@@ -1,0 +1,406 @@
+---
+import HeroGallery from "./HeroGallery.jsx";
+---
+
+<section
+  class="relative w-full min-h-screen overflow-hidden bg-gray-50 py-16 px-4 sm:px-6 lg:px-8"
+>
+  <!-- Animation d'arrière-plan moderne avec gradients -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <canvas
+      id="backgroundCanvas"
+      class="absolute inset-0 w-full h-full opacity-30"></canvas>
+  </div>
+
+  <div class="max-w-7xl mx-auto relative z-10">
+    <div class="relative" id="hero-content">
+      <h1 class="text-center mt-20">
+        <div
+          class="block text-4xl md:text-5xl lg:text-6xl tracking-tight text-gray-900 opacity-0"
+          id="title-part1"
+        >
+          <span class="font-bold">Destination</span> Castagniccia Casinca,
+        </div>
+      </h1>
+
+      <div class="mt-2 text-center">
+        <h2 class="text-xl md:text-4xl font-medium text-gray-700">
+          <div class="inline-block opacity-0 transform" id="subtitle-part1">
+            à la <span class="font-bold">découverte</span> d'une
+          </div>
+          <span
+            class="font-semibold inline-block opacity-0 transform"
+            id="subtitle-part2"
+          >
+            Corse authentique</span
+          ><span class="inline-block opacity-0 transform" id="subtitle-part3"
+            >,</span
+          >
+          <span class="inline-block opacity-0 transform" id="subtitle-part4">
+            entre</span
+          >
+        </h2>
+        <div class="text-xl md:text-4xl font-medium text-gray-700 mt-2">
+          <h3 class="inline-block opacity-0 transform" id="subtitle-part5">
+            <span class="font-bold">villages perchés</span>, <span
+              class="font-bold">plages</span
+            > et <span class="font-bold">saveurs du terroir</span>
+          </h3>
+        </div>
+      </div>
+
+      <div
+        class="mt-6 max-w-3xl mx-auto text-center opacity-0"
+        id="description"
+      >
+        <p class="text-lg text-gray-700">
+          Explorez l'une des régions les plus authentiques de Corse grâce à
+          notre application interactive. Déjà <span
+            id="counter"
+            class="font-bold inline-block min-w-[3.5rem] relative overflow-hidden top-2"
+            >0</span
+          > visiteurs ont exploré notre site pour découvrir les trésors uniques de
+          la Castagniccia Casinca. Que vous soyez à la recherche de paysages préservés,
+          d'expériences culturelles uniques ou d'adresses incontournables, nous avons
+          tout prévu pour que votre séjour soit inoubliable
+        </p>
+      </div>
+
+      <div class="mt-4 flex flex-col sm:flex-row justify-center gap-4">
+        <a
+          href="#"
+          class="inline-block px-8 py-4 text-base font-medium text-white bg-black rounded-md shadow-sm hover:bg-gray-900 opacity-0 transform translate-y-4"
+          id="btn-carte"
+        >
+          Carte interactive
+        </a>
+        <a
+          href="#"
+          class="inline-block px-8 py-4 text-base font-medium text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 opacity-0 transform translate-y-4"
+          id="btn-incontournables"
+        >
+          Incontournables
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-16">
+    <HeroGallery client:load />
+  </div>
+</section>
+
+<script>
+  // Attend que le DOM soit complètement chargé
+  document.addEventListener("DOMContentLoaded", function () {
+    // Animation d'entrée séquentielle pour chaque élément de texte
+    animateHeroSequence();
+
+    // Initialisation de l'animation d'arrière-plan
+    initModernBackgroundAnimation();
+  });
+
+  // Animation séquentielle du héros
+  function animateHeroSequence() {
+    // Tableau des éléments à animer dans l'ordre
+    const elements = [
+      { id: "title-part1", delay: 300 },
+      { id: "subtitle-part1", delay: 600 },
+      { id: "subtitle-part2", delay: 700 },
+      { id: "subtitle-part3", delay: 750 },
+      { id: "subtitle-part4", delay: 800 },
+      { id: "subtitle-part5", delay: 900 },
+      { id: "description", delay: 1100 },
+      { id: "btn-carte", delay: 1300 },
+      { id: "btn-incontournables", delay: 1450 },
+    ];
+
+    // Application des classes de transition
+    elements.forEach((element) => {
+      const el = document.getElementById(element.id);
+      if (el) {
+        // Appliquer des transitions différentes selon le type d'élément
+        if (element.id.includes("title")) {
+          el.style.transition =
+            "opacity 0.8s ease-out, transform 0.9s cubic-bezier(0.13, 0.77, 0.33, 1)";
+          el.style.transform = "translateY(30px)";
+        } else if (element.id.includes("subtitle")) {
+          el.style.transition =
+            "opacity 0.7s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
+          el.style.transform = "translateY(15px)";
+        } else if (element.id === "description") {
+          el.style.transition = "opacity 1s ease-out";
+        } else if (element.id.includes("btn")) {
+          el.style.transition =
+            "opacity 0.7s ease-out, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)";
+        }
+      }
+    });
+
+    // Animation séquentielle avec délais personnalisés
+    elements.forEach((element) => {
+      setTimeout(() => {
+        const el = document.getElementById(element.id);
+        if (el) {
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+
+          // Si c'est le paragraphe de description, déclencher l'animation du compteur
+          if (element.id === "description") {
+            setTimeout(animateCounter, 500);
+          }
+        }
+      }, element.delay);
+    });
+  }
+
+  // Animation du compteur améliorée avec effet visuel
+  function animateCounter() {
+    const counter = document.getElementById("counter");
+    const targetValue = 12300;
+    const duration = 2500; // 2.5 secondes
+    const steps = 60; // Augmenté pour une animation plus fluide
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3); // Fonction d'easing
+
+    // Préparation du style
+    counter.style.position = "relative";
+    counter.style.overflow = "hidden";
+
+    // Ajoute les styles d'animation si pas déjà présents
+    if (!document.getElementById("counter-animations")) {
+      const style = document.createElement("style");
+      style.id = "counter-animations";
+      style.textContent = `
+      @keyframes flash-highlight {
+        0% { color: inherit; transform: scale(1); }
+        30% { color: #2196F3; transform: scale(1.15); }
+        100% { color: inherit; transform: scale(1); }
+      }
+      @keyframes pulse-number {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+    `;
+      document.head.appendChild(style);
+    }
+
+    // Fonction pour formater les nombres avec K, M, G
+    function formatNumber(num) {
+      if (num >= 1000000000) {
+        // Format milliards (G)
+        return (num / 1000000000).toFixed(1).replace(/\.0$/, "") + "G";
+      } else if (num >= 1000000) {
+        // Format millions (M)
+        return (num / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+      } else if (num >= 1000) {
+        // Format milliers (K)
+        return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+      } else {
+        // Format normal
+        return num.toString();
+      }
+    }
+
+    let startTimestamp = null;
+
+    // Utilisation de requestAnimationFrame pour une animation plus fluide
+    function animationStep(timestamp) {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+
+      // Applique easing pour un effet plus naturel
+      const easedProgress = easeOutCubic(progress);
+      const value = Math.floor(targetValue * easedProgress);
+
+      // Format le nombre selon sa taille
+      const prevText = counter.textContent;
+      const formattedValue = formatNumber(value);
+      counter.textContent = formattedValue;
+
+      // Effet visuel pendant le changement de chiffres
+      if (prevText !== counter.textContent) {
+        counter.style.animation = "pulse-number 0.2s ease-out";
+        setTimeout(() => {
+          counter.style.animation = "";
+        }, 200);
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(animationStep);
+      } else {
+        // Animation terminée, affiche le format final
+        counter.style.animation = "flash-highlight 0.6s ease-out";
+        counter.textContent = formatNumber(targetValue);
+
+        // Supprime l'animation après qu'elle soit terminée
+        setTimeout(() => {
+          counter.style.animation = "";
+        }, 600);
+      }
+    }
+
+    requestAnimationFrame(animationStep);
+  }
+
+  // Animation d'arrière-plan moderne avec des gradients
+  function initModernBackgroundAnimation() {
+    const canvas = document.getElementById(
+      "backgroundCanvas"
+    ) as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d");
+
+    // Ajuste la taille du canvas pour qu'il occupe toute la zone
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    // Palette de couleurs inspirée de la Corse (bleu mer, vert maquis, ocre terre)
+    const colors = [
+      { r: 65, g: 154, b: 214, a: 0.4 }, // Bleu clair (mer)
+      { r: 107, g: 178, b: 140, a: 0.3 }, // Vert (maquis)
+      { r: 227, g: 181, b: 130, a: 0.3 }, // Ocre (terres)
+      { r: 75, g: 119, b: 190, a: 0.3 }, // Bleu médium
+      { r: 144, g: 190, b: 109, a: 0.25 }, // Vert clair
+    ];
+
+    // Création des gradients
+    const gradients = [];
+    const gradientCount = 7;
+
+    for (let i = 0; i < gradientCount; i++) {
+      const color = colors[Math.floor(Math.random() * colors.length)];
+
+      gradients.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 300 + 200,
+        color: color,
+        speedX: (Math.random() - 0.5) * 0.3,
+        speedY: (Math.random() - 0.5) * 0.3,
+        pulseSpeed: Math.random() * 0.02 + 0.01,
+        pulseDirection: 1,
+        pulseAmplitude: Math.random() * 0.2 + 0.1,
+        baseSize: Math.random() * 300 + 200,
+        angle: 0,
+        rotationSpeed: (Math.random() - 0.5) * 0.0005,
+      });
+    }
+
+    // Animation des gradients
+    function animate() {
+      // Création d'un fondu progressif plutôt que d'effacer complètement
+      ctx.fillStyle = "rgba(250, 250, 250, 0.03)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Dessine et anime chaque gradient
+      gradients.forEach((gradient) => {
+        // Création du gradient radial
+        const grd = ctx.createRadialGradient(
+          gradient.x,
+          gradient.y,
+          0,
+          gradient.x,
+          gradient.y,
+          gradient.size
+        );
+
+        // Définition des couleurs du gradient
+        grd.addColorStop(
+          0,
+          `rgba(${gradient.color.r}, ${gradient.color.g}, ${gradient.color.b}, ${gradient.color.a})`
+        );
+        grd.addColorStop(
+          1,
+          `rgba(${gradient.color.r}, ${gradient.color.g}, ${gradient.color.b}, 0)`
+        );
+
+        ctx.beginPath();
+        ctx.arc(gradient.x, gradient.y, gradient.size, 0, Math.PI * 2);
+        ctx.fillStyle = grd;
+        ctx.fill();
+
+        // Animation de pulsation
+        gradient.size =
+          gradient.baseSize +
+          Math.sin(gradient.angle) *
+            gradient.pulseAmplitude *
+            gradient.baseSize;
+        gradient.angle += gradient.pulseSpeed;
+
+        // Déplacement lent
+        gradient.x += gradient.speedX;
+        gradient.y += gradient.speedY;
+
+        // Rotation lente autour du centre
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const dx = gradient.x - centerX;
+        const dy = gradient.y - centerY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const currentAngle = Math.atan2(dy, dx);
+        const newAngle = currentAngle + gradient.rotationSpeed;
+
+        gradient.x = centerX + Math.cos(newAngle) * distance;
+        gradient.y = centerY + Math.sin(newAngle) * distance;
+
+        // Si le gradient sort du canvas, le replacer
+        const buffer = gradient.size;
+        if (
+          gradient.x < -buffer ||
+          gradient.x > canvas.width + buffer ||
+          gradient.y < -buffer ||
+          gradient.y > canvas.height + buffer
+        ) {
+          if (Math.random() > 0.5) {
+            // Replace horizontalement
+            gradient.x = Math.random() > 0.5 ? -buffer : canvas.width + buffer;
+            gradient.y = Math.random() * canvas.height;
+          } else {
+            // Replace verticalement
+            gradient.y = Math.random() > 0.5 ? -buffer : canvas.height + buffer;
+            gradient.x = Math.random() * canvas.width;
+          }
+        }
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    // Démarre l'animation avec un délai
+    setTimeout(() => {
+      animate();
+    }, 800);
+  }
+</script>
+
+<style>
+  /* Animations CSS pour le compteur */
+  @keyframes pulse-number {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes flash-highlight {
+    0% {
+      background: rgba(255, 255, 255, 0);
+    }
+    30% {
+      background: rgba(255, 246, 126, 0.3);
+    }
+    100% {
+      background: rgba(255, 255, 255, 0);
+    }
+  }
+</style>

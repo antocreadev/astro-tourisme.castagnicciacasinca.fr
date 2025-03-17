@@ -1,0 +1,146 @@
+<nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 backdrop-blur-lg bg-white/20 border-b border-white/10">
+  <div class="container mx-auto flex items-center justify-between px-6 py-4">
+    <!-- Logo -->
+    <div class="flex-shrink-0">
+      <img
+        src="https://placehold.co/50x50"
+        alt="Logo Placeholder"
+        class="h-10"
+      />
+    </div>
+    <!-- Navigation Links -->
+    <ul class="flex space-x-8 text-sm font-medium text-gray-800 relative">
+      <li class="nav-item">
+        <a href="#" class="block py-2 px-1 relative hover:text-black transition-colors">Agenda</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="block py-2 px-1 relative hover:text-black transition-colors">Carte interactive</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="block py-2 px-1 relative hover:text-black transition-colors">Incontournables</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="block py-2 px-1 relative hover:text-black transition-colors">Patrimoine et culture</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="block py-2 px-1 relative hover:text-black transition-colors">Séjourner</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="block py-2 px-1 relative hover:text-black transition-colors">Plages</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="block py-2 px-1 relative hover:text-black transition-colors">Artisanat et produit du terroir</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="block py-2 px-1 relative hover:text-black transition-colors">Activités et loisir</a>
+      </li>
+
+      <!-- Highlighter that moves -->
+      <span
+        id="nav-highlighter"
+        class="absolute bottom-0 h-0.5 bg-black transition-all duration-300 opacity-0"
+      ></span>
+    </ul>
+  </div>
+</nav>
+
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+  }
+  
+  #navbar {
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+  }
+  
+  #navbar.at-top {
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(16px);
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const navItems = document.querySelectorAll(".nav-item");
+    const highlighter = document.getElementById("nav-highlighter");
+    const navbar = document.getElementById("navbar");
+    
+    let lastScrollY = window.scrollY;
+    let scrollTimer = null;
+
+    // Handle scroll behavior with throttling
+    window.addEventListener("scroll", () => {
+      if (scrollTimer !== null) {
+        clearTimeout(scrollTimer);
+      }
+
+      scrollTimer = setTimeout(() => {
+        const currentScrollY = window.scrollY;
+        
+        // Debug - remove in production
+        console.log("Current scroll:", currentScrollY, "Last scroll:", lastScrollY);
+        
+        // Determine scroll direction and apply transform
+        if (currentScrollY > lastScrollY && currentScrollY > 50) {
+          // Scrolling down - hide navbar
+          navbar.style.transform = "translateY(-100%)";
+          console.log("Hiding navbar");
+        } else {
+          // Scrolling up - show navbar
+          navbar.style.transform = "translateY(0)";
+          console.log("Showing navbar");
+        }
+        
+        // Add special styling when at the top
+        if (currentScrollY < 20) {
+          navbar.classList.add('at-top');
+        } else {
+          navbar.classList.remove('at-top');
+        }
+        
+        lastScrollY = currentScrollY;
+      }, 10); // Short delay for better performance
+    });
+
+    // Positionnement initial du surlignement sur l'élément actif
+    const activeItem = document.querySelector(".nav-item.active");
+    if (activeItem) {
+      const activeRect = activeItem.getBoundingClientRect();
+      const navRect = activeItem.parentElement.getBoundingClientRect();
+
+      highlighter.style.width = `${activeRect.width}px`;
+      highlighter.style.transform = `translateX(${activeRect.left - navRect.left}px)`;
+      highlighter.style.opacity = "1";
+    }
+
+    // Gestion du survol comme avant
+    navItems.forEach((item) => {
+      item.addEventListener("mouseenter", () => {
+        const itemRect = item.getBoundingClientRect();
+        const navRect = item.parentElement.getBoundingClientRect();
+
+        highlighter.style.width = `${itemRect.width}px`;
+        highlighter.style.transform = `translateX(${itemRect.left - navRect.left}px)`;
+        highlighter.style.opacity = "1";
+      });
+
+      item.addEventListener("mouseleave", () => {
+        // Si un élément est actif, revenir à cet élément
+        // sinon masquer le surlignement
+        const activeItem = document.querySelector(".nav-item.active");
+        if (activeItem) {
+          const activeRect = activeItem.getBoundingClientRect();
+          const navRect = activeItem.parentElement.getBoundingClientRect();
+
+          highlighter.style.width = `${activeRect.width}px`;
+          highlighter.style.transform = `translateX(${activeRect.left - navRect.left}px)`;
+        } else {
+          highlighter.style.opacity = "0";
+        }
+      });
+    });
+  });
+</script>
