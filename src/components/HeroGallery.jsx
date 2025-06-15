@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const InfiniteScroll = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -134,8 +134,6 @@ const InfiniteScroll = () => {
         </div>
       </div>
       
-      {/* Contenu supplémentaire pour permettre le défilement */}
-      <div className="h-screen"></div>
     </div>
   );
 };
