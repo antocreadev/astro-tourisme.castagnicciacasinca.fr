@@ -50,7 +50,7 @@ export default function Agenda() {
         </div>
 
         {/* Events Grid */}
-        <div className="flex flex-col items-center justify-center md:items-start md:justify-start md:flex-row gap-8 overflow-x-auto pb-4">
+        <div className="flex flex-col items-center justify-center md:items-start md:justify-start md:flex-row gap-8 overflow-x-auto pb-4 p-4 md:p-0">
           {events.slice(0, 4).map((event, index) => (
             <div key={index} className="flex-shrink-0 w-[25rem]">
               <div className="bg-white rounded-lg overflow-hidden shadow-sm">
