@@ -58,7 +58,7 @@ export default function LesIncontournables() {
                   />
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-black text-center leading-tight group-hover:text-blue-600 transition-colors duration-300">
+                  <h3 className="text-lg font-semibold text-black text-center leading-tight  transition-colors duration-300">
                     {site.title}
                   </h3>
                 </div>
@@ -84,7 +84,7 @@ export default function LesIncontournables() {
                   />
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-black text-center leading-tight group-hover:text-blue-600 transition-colors duration-300">
+                  <h3 className="text-lg font-semibold text-black text-center leading-tight  transition-colors duration-300">
                     {itineraire.title}
                   </h3>
                 </div>
