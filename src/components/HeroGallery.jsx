@@ -5,6 +5,7 @@ const InfiniteScroll = () => {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
   const containerRef = useRef(null);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const scrollTimeoutRef = useRef(null);
 
   // Images pour chaque rangée
   const topRowImages = [
@@ -27,7 +28,14 @@ const InfiniteScroll = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrollPosition(window.scrollY);
+      // Utiliser un debounce pour limiter les mises à jour
+      if (scrollTimeoutRef.current) {
+        window.cancelAnimationFrame(scrollTimeoutRef.current);
+      }
+      
+      scrollTimeoutRef.current = window.requestAnimationFrame(() => {
+        setScrollPosition(window.scrollY);
+      });
     };
 
     const handleResize = () => {
@@ -39,12 +47,15 @@ const InfiniteScroll = () => {
       setImagesLoaded(true);
     }, 1000); // Petit délai pour s'assurer que le composant est rendu
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize);
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
+      if (scrollTimeoutRef.current) {
+        window.cancelAnimationFrame(scrollTimeoutRef.current);
+      }
       clearTimeout(timer);
     };
   }, []);
@@ -61,7 +72,9 @@ const InfiniteScroll = () => {
   const extendedBottomImages = Array(repeatCount).fill(bottomRowImages).flat();
   
   // Calculer la position de chaque rangée en fonction du scroll avec une transition plus fluide
-  const scrollSpeed = 0.5;
+  // Réduire la vitesse de défilement sur mobile
+  const scrollSpeed = windowWidth < 768 ? 0.2 : 0.5;
+
   const topRowPosition = (() => {
     const totalWidth = topRowImages.length * imageWidth;
     const rawPosition = -(scrollPosition * scrollSpeed);
@@ -81,9 +94,9 @@ const InfiniteScroll = () => {
       {/* Première rangée - défilement vers la droite */}
       <div className="relative h-64 mb-8 overflow-hidden">
         <div 
-          className="absolute flex transition-transform duration-100 ease-linear"
+          className="absolute flex will-change-transform"
           style={{ 
-            transform: `translateX(${topRowPosition}px)`,
+            transform: `translateX(${topRowPosition}px) translateZ(0)`,
             width: `${extendedTopImages.length * imageWidth}px`
           }}
         >
@@ -91,6 +104,7 @@ const InfiniteScroll = () => {
             <div 
               key={`top-${index}`} 
               className="w-72 h-64 flex-shrink-0 px-2 image-container"
+              style={{ backfaceVisibility: 'hidden' }}
             >
               <img 
                 src={src} 
@@ -100,6 +114,7 @@ const InfiniteScroll = () => {
                     ? 'opacity-100 transform translate-y-0' 
                     : 'opacity-0 transform translate-y-10'
                 }`}
+                loading="lazy"
               />
             </div>
           ))}
@@ -109,9 +124,9 @@ const InfiniteScroll = () => {
       {/* Deuxième rangée - défilement vers la gauche */}
       <div className="relative h-64 overflow-hidden">
         <div 
-          className="absolute flex transition-transform duration-100 ease-linear"
+          className="absolute flex will-change-transform"
           style={{ 
-            transform: `translateX(${bottomRowPosition}px)`,
+            transform: `translateX(${bottomRowPosition}px) translateZ(0)`,
             width: `${extendedBottomImages.length * imageWidth}px`
           }}
         >
@@ -119,6 +134,7 @@ const InfiniteScroll = () => {
             <div 
               key={`bottom-${index}`} 
               className="w-72 h-64 flex-shrink-0 px-2 image-container"
+              style={{ backfaceVisibility: 'hidden' }}
             >
               <img 
                 src={src} 
@@ -128,12 +144,12 @@ const InfiniteScroll = () => {
                     ? 'opacity-100 transform translate-y-0' 
                     : 'opacity-0 transform translate-y-10'
                 }`}
+                loading="lazy"
               />
             </div>
           ))}
         </div>
       </div>
-      
     </div>
   );
 };

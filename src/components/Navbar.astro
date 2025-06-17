@@ -27,12 +27,8 @@
 
     <ul
       id="nav-links"
-      class="
-        /* Styles pour mobile (menu déroulant) */
-        hidden flex-col space-y-4 absolute top-0 left-0 w-full h-screen pt-24 px-6 bg-white/95 backdrop-blur-md text-center text-lg
-        /* Styles pour desktop (à partir du breakpoint lg) */
-        lg:flex lg:relative lg:flex-row lg:space-y-0 lg:space-x-6 lg:h-auto lg:w-auto lg:bg-transparent lg:p-0 lg:top-auto lg:left-auto lg:pt-0 lg:text-sm
-        font-medium text-gray-800
+      class="hidden flex-col space-y-4 absolute top-0 left-0 w-full h-screen pt-24 px-6 text-center text-lg lg:flex lg:relative lg:flex-row lg:space-y-0 lg:space-x-6 lg:h-auto lg:w-auto lg:bg-transparent lg:p-0 lg:top-auto lg:left-auto lg:pt-0 lg:text-sm font-medium text-gray-800
+      bg-white
       "
     >
       <li class="nav-item">
@@ -102,7 +98,7 @@
     // --- Logique du Menu Burger ---
     burgerMenu.addEventListener("click", () => {
       const isExpanded = navLinks.classList.toggle("hidden");
-      burgerMenu.setAttribute("aria-expanded", !isExpanded);
+      burgerMenu.setAttribute("aria-expanded", (!isExpanded).toString());
       
       // Bascule entre l'icône burger et croix
       burgerIcon.classList.toggle("hidden");
