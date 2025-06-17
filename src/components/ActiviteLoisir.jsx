@@ -25,32 +25,35 @@ export default function ActivitesLoisirs() {
   ]
 
   return (
-    <div className="bg-white min-h-screen py-16 px-4">
+    <div className="bg-white py-8 sm:py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Title */}
-        <div className="mb-16">
-          <h1 className="text-5xl font-bold text-black">Activités et loisirs</h1>
+        <div className="mb-8 sm:mb-16">
+          <h1 className="text-4xl sm:text-5xl font-bold text-black">Activités et loisirs</h1>
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {activities.map((activity, index) => {
             const IconComponent = activity.icon
             return (
-              <div key={index} className="space-y-6">
+              <div
+                key={index}
+                className="p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 bg-white space-y-4"
+              >
                 {/* Icon */}
-                <div className="mb-6">
-                  <IconComponent size={48} className="text-black" strokeWidth={1.5} />
+                <div className="inline-block p-3 rounded-lg bg-gray-50">
+                  <IconComponent size={32} className="text-black" strokeWidth={1.5} />
                 </div>
 
                 {/* Title */}
-                <h2 className="text-xl font-bold text-black mb-4">{activity.title}</h2>
+                <h2 className="text-xl font-bold text-black">{activity.title}</h2>
 
                 {/* Description */}
-                <p className="text-gray-700 text-base leading-relaxed mb-6">{activity.description}</p>
+                <p className="text-gray-600 text-base leading-relaxed">{activity.description}</p>
 
                 {/* Link */}
-                <button className="flex items-center text-black font-medium hover:text-gray-600 transition-colors group">
+                <button className="inline-flex items-center text-black font-medium hover:text-gray-600 transition-colors group mt-4">
                   <span className="mr-2">En savoir plus</span>
                   <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
                 </button>

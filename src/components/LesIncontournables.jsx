@@ -34,7 +34,7 @@ export default function LesIncontournables() {
   ]
 
   return (
-    <div className="bg-white min-h-screen py-16 px-4">
+    <div className="bg-white py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Main Title */}
         <div className="text-center mb-16">

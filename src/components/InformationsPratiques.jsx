@@ -30,7 +30,7 @@ export default function InformationsPratiques() {
   ]
 
   return (
-    <div className="bg-white min-h-screen py-8 sm:py-16 px-4">
+    <div className="bg-white py-8 sm:py-16 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <div className="mb-8 sm:mb-16">

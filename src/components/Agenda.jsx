@@ -38,7 +38,7 @@ export default function Agenda() {
   ]
 
   return (
-    <div className="min-h-screen py-16">
+    <div className="py-16">
       <div className="mx-auto">
         {/* Header Section */}
         <div className="text-center mb-16">

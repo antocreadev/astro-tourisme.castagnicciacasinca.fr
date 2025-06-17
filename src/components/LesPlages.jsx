@@ -1,8 +1,8 @@
 export default function LesPlages() {
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white">
       <div className="max-w-7xl mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
           {/* Image - Takes up 3/5 of the space on desktop, appears between text and button on mobile */}
           <div className="lg:col-span-3 order-2 lg:order-1">
             <img
@@ -24,14 +24,20 @@ export default function LesPlages() {
                 détente et à l'évasion.
               </p>
             </div>
-          </div>
-
-          {/* Button - Appears after image on mobile, stays with content on desktop */}
-          <div className="lg:col-span-2 lg:col-start-4 order-3 pt-4 lg:pt-0">
-            <button className="border-2 border-black text-black px-6 py-3 font-medium hover:bg-black hover:text-white transition-colors">
+            {/* Button visible only on desktop */}
+            <button className="hidden lg:block w-auto bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-colors">
               En savoir plus
             </button>
           </div>
+
+          {/* Button for mobile - appears after image */}
+          <div className="lg:hidden order-3">
+            <button className="w-full bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-colors">
+              En savoir plus
+            </button>
+          </div>
+
+
         </div>
       </div>
     </div>
