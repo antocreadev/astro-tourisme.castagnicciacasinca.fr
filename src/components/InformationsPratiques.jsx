@@ -30,68 +30,41 @@ export default function InformationsPratiques() {
   ]
 
   return (
-    <div className="bg-white min-h-screen py-16 px-4">
+    <div className="bg-white min-h-screen py-8 sm:py-16 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Title */}
-        <div className="mb-16">
-          <h1 className="text-5xl font-bold text-black">Informations pratiques</h1>
+        <div className="mb-8 sm:mb-16">
+          <h1 className="text-4xl sm:text-5xl font-bold text-black">Informations pratiques</h1>
         </div>
 
-        {/* Grid - First row with 3 items, second row with 2 items */}
-        <div className="space-y-12">
-          {/* First Row - 3 items */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {informations.slice(0, 3).map((info, index) => {
-              const IconComponent = info.icon
-              return (
-                <div key={index} className="space-y-6">
-                  {/* Icon */}
-                  <div className="mb-6">
-                    <IconComponent size={48} className="text-black" strokeWidth={1.5} />
-                  </div>
-
-                  {/* Title */}
-                  <h2 className="text-2xl font-bold text-black mb-4">{info.title}</h2>
-
-                  {/* Description */}
-                  <p className="text-gray-700 text-base leading-relaxed mb-6">{info.description}</p>
-
-                  {/* Link */}
-                  <button className="flex items-center text-black font-medium hover:text-gray-600 transition-colors group">
-                    <span className="mr-2">En savoir plus</span>
-                    <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
-                  </button>
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-12">
+          {informations.map((info, index) => {
+            const IconComponent = info.icon
+            return (
+              <div
+                key={index}
+                className="p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 bg-white space-y-4"
+              >
+                {/* Icon */}
+                <div className="inline-block p-3 rounded-lg bg-gray-50">
+                  <IconComponent size={32} className="text-black" strokeWidth={1.5} />
                 </div>
-              )
-            })}
-          </div>
 
-          {/* Second Row - 2 items */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
-            {informations.slice(3, 5).map((info, index) => {
-              const IconComponent = info.icon
-              return (
-                <div key={index + 3} className="space-y-6">
-                  {/* Icon */}
-                  <div className="mb-6">
-                    <IconComponent size={48} className="text-black" strokeWidth={1.5} />
-                  </div>
+                {/* Title */}
+                <h2 className="text-xl sm:text-2xl font-bold text-black">{info.title}</h2>
 
-                  {/* Title */}
-                  <h2 className="text-2xl font-bold text-black mb-4">{info.title}</h2>
+                {/* Description */}
+                <p className="text-gray-600 text-base sm:text-lg leading-relaxed">{info.description}</p>
 
-                  {/* Description */}
-                  <p className="text-gray-700 text-base leading-relaxed mb-6">{info.description}</p>
-
-                  {/* Link */}
-                  <button className="flex items-center text-black font-medium hover:text-gray-600 transition-colors group">
-                    <span className="mr-2">En savoir plus</span>
-                    <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
-                  </button>
-                </div>
-              )
-            })}
-          </div>
+                {/* Link */}
+                <button className="inline-flex items-center text-black font-medium hover:text-gray-600 transition-colors group mt-4">
+                  <span className="mr-2">En savoir plus</span>
+                  <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
+                </button>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>
