@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 const InfiniteScroll = () => {
   const [scrollY, setScrollY] = useState(0);
   const [visibleImages, setVisibleImages] = useState(new Set());
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 768);
   const containerRef = useRef(null);
   const rafId = useRef(null);
   const timeoutIds = useRef([]);
@@ -36,6 +37,11 @@ const InfiniteScroll = () => {
     });
   };
 
+  // Handler de redimensionnement
+  const handleResize = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
   useEffect(() => {
     // Animation d'apparition progressive des images
     const allImages = [...topRowImages, ...bottomRowImages];
@@ -49,9 +55,11 @@ const InfiniteScroll = () => {
     });
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
       if (rafId.current) {
         cancelAnimationFrame(rafId.current);
       }
@@ -65,7 +73,9 @@ const InfiniteScroll = () => {
   const extendedBottomImages = [...bottomRowImages, ...bottomRowImages, ...bottomRowImages];
 
   // Calculs de position basés sur le scroll
-  const imageWidth = 288; // w-72 = 18rem = 288px
+  const mobileImageWidth = 192; // w-48 = 12rem = 192px
+  const desktopImageWidth = 288; // w-72 = 18rem = 288px
+  const imageWidth = windowWidth < 768 ? mobileImageWidth : desktopImageWidth;
   const scrollMultiplier = 0.5;
   
   // Première rangée : vers la DROITE avec boucle infinie
@@ -107,7 +117,7 @@ const InfiniteScroll = () => {
       `}</style>
 
       {/* Première rangée - défilement vers la droite */}
-      <div className="relative h-64 mb-8 overflow-hidden">
+      <div className="relative h-48 md:h-64 mb-8 overflow-hidden">
         <div 
           className="absolute flex gallery-row"
           style={{ 
@@ -122,7 +132,7 @@ const InfiniteScroll = () => {
             return (
               <div 
                 key={`top-${index}`} 
-                className="w-72 h-64 flex-shrink-0 px-2 image-item"
+                className="w-48 md:w-72 h-48 md:h-64 flex-shrink-0 px-2 image-item"
               >
                 <img 
                   src={src} 
@@ -139,7 +149,7 @@ const InfiniteScroll = () => {
       </div>
 
       {/* Deuxième rangée - défilement vers la gauche */}
-      <div className="relative h-64 overflow-hidden">
+      <div className="relative h-48 md:h-64 overflow-hidden">
         <div 
           className="absolute flex gallery-row"
           style={{ 
@@ -154,7 +164,7 @@ const InfiniteScroll = () => {
             return (
               <div 
                 key={`bottom-${index}`} 
-                className="w-72 h-64 flex-shrink-0 px-2 image-item"
+                className="w-48 md:w-72 h-48 md:h-64 flex-shrink-0 px-2 image-item"
               >
                 <img 
                   src={src} 
