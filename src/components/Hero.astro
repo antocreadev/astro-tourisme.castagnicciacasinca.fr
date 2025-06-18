@@ -10,6 +10,12 @@ import HeroGallery from "./HeroGallery.jsx";
     <canvas
       id="backgroundCanvas"
       class="absolute inset-0 w-full h-full opacity-30"></canvas>
+
+    <!-- Dégradé d'opacité smooth vers le blanc -->
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-transparent via-white/20 to-white pointer-events-none"
+    >
+    </div>
   </div>
 
   <div class="max-w-7xl mx-auto relative z-10">
@@ -250,56 +256,104 @@ import HeroGallery from "./HeroGallery.jsx";
     ) as HTMLCanvasElement;
     const ctx = canvas.getContext("2d");
 
+    // Détection des appareils mobiles et de la performance
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      ) || window.innerWidth <= 768;
+    const isLowPerformance = isMobile || navigator.hardwareConcurrency <= 2;
+
+    // Configuration adaptative selon l'appareil
+    const config = {
+      gradientCount: isLowPerformance ? 3 : 7,
+      animationFPS: isLowPerformance ? 30 : 60,
+      maxGradientSize: isLowPerformance ? 200 : 300,
+      minGradientSize: isLowPerformance ? 100 : 200,
+      speedMultiplier: isLowPerformance ? 0.5 : 1,
+      fadeOpacity: isLowPerformance ? 0.08 : 0.03,
+    };
+
+    // Throttle pour limiter la fréquence d'animation sur mobile
+    let lastAnimationTime = 0;
+    const animationInterval = 1000 / config.animationFPS;
+
     // Ajuste la taille du canvas pour qu'il occupe toute la zone
     function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      const displayWidth = window.innerWidth;
+      const displayHeight = window.innerHeight;
+
+      // Réduction de la résolution sur mobile pour améliorer les performances
+      const scale = isMobile ? 0.5 : 0.75;
+
+      canvas.width = displayWidth * dpr * scale;
+      canvas.height = displayHeight * dpr * scale;
+      canvas.style.width = displayWidth + "px";
+      canvas.style.height = displayHeight + "px";
+
+      ctx.scale(dpr * scale, dpr * scale);
     }
 
     resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
+
+    // Throttle resize pour éviter trop d'appels
+    let resizeTimeout;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(resizeCanvas, 100);
+    });
 
     // Palette de couleurs inspirée de la Corse (bleu mer, vert maquis, ocre terre)
     const colors = [
-      { r: 65, g: 154, b: 214, a: 0.4 }, // Bleu clair (mer)
-      { r: 107, g: 178, b: 140, a: 0.3 }, // Vert (maquis)
-      { r: 227, g: 181, b: 130, a: 0.3 }, // Ocre (terres)
-      { r: 75, g: 119, b: 190, a: 0.3 }, // Bleu médium
-      { r: 144, g: 190, b: 109, a: 0.25 }, // Vert clair
+      { r: 65, g: 154, b: 214, a: isLowPerformance ? 0.2 : 0.4 }, // Bleu clair (mer)
+      { r: 107, g: 178, b: 140, a: isLowPerformance ? 0.15 : 0.3 }, // Vert (maquis)
+      { r: 227, g: 181, b: 130, a: isLowPerformance ? 0.15 : 0.3 }, // Ocre (terres)
+      { r: 75, g: 119, b: 190, a: isLowPerformance ? 0.15 : 0.3 }, // Bleu médium
+      { r: 144, g: 190, b: 109, a: isLowPerformance ? 0.12 : 0.25 }, // Vert clair
     ];
 
     // Création des gradients
     const gradients = [];
-    const gradientCount = 7;
 
-    for (let i = 0; i < gradientCount; i++) {
+    for (let i = 0; i < config.gradientCount; i++) {
       const color = colors[Math.floor(Math.random() * colors.length)];
 
       gradients.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 300 + 200,
+        x: (Math.random() * canvas.width) / (window.devicePixelRatio || 1),
+        y: (Math.random() * canvas.height) / (window.devicePixelRatio || 1),
+        size:
+          Math.random() * (config.maxGradientSize - config.minGradientSize) +
+          config.minGradientSize,
         color: color,
-        speedX: (Math.random() - 0.5) * 0.3,
-        speedY: (Math.random() - 0.5) * 0.3,
-        pulseSpeed: Math.random() * 0.02 + 0.01,
+        speedX: (Math.random() - 0.5) * 0.3 * config.speedMultiplier,
+        speedY: (Math.random() - 0.5) * 0.3 * config.speedMultiplier,
+        pulseSpeed: (Math.random() * 0.02 + 0.01) * config.speedMultiplier,
         pulseDirection: 1,
         pulseAmplitude: Math.random() * 0.2 + 0.1,
-        baseSize: Math.random() * 300 + 200,
+        baseSize:
+          Math.random() * (config.maxGradientSize - config.minGradientSize) +
+          config.minGradientSize,
         angle: 0,
-        rotationSpeed: (Math.random() - 0.5) * 0.0005,
+        rotationSpeed: (Math.random() - 0.5) * 0.0005 * config.speedMultiplier,
       });
     }
 
-    // Animation des gradients
-    function animate() {
+    // Animation des gradients avec optimisations
+    function animate(currentTime) {
+      // Throttle animation sur mobile
+      if (currentTime - lastAnimationTime < animationInterval) {
+        requestAnimationFrame(animate);
+        return;
+      }
+      lastAnimationTime = currentTime;
+
       // Création d'un fondu progressif plutôt que d'effacer complètement
-      ctx.fillStyle = "rgba(250, 250, 250, 0.03)";
+      ctx.fillStyle = `rgba(250, 250, 250, ${config.fadeOpacity})`;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Dessine et anime chaque gradient
       gradients.forEach((gradient) => {
-        // Création du gradient radial
+        // Création du gradient radial avec optimisation
         const grd = ctx.createRadialGradient(
           gradient.x,
           gradient.y,
@@ -324,46 +378,57 @@ import HeroGallery from "./HeroGallery.jsx";
         ctx.fillStyle = grd;
         ctx.fill();
 
-        // Animation de pulsation
-        gradient.size =
-          gradient.baseSize +
-          Math.sin(gradient.angle) *
-            gradient.pulseAmplitude *
-            gradient.baseSize;
-        gradient.angle += gradient.pulseSpeed;
+        // Animation de pulsation simplifiée sur mobile
+        if (!isLowPerformance) {
+          gradient.size =
+            gradient.baseSize +
+            Math.sin(gradient.angle) *
+              gradient.pulseAmplitude *
+              gradient.baseSize;
+          gradient.angle += gradient.pulseSpeed;
+        }
 
         // Déplacement lent
         gradient.x += gradient.speedX;
         gradient.y += gradient.speedY;
 
-        // Rotation lente autour du centre
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const dx = gradient.x - centerX;
-        const dy = gradient.y - centerY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const currentAngle = Math.atan2(dy, dx);
-        const newAngle = currentAngle + gradient.rotationSpeed;
+        // Rotation lente autour du centre (désactivée sur mobile)
+        if (!isLowPerformance) {
+          const centerX = canvas.width / (window.devicePixelRatio || 1) / 2;
+          const centerY = canvas.height / (window.devicePixelRatio || 1) / 2;
+          const dx = gradient.x - centerX;
+          const dy = gradient.y - centerY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const currentAngle = Math.atan2(dy, dx);
+          const newAngle = currentAngle + gradient.rotationSpeed;
 
-        gradient.x = centerX + Math.cos(newAngle) * distance;
-        gradient.y = centerY + Math.sin(newAngle) * distance;
+          gradient.x = centerX + Math.cos(newAngle) * distance;
+          gradient.y = centerY + Math.sin(newAngle) * distance;
+        }
 
         // Si le gradient sort du canvas, le replacer
         const buffer = gradient.size;
+        const canvasDisplayWidth =
+          canvas.width / (window.devicePixelRatio || 1);
+        const canvasDisplayHeight =
+          canvas.height / (window.devicePixelRatio || 1);
+
         if (
           gradient.x < -buffer ||
-          gradient.x > canvas.width + buffer ||
+          gradient.x > canvasDisplayWidth + buffer ||
           gradient.y < -buffer ||
-          gradient.y > canvas.height + buffer
+          gradient.y > canvasDisplayHeight + buffer
         ) {
           if (Math.random() > 0.5) {
             // Replace horizontalement
-            gradient.x = Math.random() > 0.5 ? -buffer : canvas.width + buffer;
-            gradient.y = Math.random() * canvas.height;
+            gradient.x =
+              Math.random() > 0.5 ? -buffer : canvasDisplayWidth + buffer;
+            gradient.y = Math.random() * canvasDisplayHeight;
           } else {
             // Replace verticalement
-            gradient.y = Math.random() > 0.5 ? -buffer : canvas.height + buffer;
-            gradient.x = Math.random() * canvas.width;
+            gradient.y =
+              Math.random() > 0.5 ? -buffer : canvasDisplayHeight + buffer;
+            gradient.x = Math.random() * canvasDisplayWidth;
           }
         }
       });
@@ -373,8 +438,19 @@ import HeroGallery from "./HeroGallery.jsx";
 
     // Démarre l'animation avec un délai
     setTimeout(() => {
-      animate();
+      requestAnimationFrame(animate);
     }, 800);
+
+    // Pause l'animation quand la page n'est pas visible (économie de batterie)
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        // Page cachée, on peut mettre en pause l'animation
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      } else {
+        // Page visible, on redémarre l'animation
+        requestAnimationFrame(animate);
+      }
+    });
   }
 </script>
 
