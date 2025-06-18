@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
 const InfiniteScroll = () => {
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+  const [scrollY, setScrollY] = useState(0);
+  const [visibleImages, setVisibleImages] = useState(new Set());
   const containerRef = useRef(null);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
-  const scrollTimeoutRef = useRef(null);
+  const rafId = useRef(null);
+  const timeoutIds = useRef([]);
 
   // Images pour chaque rangée
   const topRowImages = [
@@ -26,128 +26,147 @@ const InfiniteScroll = () => {
     "photos/Mont-San-Petrone.jpg"
   ];
 
+  // Handler de scroll optimisé
+  const handleScroll = () => {
+    if (rafId.current) return;
+    
+    rafId.current = requestAnimationFrame(() => {
+      setScrollY(window.pageYOffset);
+      rafId.current = null;
+    });
+  };
+
   useEffect(() => {
-    const handleScroll = () => {
-      // Utiliser un debounce pour limiter les mises à jour
-      if (scrollTimeoutRef.current) {
-        window.cancelAnimationFrame(scrollTimeoutRef.current);
-      }
+    // Animation d'apparition progressive des images
+    const allImages = [...topRowImages, ...bottomRowImages];
+    
+    allImages.forEach((_, index) => {
+      const timeoutId = setTimeout(() => {
+        setVisibleImages(prev => new Set([...prev, index]));
+      }, 1800 + (index * 200)); // 1000ms d'attente + 200ms de délai entre chaque image
       
-      scrollTimeoutRef.current = window.requestAnimationFrame(() => {
-        setScrollPosition(window.scrollY);
-      });
-    };
-
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    // Définir les images comme chargées après un court délai
-    const timer = setTimeout(() => {
-      setImagesLoaded(true);
-    }, 1000); // Petit délai pour s'assurer que le composant est rendu
+      timeoutIds.current.push(timeoutId);
+    });
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize);
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
-      if (scrollTimeoutRef.current) {
-        window.cancelAnimationFrame(scrollTimeoutRef.current);
+      if (rafId.current) {
+        cancelAnimationFrame(rafId.current);
       }
-      clearTimeout(timer);
+      // Nettoyer tous les timeouts
+      timeoutIds.current.forEach(id => clearTimeout(id));
     };
   }, []);
 
-  // Taille de chaque image
-  const imageWidth = 300;
-  
-  // Nombre d'images nécessaires pour couvrir l'écran
-  const imagesNeededForScreen = Math.ceil(windowWidth / imageWidth) + 2;
-  
-  // Créer un tableau plus grand pour une transition plus fluide
-  const repeatCount = 4;
-  const extendedTopImages = Array(repeatCount).fill(topRowImages).flat();
-  const extendedBottomImages = Array(repeatCount).fill(bottomRowImages).flat();
-  
-  // Calculer la position de chaque rangée en fonction du scroll avec une transition plus fluide
-  // Réduire la vitesse de défilement sur mobile
-  const scrollSpeed = windowWidth < 768 ? 0.2 : 0.5;
+  // Créer des tableaux étendus pour la boucle infinie
+  const extendedTopImages = [...topRowImages, ...topRowImages, ...topRowImages];
+  const extendedBottomImages = [...bottomRowImages, ...bottomRowImages, ...bottomRowImages];
 
-  const topRowPosition = (() => {
-    const totalWidth = topRowImages.length * imageWidth;
-    const rawPosition = -(scrollPosition * scrollSpeed);
-    const normalizedPosition = (rawPosition % totalWidth) - totalWidth;
-    return normalizedPosition;
-  })();
-
-  const bottomRowPosition = (() => {
-    const totalWidth = bottomRowImages.length * imageWidth;
-    const rawPosition = (scrollPosition * scrollSpeed);
-    const normalizedPosition = (rawPosition % totalWidth) - totalWidth;
-    return normalizedPosition;
-  })();
+  // Calculs de position basés sur le scroll
+  const imageWidth = 288; // w-72 = 18rem = 288px
+  const scrollMultiplier = 0.5;
+  
+  // Première rangée : vers la DROITE avec boucle infinie
+  const topRowOffset = (scrollY * scrollMultiplier) % (topRowImages.length * imageWidth);
+  const topRowTransform = -topRowOffset; // Images viennent de la gauche, vont vers la droite
+  
+  // Deuxième rangée : vers la GAUCHE avec boucle infinie (sens inversé)
+  const bottomRowOffset = (scrollY * scrollMultiplier) % (bottomRowImages.length * imageWidth);
+  const bottomRowTransform = bottomRowOffset - (bottomRowImages.length * imageWidth); // Commencer décalé pour éviter l'espace blanc
 
   return (
     <div ref={containerRef} className="w-full overflow-hidden">
+      <style jsx>{`
+        .gallery-row {
+          will-change: transform;
+          backface-visibility: hidden;
+        }
+        
+        .image-item {
+          will-change: transform, opacity;
+          transform: translateZ(0);
+        }
+        
+        .image-item img {
+          will-change: opacity, transform;
+          backface-visibility: hidden;
+        }
+        
+        .image-enter {
+          opacity: 0;
+          transform: translateY(30px) scale(0.9);
+          transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .image-visible {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      `}</style>
+
       {/* Première rangée - défilement vers la droite */}
       <div className="relative h-64 mb-8 overflow-hidden">
         <div 
-          className="absolute flex will-change-transform"
+          className="absolute flex gallery-row"
           style={{ 
-            transform: `translateX(${topRowPosition}px) translateZ(0)`,
+            transform: `translate3d(${topRowTransform}px, 0, 0)`,
             width: `${extendedTopImages.length * imageWidth}px`
           }}
         >
-          {extendedTopImages.map((src, index) => (
-            <div 
-              key={`top-${index}`} 
-              className="w-72 h-64 flex-shrink-0 px-2 image-container"
-              style={{ backfaceVisibility: 'hidden' }}
-            >
-              <img 
-                src={src} 
-                alt={`Image ${(index % topRowImages.length) + 1}`} 
-                className={`w-full h-full object-cover rounded-lg transition-all duration-1000 ${
-                  imagesLoaded 
-                    ? 'opacity-100 transform translate-y-0' 
-                    : 'opacity-0 transform translate-y-10'
-                }`}
-                loading="lazy"
-              />
-            </div>
-          ))}
+          {extendedTopImages.map((src, index) => {
+            const originalIndex = index % topRowImages.length;
+            const isVisible = visibleImages.has(originalIndex);
+            
+            return (
+              <div 
+                key={`top-${index}`} 
+                className="w-72 h-64 flex-shrink-0 px-2 image-item"
+              >
+                <img 
+                  src={src} 
+                  alt={`Image ${originalIndex + 1}`} 
+                  className={`w-full h-full object-cover rounded-lg image-enter ${
+                    isVisible ? 'image-visible' : ''
+                  }`}
+                  loading="eager"
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {/* Deuxième rangée - défilement vers la gauche */}
       <div className="relative h-64 overflow-hidden">
         <div 
-          className="absolute flex will-change-transform"
+          className="absolute flex gallery-row"
           style={{ 
-            transform: `translateX(${bottomRowPosition}px) translateZ(0)`,
+            transform: `translate3d(${bottomRowTransform}px, 0, 0)`,
             width: `${extendedBottomImages.length * imageWidth}px`
           }}
         >
-          {extendedBottomImages.map((src, index) => (
-            <div 
-              key={`bottom-${index}`} 
-              className="w-72 h-64 flex-shrink-0 px-2 image-container"
-              style={{ backfaceVisibility: 'hidden' }}
-            >
-              <img 
-                src={src} 
-                alt={`Image ${(index % bottomRowImages.length) + 7}`} 
-                className={`w-full h-full object-cover rounded-lg transition-all duration-1000 ${
-                  imagesLoaded 
-                    ? 'opacity-100 transform translate-y-0' 
-                    : 'opacity-0 transform translate-y-10'
-                }`}
-                loading="lazy"
-              />
-            </div>
-          ))}
+          {extendedBottomImages.map((src, index) => {
+            const originalIndex = index % bottomRowImages.length;
+            const isVisible = visibleImages.has(topRowImages.length + originalIndex);
+            
+            return (
+              <div 
+                key={`bottom-${index}`} 
+                className="w-72 h-64 flex-shrink-0 px-2 image-item"
+              >
+                <img 
+                  src={src} 
+                  alt={`Image ${originalIndex + 7}`} 
+                  className={`w-full h-full object-cover rounded-lg image-enter ${
+                    isVisible ? 'image-visible' : ''
+                  }`}
+                  loading="eager"
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
