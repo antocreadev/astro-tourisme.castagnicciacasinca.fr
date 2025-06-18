@@ -9,21 +9,21 @@ const InfiniteScroll = () => {
 
   // Images pour chaque rangée
   const topRowImages = [
-    "https://placehold.co/600x400?text=1",
-    "https://placehold.co/600x400?text=2",
-    "https://placehold.co/600x400?text=3",
-    "https://placehold.co/600x400?text=4",
-    "https://placehold.co/600x400?text=5",
-    "https://placehold.co/600x400?text=6"
+    "photos/Campile.jpg",
+    "photos/Camping-Domaine-d-anghione.jpg",
+    "photos/Hotel-Residence-A-Torra-2.jpg",
+    "photos/Hotel-Restaurant-Le-Refuge-Orezza-2.jpg",
+    "photos/MontSantAnghjulu.JPG",
+    "photos/IMG_2089.JPG"
   ];
 
   const bottomRowImages = [
-    "https://placehold.co/600x400?text=7",
-    "https://placehold.co/600x400?text=8",
-    "https://placehold.co/600x400?text=9",
-    "https://placehold.co/600x400?text=10",
-    "https://placehold.co/600x400?text=11",
-    "https://placehold.co/600x400?text=12"
+    "photos/VillagevacanceSandayaCapSud.jpg",
+    "photos/PentadiCasinca.jpg",
+    "photos/PentaAcquatella.jpg",
+    "photos/LoretodiCasinca.jpg",
+    "photos/Ortiporiu.JPG",
+    "photos/Mont-San-Petrone.jpg"
   ];
 
   useEffect(() => {
