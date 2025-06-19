@@ -1,0 +1,18 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SiteDetail from '../../components/detail/SiteDetail.jsx';
+import { sites } from '../../data/sites.js';
+
+export async function getStaticPaths() {
+  return sites.map((site) => ({
+    params: { slug: site.slug },
+    props: { site },
+  }));
+}
+
+const { site } = Astro.props;
+---
+
+<Layout title={`${site.title} - Sites phares`}>
+  <SiteDetail site={site} client:load />
+</Layout>

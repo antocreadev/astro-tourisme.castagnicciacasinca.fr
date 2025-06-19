@@ -1,21 +1,34 @@
 import { Building2, Building, Home, Tent, ShoppingBasket, UtensilsCrossed, ChevronRight } from "lucide-react"
+import { hebergements, typesHebergement } from '../data/hebergements.js';
 
 export default function Sejourner() {
+  // Compter les hébergements par type
+  const countByType = (type) => {
+    if (type === "tous") return hebergements.length;
+    return hebergements.filter(h => h.type === type).length;
+  };
+
   const accommodations = [
     {
       icon: Building2,
       title: "Hôtels",
-      description: "Détendez-vous dans nos hôtels confortables et accueillants.",
+      count: countByType("hotel"),
+      description: "Détendez-vous dans nos hôtels de charme avec vue sur mer ou montagne.",
+      link: "/hebergements?type=hotel"
     },
     {
       icon: Building,
-      title: "Residences de tourisme",
-      description: "Louez votre résidence de tourisme et vivez comme un local.",
+      title: "Résidences de tourisme",
+      count: countByType("residence"),
+      description: "Profitez de l'indépendance avec nos résidences tout équipées.",
+      link: "/hebergements?type=residence"
     },
     {
       icon: Home,
       title: "Villages vacances",
-      description: "Partagez des moments inoubliables en famille ou entre amis.",
+      count: countByType("village-vacances"),
+      description: "Partagez des moments inoubliables avec animations et services.",
+      link: "/hebergements?type=village-vacances"
     },
   ]
 
@@ -23,17 +36,21 @@ export default function Sejourner() {
     {
       icon: Tent,
       title: "Campings",
-      description: "Campez en pleine nature et profitez du grand air.",
+      count: countByType("camping"),
+      description: "Campez en pleine nature avec tout le confort moderne.",
+      link: "/hebergements?type=camping"
     },
     {
       icon: ShoppingBasket,
       title: "Commerces",
       description: "Découvrez nos produits locaux et artisanaux.",
+      link: "#commerces"
     },
     {
       icon: UtensilsCrossed,
       title: "Restaurants",
       description: "Dégustez une cuisine corse authentique et savoureuse.",
+      link: "#restaurants"
     },
   ]
 
@@ -61,20 +78,43 @@ export default function Sejourner() {
                   <IconComponent size={32} className="text-black" strokeWidth={1.5} />
                 </div>
 
-                {/* Title */}
-                <h2 className="text-xl sm:text-2xl font-bold text-black">{item.title}</h2>
+                {/* Title with count */}
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl sm:text-2xl font-bold text-black">{item.title}</h2>
+                  {item.count && (
+                    <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-full">
+                      {item.count}
+                    </span>
+                  )}
+                </div>
 
                 {/* Description */}
                 <p className="text-gray-600 text-base sm:text-lg leading-relaxed">{item.description}</p>
 
                 {/* Link */}
-                <button className="inline-flex items-center text-black font-medium hover:text-gray-600 transition-colors group mt-4">
-                  <span className="mr-2">En savoir plus</span>
+                <a 
+                  href={item.link} 
+                  className="inline-flex items-center text-black font-medium hover:text-gray-600 transition-colors group mt-4"
+                >
+                  <span className="mr-2">
+                    {item.count ? 'Voir les hébergements' : 'En savoir plus'}
+                  </span>
                   <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
-                </button>
+                </a>
               </div>
             )
           })}
+        </div>
+
+        {/* Bouton pour voir tous les hébergements */}
+        <div className="text-center mt-12">
+          <a
+            href="/hebergements"
+            className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-200"
+          >
+            Voir tous les hébergements
+            <ChevronRight size={20} className="ml-2" />
+          </a>
         </div>
       </div>
     </div>

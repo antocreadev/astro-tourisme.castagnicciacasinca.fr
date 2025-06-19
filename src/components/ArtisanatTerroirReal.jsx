@@ -3,19 +3,22 @@ import { ChevronRight } from "lucide-react"
 export default function ArtisanatTerroirReal() {
   const products = [
     {
-      image: "https://placehold.co/600x400?text=Brasserie+Cuves",
-      title: "Production de Bière",
-      alt: "Équipements de brasserie avec cuves en inox et système de brassage professionnel",
+      image: "/photos/PentadiCasinca.jpg",
+      title: "Miel & Apiculture",
+      alt: "Production de miel artisanal en Castagniccia",
+      link: "/artisanat?categorie=miel"
     },
     {
-      image: "https://placehold.co/600x400?text=Charcutier+Artisan",
-      title: "Charcuterie",
-      alt: "Artisan charcutier découpant de la charcuterie traditionnelle corse sur planche en bois",
+      image: "/photos/PentadiCasinca.jpg",
+      title: "Charcuterie Corse",
+      alt: "Charcuterie traditionnelle corse artisanale",
+      link: "/artisanat?categorie=charcuterie"
     },
     {
-      image: "https://placehold.co/600x400?text=Tracteur+Champs",
-      title: "Maraichage",
-      alt: "Tracteur dans les champs au coucher du soleil avec silhouette du conducteur",
+      image: "/photos/PentadiCasinca.jpg",
+      title: "Poterie & Artisanat",
+      alt: "Artisanat local et poterie traditionnelle",
+      link: "/artisanat?categorie=poterie"
     },
   ]
 
@@ -30,7 +33,7 @@ export default function ArtisanatTerroirReal() {
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product, index) => (
-            <div key={index} className="group cursor-pointer">
+            <a href={product.link} key={index} className="group cursor-pointer block">
               {/* Image */}
               <div className="overflow-hidden rounded-lg mb-6">
                 <img
@@ -52,8 +55,19 @@ export default function ArtisanatTerroirReal() {
                   className="text-black group-hover:text-gray-600 transition-all group-hover:translate-x-1"
                 />
               </div>
-            </div>
+            </a>
           ))}
+        </div>
+
+        {/* Call to Action */}
+        <div className="text-center mt-12">
+          <a
+            href="/artisanat"
+            className="inline-flex items-center bg-black hover:bg-gray-800 text-white px-8 py-3 font-medium transition-colors"
+          >
+            Découvrir tous nos artisans
+            <ChevronRight size={20} className="ml-2" />
+          </a>
         </div>
       </div>
     </div>

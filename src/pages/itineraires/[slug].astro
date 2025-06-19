@@ -1,0 +1,18 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ItineraireDetail from '../../components/detail/ItineraireDetail.jsx';
+import { itineraires } from '../../data/itineraires.js';
+
+export async function getStaticPaths() {
+  return itineraires.map((itineraire) => ({
+    params: { slug: itineraire.slug },
+    props: { itineraire },
+  }));
+}
+
+const { itineraire } = Astro.props;
+---
+
+<Layout title={`${itineraire.title} - Itinéraires`}>
+  <ItineraireDetail itineraire={itineraire} client:load />
+</Layout>

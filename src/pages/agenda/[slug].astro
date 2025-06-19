@@ -1,0 +1,18 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import EventDetail from '../../components/detail/EventDetail.jsx';
+import { events } from '../../data/agenda.js';
+
+export async function getStaticPaths() {
+  return events.map((event) => ({
+    params: { slug: event.slug },
+    props: { event },
+  }));
+}
+
+const { event } = Astro.props;
+---
+
+<Layout title={`${event.title} - Agenda`}>
+  <EventDetail event={event} client:load />
+</Layout>
