@@ -10,7 +10,8 @@ export const sites = [
     duration: "6h aller-retour",
     commune: "Morosaglia",
     image: "/photos/Mont-San-Petrone.jpg",
-    description: "Le plus haut sommet de la Castagniccia offre un panorama exceptionnel sur toute la Corse.",
+    description:
+      "Le plus haut sommet de la Castagniccia offre un panorama exceptionnel sur toute la Corse.",
     fullDescription: `
       <p>Le Monte San Petrone, culminant à 1767 mètres d'altitude, est le point le plus élevé de la Castagniccia et l'un des sommets les plus accessibles de Corse pour découvrir des panoramas à couper le souffle.</p>
       
@@ -26,17 +27,14 @@ export const sites = [
       equipment: "Chaussures de randonnée recommandées",
       season: "Accessible toute l'année, éviter par mauvais temps",
       viewpoints: "360° sur toute la Corse",
-      flora: "Châtaigniers, genévriers, asphodèles"
+      flora: "Châtaigniers, genévriers, asphodèles",
     },
     coordinates: {
       lat: 42.4247,
-      lng: 9.3711
+      lng: 9.3711,
     },
-    gallery: [
-      "/photos/Mont-San-Petrone.jpg",
-      "/photos/MontSantAnghjulu.JPG"
-    ],
-    activities: ["randonnée", "photographie", "observation", "astronomie"]
+    gallery: ["/photos/Mont-San-Petrone.jpg", "/photos/MontSantAnghjulu.JPG"],
+    activities: ["randonnée", "photographie", "observation", "astronomie"],
   },
   {
     id: 2,
@@ -49,7 +47,8 @@ export const sites = [
     duration: "2h",
     commune: "Venzolasca",
     image: "/photos/Venzolasca.jpg",
-    description: "Une formation végétale exceptionnelle unique en Méditerranée occidentale.",
+    description:
+      "Une formation végétale exceptionnelle unique en Méditerranée occidentale.",
     fullDescription: `
       <p>La juniperaie littorale de Venzolasca constitue l'un des écosystèmes les plus remarquables et les plus rares de Corse. Cette formation végétale unique en Méditerranée occidentale abrite des genévriers séculaires aux formes tourmentées par les vents marins.</p>
       
@@ -65,16 +64,14 @@ export const sites = [
       equipment: "Chaussures de marche, jumelles conseillées",
       season: "Toute l'année, printemps idéal pour la flore",
       protection: "Espace Naturel Sensible - Respect obligatoire",
-      fauna: "Oiseaux migrateurs, reptiles endémiques"
+      fauna: "Oiseaux migrateurs, reptiles endémiques",
     },
     coordinates: {
       lat: 42.5123,
-      lng: 9.5234
+      lng: 9.5234,
     },
-    gallery: [
-      "/photos/Venzolasca.jpg"
-    ],
-    activities: ["observation", "photographie", "ornithologie", "botanique"]
+    gallery: ["/photos/Venzolasca.jpg"],
+    activities: ["observation", "photographie", "ornithologie", "botanique"],
   },
   {
     id: 3,
@@ -87,7 +84,8 @@ export const sites = [
     duration: "4h aller-retour",
     commune: "Valle-di-Rostino",
     image: "/photos/MontSantAnghjulu.JPG",
-    description: "Montagne sacrée chargée d'histoire avec ses chapelles et ermitages.",
+    description:
+      "Montagne sacrée chargée d'histoire avec ses chapelles et ermitages.",
     fullDescription: `
       <p>Le Monte Sant'Anghjuli, culminant à 1218 mètres, est bien plus qu'un simple sommet : c'est un lieu chargé d'histoire et de spiritualité au cœur de la Castagniccia.</p>
       
@@ -103,16 +101,14 @@ export const sites = [
       equipment: "Chaussures de randonnée, eau",
       season: "Mars à novembre recommandé",
       heritage: "Chapelles et ermitages historiques",
-      flora: "Espèces endémiques corses"
+      flora: "Espèces endémiques corses",
     },
     coordinates: {
       lat: 42.4156,
-      lng: 9.2987
+      lng: 9.2987,
     },
-    gallery: [
-      "/photos/MontSantAnghjulu.JPG"
-    ],
-    activities: ["randonnée", "patrimoine", "spiritualité", "photographie"]
+    gallery: ["/photos/MontSantAnghjulu.JPG"],
+    activities: ["randonnée", "patrimoine", "spiritualité", "photographie"],
   },
   {
     id: 4,
@@ -125,7 +121,8 @@ export const sites = [
     duration: "1h",
     commune: "Rapaggio",
     image: "/photos/Hotel-Restaurant-Le-Refuge-Orezza-2.jpg",
-    description: "Source d'eau gazeuse naturelle aux vertus thérapeutiques reconnues depuis l'Antiquité.",
+    description:
+      "Source d'eau gazeuse naturelle aux vertus thérapeutiques reconnues depuis l'Antiquité.",
     fullDescription: `
       <p>Les eaux d'Orezza constituent l'un des trésors naturels les plus précieux de la Castagniccia. Cette source d'eau gazeuse naturelle jaillit du sol à une température constante de 37°C, chargée de minéraux aux vertus thérapeutiques reconnues.</p>
       
@@ -141,17 +138,17 @@ export const sites = [
       equipment: "Tenue de bain pour les cures",
       season: "Ouvert toute l'année",
       services: "Centre thermal, restaurant, hébergement",
-      history: "Exploitée depuis l'époque romaine"
+      history: "Exploitée depuis l'époque romaine",
     },
     coordinates: {
       lat: 42.4089,
-      lng: 9.3456
+      lng: 9.3456,
     },
     gallery: [
       "/photos/Hotel-Restaurant-Le-Refuge-Orezza-2.jpg",
-      "/photos/Hôtel-Restaurant-Le-Refuge-Orezza.jpg"
+      "/photos/Hôtel-Restaurant-Le-Refuge-Orezza.jpg",
     ],
-    activities: ["thermal", "détente", "cure", "gastronomie"]
+    activities: ["thermal", "détente", "cure", "gastronomie"],
   },
   {
     id: 5,
@@ -164,7 +161,8 @@ export const sites = [
     duration: "2h",
     commune: "Volpajola",
     image: "/photos/Volpajola.JPG",
-    description: "Village authentique aux maisons de schiste et ruelles pavées d'antan.",
+    description:
+      "Village authentique aux maisons de schiste et ruelles pavées d'antan.",
     fullDescription: `
       <p>Volpajola, accroché à flanc de montagne à 480 mètres d'altitude, est l'un des villages les mieux préservés de la Castagniccia. Ses maisons de schiste aux toits de lauze témoignent de l'architecture traditionnelle corse dans toute sa splendeur.</p>
       
@@ -180,16 +178,14 @@ export const sites = [
       equipment: "Chaussures confortables",
       season: "Toute l'année, printemps et automne recommandés",
       heritage: "Architecture traditionnelle, église baroque",
-      population: "Village habité à l'année"
+      population: "Village habité à l'année",
     },
     coordinates: {
       lat: 42.3987,
-      lng: 9.3245
+      lng: 9.3245,
     },
-    gallery: [
-      "/photos/Volpajola.JPG"
-    ],
-    activities: ["patrimoine", "photographie", "architecture", "balade"]
+    gallery: ["/photos/Volpajola.JPG"],
+    activities: ["patrimoine", "photographie", "architecture", "balade"],
   },
   {
     id: 6,
@@ -202,7 +198,8 @@ export const sites = [
     duration: "1h30",
     commune: "Penta-di-Casinca",
     image: "/photos/PentaAcquatella.jpg",
-    description: "Point de vue spectaculaire sur la côte orientale et la plaine du Golo.",
+    description:
+      "Point de vue spectaculaire sur la côte orientale et la plaine du Golo.",
     fullDescription: `
       <p>La Punta d'Acquatella offre l'un des panoramas les plus spectaculaires de toute la Castagniccia. Située à 900 mètres d'altitude, cette terrasse naturelle domine majestueusement la côte orientale de la Corse.</p>
       
@@ -218,18 +215,15 @@ export const sites = [
       equipment: "Chaussures de marche légères",
       season: "Toute l'année, éviter les jours de vent fort",
       viewpoints: "Côte orientale, plaine du Golo, centre montagneux",
-      photography: "Idéal pour couchers de soleil"
+      photography: "Idéal pour couchers de soleil",
     },
     coordinates: {
       lat: 42.4567,
-      lng: 9.4123
+      lng: 9.4123,
     },
-    gallery: [
-      "/photos/PentaAcquatella.jpg",
-      "/photos/PentadiCasinca.jpg"
-    ],
-    activities: ["observation", "photographie", "détente", "famille"]
-  }
+    gallery: ["/photos/PentaAcquatella.jpg", "/photos/PentadiCasinca.jpg"],
+    activities: ["observation", "photographie", "détente", "famille"],
+  },
 ];
 
 export const siteTypes = [
@@ -238,14 +232,14 @@ export const siteTypes = [
   { id: "nature", label: "Nature", color: "emerald" },
   { id: "village", label: "Village", color: "orange" },
   { id: "thermal", label: "Thermal", color: "blue" },
-  { id: "belvédère", label: "Belvédère", color: "purple" }
+  { id: "belvédère", label: "Belvédère", color: "purple" },
 ];
 
 export const difficulties = [
   "Toutes difficultés",
   "facile",
   "modéré",
-  "difficile"
+  "difficile",
 ];
 
 export const durations = [
@@ -253,15 +247,15 @@ export const durations = [
   "< 2h",
   "2h - 4h",
   "4h - 6h",
-  "> 6h"
+  "> 6h",
 ];
 
 export const sitesCommunes = [
   "Toutes communes",
   "Morosaglia",
-  "Venzolasca", 
+  "Venzolasca",
   "Valle-di-Rostino",
   "Rapaggio",
   "Volpajola",
-  "Penta-di-Casinca"
+  "Penta-di-Casinca",
 ];

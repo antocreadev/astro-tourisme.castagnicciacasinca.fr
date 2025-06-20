@@ -1,8 +1,8 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import HebergementDetail from '../../components/detail/HebergementDetail.jsx';
-import { hebergements } from '../../data/hebergements.js';
-import { getHebergementBySlug } from '../../utils/hebergementFilters.js';
+import Layout from "../../layouts/Layout.astro";
+import HebergementDetail from "../../components/detail/HebergementDetail.jsx";
+import { hebergements } from "../../data/hebergements.js";
+import { getHebergementBySlug } from "../../utils/hebergementFilters.js";
 
 export async function getStaticPaths() {
   return hebergements.map((hebergement) => ({
@@ -15,7 +15,7 @@ const { slug } = Astro.params;
 const { hebergement } = Astro.props;
 
 if (!hebergement) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
 
 const title = `${hebergement.nom} - Hébergements - Castagniccia Casinca`;

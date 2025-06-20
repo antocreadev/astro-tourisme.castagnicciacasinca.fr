@@ -1,8 +1,8 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import ArtisanatDetail from '../../components/detail/ArtisanatDetail.jsx';
-import { artisanatTerroir } from '../../data/artisanat.js';
-import { getArtisanatBySlug } from '../../utils/artisanatFilters.js';
+import Layout from "../../layouts/Layout.astro";
+import ArtisanatDetail from "../../components/detail/ArtisanatDetail.jsx";
+import { artisanatTerroir } from "../../data/artisanat.js";
+import { getArtisanatBySlug } from "../../utils/artisanatFilters.js";
 
 export async function getStaticPaths() {
   return artisanatTerroir.map((artisan) => ({
@@ -15,7 +15,7 @@ const { slug } = Astro.params;
 const { artisan } = Astro.props;
 
 if (!artisan) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
 
 const title = `${artisan.nom} - Artisanat & Terroir - Castagniccia Casinca`;

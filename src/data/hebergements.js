@@ -9,28 +9,40 @@ export const hebergements = [
     telephone: "04 95 35 82 65",
     email: "contact@aufragnu.com",
     siteweb: "https://aufragnu.com",
-    description: "Auberge de charme nichée au cœur de la vallée de la Castagniccia, offrant une cuisine traditionnelle corse et un hébergement authentique.",
-    descriptionLongue: "L'Auberge U Fragnu est un établissement familial qui perpétue les traditions corses depuis trois générations. Située dans un cadre exceptionnel au pied des châtaigniers centenaires, cette auberge propose une immersion totale dans l'art de vivre corse. Les chambres, décorées avec goût dans un style rustique chic, offrent tout le confort moderne tout en préservant l'authenticité des lieux. La table de l'auberge met à l'honneur les produits du terroir avec une carte qui varie selon les saisons.",
+    description:
+      "Auberge de charme nichée au cœur de la vallée de la Castagniccia, offrant une cuisine traditionnelle corse et un hébergement authentique.",
+    descriptionLongue:
+      "L'Auberge U Fragnu est un établissement familial qui perpétue les traditions corses depuis trois générations. Située dans un cadre exceptionnel au pied des châtaigniers centenaires, cette auberge propose une immersion totale dans l'art de vivre corse. Les chambres, décorées avec goût dans un style rustique chic, offrent tout le confort moderne tout en préservant l'authenticité des lieux. La table de l'auberge met à l'honneur les produits du terroir avec une carte qui varie selon les saisons.",
     prix: "85-120",
     devise: "€",
     periodeOuverture: "Avril à Octobre",
     capacite: "12 chambres",
-    services: ["Restaurant", "WiFi gratuit", "Parking", "Terrasse", "Petit-déjeuner"],
-    equipements: ["Climatisation", "TV", "Salle de bain privée", "Coffre-fort", "Sèche-cheveux"],
-    image: "/photos/Auberge-U-Fragnu.jpg",
-    images: [
-      "/photos/Auberge-U-Fragnu.jpg",
+    services: [
+      "Restaurant",
+      "WiFi gratuit",
+      "Parking",
+      "Terrasse",
+      "Petit-déjeuner",
     ],
+    equipements: [
+      "Climatisation",
+      "TV",
+      "Salle de bain privée",
+      "Coffre-fort",
+      "Sèche-cheveux",
+    ],
+    image: "/photos/Auberge-U-Fragnu.jpg",
+    images: ["/photos/Auberge-U-Fragnu.jpg"],
     coordonnees: {
       lat: 42.3167,
-      lng: 9.2833
+      lng: 9.2833,
     },
     note: 4.6,
     nombreAvis: 89,
     labelQualite: "Gîtes de France",
     accessibilite: "Accessible PMR",
     languesParless: ["Français", "Italien", "Anglais"],
-    activitesProximite: ["Randonnée", "VTT", "Patrimoine", "Dégustation"]
+    activitesProximite: ["Randonnée", "VTT", "Patrimoine", "Dégustation"],
   },
   {
     id: 2,
@@ -42,29 +54,49 @@ export const hebergements = [
     telephone: "04 95 38 01 40",
     email: "reservation@atorra.fr",
     siteweb: "https://hotel-atorra.fr",
-    description: "Hôtel-résidence en bord de mer avec accès direct à la plage de Padulone et vue panoramique sur la mer Tyrrhénienne.",
-    descriptionLongue: "L'Hôtel Résidence A Torra bénéficie d'un emplacement privilégié en première ligne de la magnifique plage de Padulone. Cet établissement moderne allie confort contemporain et charme méditerranéen. Les chambres et suites, toutes avec vue sur mer ou jardin, sont équipées de tout le confort moderne. La résidence dispose d'une piscine extérieure, d'un restaurant avec terrasse face à la mer et d'un accès direct à la plage. C'est le point de départ idéal pour explorer la Costa Verde et ses trésors naturels.",
+    description:
+      "Hôtel-résidence en bord de mer avec accès direct à la plage de Padulone et vue panoramique sur la mer Tyrrhénienne.",
+    descriptionLongue:
+      "L'Hôtel Résidence A Torra bénéficie d'un emplacement privilégié en première ligne de la magnifique plage de Padulone. Cet établissement moderne allie confort contemporain et charme méditerranéen. Les chambres et suites, toutes avec vue sur mer ou jardin, sont équipées de tout le confort moderne. La résidence dispose d'une piscine extérieure, d'un restaurant avec terrasse face à la mer et d'un accès direct à la plage. C'est le point de départ idéal pour explorer la Costa Verde et ses trésors naturels.",
     prix: "120-280",
     devise: "€",
     periodeOuverture: "Mai à Septembre",
     capacite: "45 chambres et suites",
-    services: ["Restaurant", "Piscine", "Plage privée", "WiFi", "Room service", "Concierge"],
-    equipements: ["Climatisation", "TV satellite", "Minibar", "Coffre-fort", "Balcon ou terrasse"],
+    services: [
+      "Restaurant",
+      "Piscine",
+      "Plage privée",
+      "WiFi",
+      "Room service",
+      "Concierge",
+    ],
+    equipements: [
+      "Climatisation",
+      "TV satellite",
+      "Minibar",
+      "Coffre-fort",
+      "Balcon ou terrasse",
+    ],
     image: "/photos/Hotel-Résidence-A-Torra.jpg",
     images: [
       "/photos/Hotel-Résidence-A-Torra.jpg",
-      "/photos/Hotel-Residence-A-Torra-2.jpg"
+      "/photos/Hotel-Residence-A-Torra-2.jpg",
     ],
     coordonnees: {
       lat: 42.3891,
-      lng: 9.5234
+      lng: 9.5234,
     },
     note: 4.4,
     nombreAvis: 156,
     labelQualite: "3 étoiles",
     accessibilite: "Partiellement accessible",
     languesParless: ["Français", "Italien", "Anglais", "Allemand"],
-    activitesProximite: ["Plage", "Sports nautiques", "Randonnée côtière", "Plongée"]
+    activitesProximite: [
+      "Plage",
+      "Sports nautiques",
+      "Randonnée côtière",
+      "Plongée",
+    ],
   },
   {
     id: 3,
@@ -76,28 +108,41 @@ export const hebergements = [
     telephone: "04 95 36 04 78",
     email: "info@camping-anghione.com",
     siteweb: "https://camping-anghione.com",
-    description: "Camping familial 4 étoiles avec parc aquatique, à 800m de la plage, dans un cadre verdoyant exceptionnel.",
-    descriptionLongue: "Le Camping Domaine d'Anghione est un véritable havre de paix pour des vacances en famille réussies. Situé dans un parc arboré de 8 hectares, ce camping 4 étoiles propose des emplacements spacieux et des locations modernes. Le complexe aquatique avec piscines chauffées, toboggans et pataugeoire ravira petits et grands. À seulement 800 mètres des plages de sable fin, le camping offre également de nombreuses activités : club enfants, animations sportives, soirées à thème. Le restaurant et l'épicerie sur place complètent parfaitement les services.",
+    description:
+      "Camping familial 4 étoiles avec parc aquatique, à 800m de la plage, dans un cadre verdoyant exceptionnel.",
+    descriptionLongue:
+      "Le Camping Domaine d'Anghione est un véritable havre de paix pour des vacances en famille réussies. Situé dans un parc arboré de 8 hectares, ce camping 4 étoiles propose des emplacements spacieux et des locations modernes. Le complexe aquatique avec piscines chauffées, toboggans et pataugeoire ravira petits et grands. À seulement 800 mètres des plages de sable fin, le camping offre également de nombreuses activités : club enfants, animations sportives, soirées à thème. Le restaurant et l'épicerie sur place complètent parfaitement les services.",
     prix: "25-85",
     devise: "€",
     periodeOuverture: "Avril à Octobre",
     capacite: "200 emplacements + 50 locations",
-    services: ["Piscine chauffée", "Restaurant", "Épicerie", "Club enfants", "Animations", "Location vélos"],
-    equipements: ["Sanitaires modernes", "Laverie", "WiFi", "Aire de jeux", "Terrain multisports"],
-    image: "/photos/Camping-Domaine-d-anghione.jpg",
-    images: [
-      "/photos/Camping-Domaine-d-anghione.jpg"
+    services: [
+      "Piscine chauffée",
+      "Restaurant",
+      "Épicerie",
+      "Club enfants",
+      "Animations",
+      "Location vélos",
     ],
+    equipements: [
+      "Sanitaires modernes",
+      "Laverie",
+      "WiFi",
+      "Aire de jeux",
+      "Terrain multisports",
+    ],
+    image: "/photos/Camping-Domaine-d-anghione.jpg",
+    images: ["/photos/Camping-Domaine-d-anghione.jpg"],
     coordonnees: {
       lat: 42.3678,
-      lng: 9.4856
+      lng: 9.4856,
     },
     note: 4.2,
     nombreAvis: 234,
     labelQualite: "4 étoiles",
     accessibilite: "Accessible PMR",
     languesParless: ["Français", "Italien", "Anglais"],
-    activitesProximite: ["Plage", "Aquaparc", "Mini-golf", "Sports nautiques"]
+    activitesProximite: ["Plage", "Aquaparc", "Mini-golf", "Sports nautiques"],
   },
   {
     id: 4,
@@ -109,29 +154,43 @@ export const hebergements = [
     telephone: "04 95 35 80 50",
     email: "contact@refuge-orezza.com",
     siteweb: "https://refuge-orezza.com",
-    description: "Hôtel de montagne dans la vallée d'Orezza, réputé pour sa source thermale et sa cuisine gastronomique.",
-    descriptionLongue: "Le Refuge Orezza est un établissement unique niché dans la vallée éponyme, célèbre pour ses eaux thermales aux vertus thérapeutiques reconnues depuis l'Antiquité. Cet hôtel de caractère allie tradition et modernité dans un cadre montagnard exceptionnel. Les chambres, récemment rénovées, offrent une vue imprenable sur les montagnes environnantes. Le restaurant gastronomique, dirigé par un chef passionné, propose une cuisine créative mettant en valeur les produits locaux. L'établissement est également un point de départ privilégié pour de nombreuses randonnées.",
+    description:
+      "Hôtel de montagne dans la vallée d'Orezza, réputé pour sa source thermale et sa cuisine gastronomique.",
+    descriptionLongue:
+      "Le Refuge Orezza est un établissement unique niché dans la vallée éponyme, célèbre pour ses eaux thermales aux vertus thérapeutiques reconnues depuis l'Antiquité. Cet hôtel de caractère allie tradition et modernité dans un cadre montagnard exceptionnel. Les chambres, récemment rénovées, offrent une vue imprenable sur les montagnes environnantes. Le restaurant gastronomique, dirigé par un chef passionné, propose une cuisine créative mettant en valeur les produits locaux. L'établissement est également un point de départ privilégié pour de nombreuses randonnées.",
     prix: "95-160",
     devise: "€",
     periodeOuverture: "Toute l'année",
     capacite: "18 chambres",
-    services: ["Restaurant gastronomique", "Bar", "Terrasse", "WiFi", "Parking", "Spa"],
+    services: [
+      "Restaurant gastronomique",
+      "Bar",
+      "Terrasse",
+      "WiFi",
+      "Parking",
+      "Spa",
+    ],
     equipements: ["Climatisation", "TV", "Minibar", "Coffre-fort", "Balcon"],
     image: "/photos/Hôtel-Restaurant-Le-Refuge-Orezza.jpg",
     images: [
       "/photos/Hôtel-Restaurant-Le-Refuge-Orezza.jpg",
-      "/photos/Hotel-Restaurant-Le-Refuge-Orezza-2.jpg"
+      "/photos/Hotel-Restaurant-Le-Refuge-Orezza-2.jpg",
     ],
     coordonnees: {
       lat: 42.3445,
-      lng: 9.3221
+      lng: 9.3221,
     },
     note: 4.7,
     nombreAvis: 78,
     labelQualite: "Logis de France",
     accessibilite: "Non accessible PMR",
     languesParless: ["Français", "Italien", "Anglais"],
-    activitesProximite: ["Thermalisme", "Randonnée", "Patrimoine", "Dégustation"]
+    activitesProximite: [
+      "Thermalisme",
+      "Randonnée",
+      "Patrimoine",
+      "Dégustation",
+    ],
   },
   {
     id: 5,
@@ -143,28 +202,34 @@ export const hebergements = [
     telephone: "04 95 38 12 34",
     email: "info@mucchiatana.fr",
     siteweb: "https://mucchiatana-cervione.fr",
-    description: "Résidence de tourisme avec appartements tout équipés, piscine et vue panoramique sur la Costa Verde.",
-    descriptionLongue: "La Résidence A Mucchiatana offre un cadre exceptionnel pour des vacances en toute indépendance. Située sur les hauteurs de Cervione, cette résidence moderne propose des appartements spacieux et entièrement équipés avec terrasse privative. Chaque logement bénéficie d'une vue panoramique sur la Costa Verde et la mer Tyrrhénienne. La résidence dispose d'une belle piscine avec solarium, d'un jardin méditerranéen et d'un parking sécurisé. Sa situation privilégiée permet de rejoindre facilement les plages et de découvrir les villages perchés de la Castagniccia.",
+    description:
+      "Résidence de tourisme avec appartements tout équipés, piscine et vue panoramique sur la Costa Verde.",
+    descriptionLongue:
+      "La Résidence A Mucchiatana offre un cadre exceptionnel pour des vacances en toute indépendance. Située sur les hauteurs de Cervione, cette résidence moderne propose des appartements spacieux et entièrement équipés avec terrasse privative. Chaque logement bénéficie d'une vue panoramique sur la Costa Verde et la mer Tyrrhénienne. La résidence dispose d'une belle piscine avec solarium, d'un jardin méditerranéen et d'un parking sécurisé. Sa situation privilégiée permet de rejoindre facilement les plages et de découvrir les villages perchés de la Castagniccia.",
     prix: "70-140",
     devise: "€",
     periodeOuverture: "Mars à Novembre",
     capacite: "24 appartements",
     services: ["Piscine", "Parking privé", "Jardin", "WiFi", "Réception"],
-    equipements: ["Cuisine équipée", "Climatisation", "TV", "Terrasse", "Lave-vaisselle"],
-    image: "/photos/Résidence A Mucchiatana.jpg",
-    images: [
-      "/photos/Résidence A Mucchiatana.jpg"
+    equipements: [
+      "Cuisine équipée",
+      "Climatisation",
+      "TV",
+      "Terrasse",
+      "Lave-vaisselle",
     ],
+    image: "/photos/Résidence A Mucchiatana.jpg",
+    images: ["/photos/Résidence A Mucchiatana.jpg"],
     coordonnees: {
       lat: 42.3456,
-      lng: 9.4123
+      lng: 9.4123,
     },
     note: 4.3,
     nombreAvis: 112,
     labelQualite: "Résidence de tourisme",
     accessibilite: "Accessible PMR",
     languesParless: ["Français", "Italien", "Anglais"],
-    activitesProximite: ["Piscine", "Randonnée", "Villages", "Plages"]
+    activitesProximite: ["Piscine", "Randonnée", "Villages", "Plages"],
   },
   {
     id: 6,
@@ -176,29 +241,43 @@ export const hebergements = [
     telephone: "04 95 38 53 76",
     email: "capsud@sandaya.fr",
     siteweb: "https://sandaya.fr/cap-sud",
-    description: "Village vacances familial avec accès direct à la plage, parc aquatique et animations pour tous les âges.",
-    descriptionLongue: "Le Village Vacances Sandaya Cap Sud est la destination idéale pour des vacances familiales inoubliables en Corse. Idéalement situé en bord de mer avec un accès direct à une magnifique plage de sable fin, ce village vacances 4 étoiles propose un hébergement en mobil-homes tout confort. Le complexe aquatique avec piscines, toboggans et rivière paresseuse offre des heures de plaisir. Les animations variées, le club enfants et les soirées spectacles garantissent des vacances dynamiques. Les nombreux services sur place (restaurant, bar, épicerie, location de vélos) assurent un séjour en toute sérénité.",
+    description:
+      "Village vacances familial avec accès direct à la plage, parc aquatique et animations pour tous les âges.",
+    descriptionLongue:
+      "Le Village Vacances Sandaya Cap Sud est la destination idéale pour des vacances familiales inoubliables en Corse. Idéalement situé en bord de mer avec un accès direct à une magnifique plage de sable fin, ce village vacances 4 étoiles propose un hébergement en mobil-homes tout confort. Le complexe aquatique avec piscines, toboggans et rivière paresseuse offre des heures de plaisir. Les animations variées, le club enfants et les soirées spectacles garantissent des vacances dynamiques. Les nombreux services sur place (restaurant, bar, épicerie, location de vélos) assurent un séjour en toute sérénité.",
     prix: "60-180",
     devise: "€",
     periodeOuverture: "Avril à Octobre",
     capacite: "150 mobil-homes",
-    services: ["Accès plage", "Parc aquatique", "Restaurant", "Bar", "Épicerie", "Animations", "Club enfants"],
-    equipements: ["Cuisine équipée", "Climatisation", "TV", "Terrasse", "Parking"],
-    image: "/photos/VillagevacanceSandayaCapSud.jpg",
-    images: [
-      "/photos/VillagevacanceSandayaCapSud.jpg"
+    services: [
+      "Accès plage",
+      "Parc aquatique",
+      "Restaurant",
+      "Bar",
+      "Épicerie",
+      "Animations",
+      "Club enfants",
     ],
+    equipements: [
+      "Cuisine équipée",
+      "Climatisation",
+      "TV",
+      "Terrasse",
+      "Parking",
+    ],
+    image: "/photos/VillagevacanceSandayaCapSud.jpg",
+    images: ["/photos/VillagevacanceSandayaCapSud.jpg"],
     coordonnees: {
       lat: 42.3823,
-      lng: 9.5187
+      lng: 9.5187,
     },
     note: 4.1,
     nombreAvis: 298,
     labelQualite: "4 étoiles",
     accessibilite: "Accessible PMR",
     languesParless: ["Français", "Italien", "Anglais", "Allemand"],
-    activitesProximite: ["Plage", "Aquaparc", "Sports nautiques", "Animations"]
-  }
+    activitesProximite: ["Plage", "Aquaparc", "Sports nautiques", "Animations"],
+  },
 ];
 
 export const typesHebergement = [
@@ -207,7 +286,7 @@ export const typesHebergement = [
   { value: "auberge", label: "Auberges" },
   { value: "camping", label: "Campings" },
   { value: "residence", label: "Résidences" },
-  { value: "village-vacances", label: "Villages vacances" }
+  { value: "village-vacances", label: "Villages vacances" },
 ];
 
 export const communesHebergement = [
@@ -217,7 +296,7 @@ export const communesHebergement = [
   { value: "Castellare-di-Casinca", label: "Castellare-di-Casinca" },
   { value: "Rapaggio", label: "Rapaggio" },
   { value: "Cervione", label: "Cervione" },
-  { value: "San-Nicolao", label: "San-Nicolao" }
+  { value: "San-Nicolao", label: "San-Nicolao" },
 ];
 
 export const gammesPrix = [
@@ -225,7 +304,7 @@ export const gammesPrix = [
   { value: "economique", label: "Économique (< 50€)" },
   { value: "moyen", label: "Moyen (50-100€)" },
   { value: "superieur", label: "Supérieur (100-150€)" },
-  { value: "luxe", label: "Luxe (> 150€)" }
+  { value: "luxe", label: "Luxe (> 150€)" },
 ];
 
 export const servicesHebergement = [
@@ -238,5 +317,5 @@ export const servicesHebergement = [
   "Club enfants",
   "Animations",
   "Room service",
-  "Concierge"
+  "Concierge",
 ];

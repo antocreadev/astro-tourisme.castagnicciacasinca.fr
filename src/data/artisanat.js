@@ -10,20 +10,33 @@ export const artisanatTerroir = [
     telephone: "04 95 35 82 14",
     email: "contact@apicoltore-corsu.com",
     siteweb: "https://apicoltore-corsu.com",
-    description: "Producteur de miel artisanal AOC Miel de Corse dans les châtaigneraies centenaires de Castagniccia.",
-    descriptionLongue: "L'Apicoltore Corsu perpétue une tradition familiale depuis quatre générations dans les hauteurs de Piedicroce. Nos ruches sont installées au cœur des châtaigneraies centenaires, offrant un miel de châtaignier d'une qualité exceptionnelle, reconnu AOC Miel de Corse. Nous produisons également du miel de printemps, de maquis et de miellat selon les saisons. Notre exploitation respecte les principes de l'apiculture traditionnelle corse, garantissant un produit naturel et authentique. Visite de l'exploitation possible sur rendez-vous avec dégustation et vente directe.",
-    produits: ["Miel de châtaignier AOC", "Miel de printemps", "Miel de maquis", "Miel de miellat", "Pollen", "Propolis", "Cire d'abeille"],
-    services: ["Vente directe", "Visite guidée", "Dégustation", "Livraison locale"],
+    description:
+      "Producteur de miel artisanal AOC Miel de Corse dans les châtaigneraies centenaires de Castagniccia.",
+    descriptionLongue:
+      "L'Apicoltore Corsu perpétue une tradition familiale depuis quatre générations dans les hauteurs de Piedicroce. Nos ruches sont installées au cœur des châtaigneraies centenaires, offrant un miel de châtaignier d'une qualité exceptionnelle, reconnu AOC Miel de Corse. Nous produisons également du miel de printemps, de maquis et de miellat selon les saisons. Notre exploitation respecte les principes de l'apiculture traditionnelle corse, garantissant un produit naturel et authentique. Visite de l'exploitation possible sur rendez-vous avec dégustation et vente directe.",
+    produits: [
+      "Miel de châtaignier AOC",
+      "Miel de printemps",
+      "Miel de maquis",
+      "Miel de miellat",
+      "Pollen",
+      "Propolis",
+      "Cire d'abeille",
+    ],
+    services: [
+      "Vente directe",
+      "Visite guidée",
+      "Dégustation",
+      "Livraison locale",
+    ],
     horaires: "Lun-Ven 9h-17h, Sam 9h-12h (sur RDV)",
     paiement: ["Espèces", "Chèque", "Carte bancaire"],
     labels: ["AOC Miel de Corse", "Agriculture biologique"],
     image: "/photos/PentadiCasinca.jpg",
-    images: [
-      "/photos/PentadiCasinca.jpg"
-    ],
+    images: ["/photos/PentadiCasinca.jpg"],
     coordonnees: {
       lat: 42.3167,
-      lng: 9.2833
+      lng: 9.2833,
     },
     note: 4.8,
     nombreAvis: 67,
@@ -32,8 +45,8 @@ export const artisanatTerroir = [
     languesParless: ["Français", "Corse", "Italien"],
     reseauxSociaux: {
       facebook: "apicoltore-corsu",
-      instagram: "apicoltore_corsu"
-    }
+      instagram: "apicoltore_corsu",
+    },
   },
   {
     id: 2,
@@ -45,20 +58,33 @@ export const artisanatTerroir = [
     adresse: "Route de la Plaine, 20221 Cervione",
     telephone: "04 95 38 15 27",
     email: "casinca.tradicional@orange.fr",
-    description: "Charcuterie artisanale corse traditionnelle, élevage de porcs corses en liberté dans le maquis.",
-    descriptionLongue: "La Charcuterie Casinca Tradicional est une entreprise familiale qui perpétue les méthodes traditionnelles de fabrication de la charcuterie corse. Nos porcs de race corse évoluent en liberté dans le maquis de la région, se nourrissant de châtaignes, de glands et de plantes aromatiques qui donnent à notre charcuterie ses saveurs uniques. Nous utilisons exclusivement des méthodes de séchage naturel dans nos caves voûtées, selon des recettes transmises de génération en génération. Notre gamme comprend prisuttu, coppa, lonzu et figatellu, tous élaborés sans additifs artificiels.",
-    produits: ["Prisuttu (jambon sec)", "Coppa", "Lonzu", "Figatellu", "Saucisson sec", "Pancetta", "Pâtés corses"],
-    services: ["Vente directe", "Expédition", "Commande en ligne", "Dégustation"],
+    description:
+      "Charcuterie artisanale corse traditionnelle, élevage de porcs corses en liberté dans le maquis.",
+    descriptionLongue:
+      "La Charcuterie Casinca Tradicional est une entreprise familiale qui perpétue les méthodes traditionnelles de fabrication de la charcuterie corse. Nos porcs de race corse évoluent en liberté dans le maquis de la région, se nourrissant de châtaignes, de glands et de plantes aromatiques qui donnent à notre charcuterie ses saveurs uniques. Nous utilisons exclusivement des méthodes de séchage naturel dans nos caves voûtées, selon des recettes transmises de génération en génération. Notre gamme comprend prisuttu, coppa, lonzu et figatellu, tous élaborés sans additifs artificiels.",
+    produits: [
+      "Prisuttu (jambon sec)",
+      "Coppa",
+      "Lonzu",
+      "Figatellu",
+      "Saucisson sec",
+      "Pancetta",
+      "Pâtés corses",
+    ],
+    services: [
+      "Vente directe",
+      "Expédition",
+      "Commande en ligne",
+      "Dégustation",
+    ],
     horaires: "Mar-Sam 8h30-12h30 et 15h-19h",
     paiement: ["Espèces", "Chèque", "Carte bancaire", "Paypal"],
     labels: ["Charcuterie traditionnelle corse", "Porc corse"],
     image: "/photos/PentadiCasinca.jpg",
-    images: [
-      "/photos/PentadiCasinca.jpg"
-    ],
+    images: ["/photos/PentadiCasinca.jpg"],
     coordonnees: {
       lat: 42.3456,
-      lng: 9.4123
+      lng: 9.4123,
     },
     note: 4.7,
     nombreAvis: 89,
@@ -66,8 +92,8 @@ export const artisanatTerroir = [
     saisonOptimale: "Toute l'année",
     languesParless: ["Français", "Corse", "Italien"],
     reseauxSociaux: {
-      facebook: "charcuterie-casinca"
-    }
+      facebook: "charcuterie-casinca",
+    },
   },
   {
     id: 3,
@@ -79,27 +105,39 @@ export const artisanatTerroir = [
     adresse: "Bergerie di l'Orta, 20218 Morosaglia",
     telephone: "04 95 47 68 92",
     email: "bergerie.orta@wanadoo.fr",
-    description: "Fromages de chèvre fermiers dans une bergerie traditionnelle au cœur de la Castagniccia.",
-    descriptionLongue: "La Bergerie di l'Orta est nichée dans un écrin de verdure au cœur de la Castagniccia, où nos chèvres corses pâturent librement dans les châtaigneraies et le maquis environnant. Cette alimentation naturelle confère à nos fromages des arômes uniques et une qualité gustative exceptionnelle. Nous produisons différents types de fromages selon des méthodes artisanales : fromage frais, tome affinée, et notre spécialité, le fromage aux herbes du maquis. La bergerie propose également des visites guidées pour découvrir l'élevage caprin traditionnel et le processus de fabrication fromagère.",
-    produits: ["Fromage de chèvre frais", "Tome de chèvre affinée", "Fromage aux herbes", "Brousse", "Fromage sec", "Yaourts de chèvre"],
-    services: ["Vente directe", "Visite de la bergerie", "Dégustation", "Ateliers fromagers"],
+    description:
+      "Fromages de chèvre fermiers dans une bergerie traditionnelle au cœur de la Castagniccia.",
+    descriptionLongue:
+      "La Bergerie di l'Orta est nichée dans un écrin de verdure au cœur de la Castagniccia, où nos chèvres corses pâturent librement dans les châtaigneraies et le maquis environnant. Cette alimentation naturelle confère à nos fromages des arômes uniques et une qualité gustative exceptionnelle. Nous produisons différents types de fromages selon des méthodes artisanales : fromage frais, tome affinée, et notre spécialité, le fromage aux herbes du maquis. La bergerie propose également des visites guidées pour découvrir l'élevage caprin traditionnel et le processus de fabrication fromagère.",
+    produits: [
+      "Fromage de chèvre frais",
+      "Tome de chèvre affinée",
+      "Fromage aux herbes",
+      "Brousse",
+      "Fromage sec",
+      "Yaourts de chèvre",
+    ],
+    services: [
+      "Vente directe",
+      "Visite de la bergerie",
+      "Dégustation",
+      "Ateliers fromagers",
+    ],
     horaires: "Lun-Sam 8h-12h et 16h-19h (fermé dim)",
     paiement: ["Espèces", "Chèque"],
     labels: ["Fermier", "Chèvre corse"],
     image: "/photos/PentadiCasinca.jpg",
-    images: [
-      "/photos/PentadiCasinca.jpg"
-    ],
+    images: ["/photos/PentadiCasinca.jpg"],
     coordonnees: {
       lat: 42.4234,
-      lng: 9.3156
+      lng: 9.3156,
     },
     note: 4.6,
     nombreAvis: 54,
     specialites: ["Fromage aux herbes", "Élevage caprin"],
     saisonOptimale: "Mars à Novembre",
     languesParless: ["Français", "Corse"],
-    reseauxSociaux: {}
+    reseauxSociaux: {},
   },
   {
     id: 4,
@@ -112,20 +150,32 @@ export const artisanatTerroir = [
     telephone: "04 95 57 04 45",
     email: "contact@distillerie-mavela.com",
     siteweb: "https://distillerie-mavela.com",
-    description: "Distillerie artisanale produisant liqueurs, eaux-de-vie et apéritifs à base de plantes du maquis corse.",
-    descriptionLongue: "La Distillerie Mavela est une entreprise familiale créée en 1986, spécialisée dans la production d'apéritifs et liqueurs corses authentiques. Nous utilisons exclusivement des plantes sauvages du maquis corse : immortelle, myrte, arbouse, châtaigne, et bien d'autres, cueillies à la main selon les saisons. Notre savoir-faire artisanal, transmis de génération en génération, nous permet de créer des produits d'exception qui révèlent toute la richesse aromatique de l'île. La distillerie propose des visites guidées avec dégustation dans un cadre authentique, permettant de découvrir les secrets de fabrication de nos spécialités.",
-    produits: ["Liqueur de myrte", "Eau-de-vie de châtaigne", "Apéritif à l'immortelle", "Liqueur d'arbouse", "Pastis corse", "Digestifs aux herbes"],
-    services: ["Vente directe", "Visite de la distillerie", "Dégustation", "Boutique en ligne"],
+    description:
+      "Distillerie artisanale produisant liqueurs, eaux-de-vie et apéritifs à base de plantes du maquis corse.",
+    descriptionLongue:
+      "La Distillerie Mavela est une entreprise familiale créée en 1986, spécialisée dans la production d'apéritifs et liqueurs corses authentiques. Nous utilisons exclusivement des plantes sauvages du maquis corse : immortelle, myrte, arbouse, châtaigne, et bien d'autres, cueillies à la main selon les saisons. Notre savoir-faire artisanal, transmis de génération en génération, nous permet de créer des produits d'exception qui révèlent toute la richesse aromatique de l'île. La distillerie propose des visites guidées avec dégustation dans un cadre authentique, permettant de découvrir les secrets de fabrication de nos spécialités.",
+    produits: [
+      "Liqueur de myrte",
+      "Eau-de-vie de châtaigne",
+      "Apéritif à l'immortelle",
+      "Liqueur d'arbouse",
+      "Pastis corse",
+      "Digestifs aux herbes",
+    ],
+    services: [
+      "Vente directe",
+      "Visite de la distillerie",
+      "Dégustation",
+      "Boutique en ligne",
+    ],
     horaires: "Lun-Ven 9h-12h et 14h-18h, Sam 9h-12h",
     paiement: ["Espèces", "Chèque", "Carte bancaire", "Paypal"],
     labels: ["Artisan distillateur", "Plantes sauvages corses"],
     image: "/photos/PentadiCasinca.jpg",
-    images: [
-      "/photos/PentadiCasinca.jpg"
-    ],
+    images: ["/photos/PentadiCasinca.jpg"],
     coordonnees: {
       lat: 42.1089,
-      lng: 9.5123
+      lng: 9.5123,
     },
     note: 4.5,
     nombreAvis: 112,
@@ -134,8 +184,8 @@ export const artisanatTerroir = [
     languesParless: ["Français", "Italien", "Anglais"],
     reseauxSociaux: {
       facebook: "distillerie-mavela",
-      instagram: "mavela_corse"
-    }
+      instagram: "mavela_corse",
+    },
   },
   {
     id: 5,
@@ -147,20 +197,32 @@ export const artisanatTerroir = [
     adresse: "Rue du Village, 20221 Cervione",
     telephone: "04 95 38 42 73",
     email: "terra.corsa@gmail.com",
-    description: "Atelier de poterie artisanale créant des pièces uniques inspirées de la tradition corse.",
-    descriptionLongue: "L'atelier Terra Corsa est dirigé par Marie-Laure Santucci, céramiste passionnée qui s'inspire des traditions potières corses pour créer des pièces contemporaines uniques. Utilisant exclusivement de l'argile locale et des émaux naturels, elle façonne à la main ou au tour des objets utilitaires et décoratifs : vaisselle, vases, sculptures, carreaux. Chaque pièce est unique et porte l'empreinte de l'artisan. L'atelier propose des stages d'initiation à la poterie et des démonstrations de tournage. Les créations reflètent l'âme corse à travers des formes épurées et des couleurs inspirées du maquis et de la mer.",
-    produits: ["Vaisselle artisanale", "Vases et pots", "Sculptures", "Carreaux décoratifs", "Objets usuels", "Pièces décoratives"],
-    services: ["Vente directe", "Commandes personnalisées", "Stages poterie", "Démonstrations"],
+    description:
+      "Atelier de poterie artisanale créant des pièces uniques inspirées de la tradition corse.",
+    descriptionLongue:
+      "L'atelier Terra Corsa est dirigé par Marie-Laure Santucci, céramiste passionnée qui s'inspire des traditions potières corses pour créer des pièces contemporaines uniques. Utilisant exclusivement de l'argile locale et des émaux naturels, elle façonne à la main ou au tour des objets utilitaires et décoratifs : vaisselle, vases, sculptures, carreaux. Chaque pièce est unique et porte l'empreinte de l'artisan. L'atelier propose des stages d'initiation à la poterie et des démonstrations de tournage. Les créations reflètent l'âme corse à travers des formes épurées et des couleurs inspirées du maquis et de la mer.",
+    produits: [
+      "Vaisselle artisanale",
+      "Vases et pots",
+      "Sculptures",
+      "Carreaux décoratifs",
+      "Objets usuels",
+      "Pièces décoratives",
+    ],
+    services: [
+      "Vente directe",
+      "Commandes personnalisées",
+      "Stages poterie",
+      "Démonstrations",
+    ],
     horaires: "Mar-Sam 10h-12h et 15h-18h",
     paiement: ["Espèces", "Chèque", "Carte bancaire"],
     labels: ["Artisan d'art", "Fait main"],
     image: "/photos/PentadiCasinca.jpg",
-    images: [
-      "/photos/PentadiCasinca.jpg"
-    ],
+    images: ["/photos/PentadiCasinca.jpg"],
     coordonnees: {
       lat: 42.3456,
-      lng: 9.4123
+      lng: 9.4123,
     },
     note: 4.9,
     nombreAvis: 34,
@@ -168,8 +230,8 @@ export const artisanatTerroir = [
     saisonOptimale: "Toute l'année",
     languesParless: ["Français", "Italien"],
     reseauxSociaux: {
-      instagram: "terra_corsa_poterie"
-    }
+      instagram: "terra_corsa_poterie",
+    },
   },
   {
     id: 6,
@@ -182,20 +244,32 @@ export const artisanatTerroir = [
     telephone: "04 95 38 57 82",
     email: "orfevrerie.marina@orange.fr",
     siteweb: "https://bijoux-corses-marina.fr",
-    description: "Création de bijoux corses traditionnels et contemporains en argent et corail.",
-    descriptionLongue: "L'Orfèvrerie Marina, dirigée par Paul Marina, maître artisan bijoutier, perpétue l'art de la bijouterie corse traditionnelle tout en proposant des créations contemporaines. Spécialisé dans le travail de l'argent et l'utilisation du corail rouge de Méditerranée, l'atelier crée des pièces uniques inspirées des symboles corses : têtes de Maure, croix corse, mains de Fatma. Chaque bijou est entièrement réalisé à la main selon des techniques ancestrales transmises de maître à apprenti. L'atelier propose également la restauration de bijoux anciens et des créations sur mesure pour des occasions particulières.",
-    produits: ["Pendentifs tête de Maure", "Croix corses", "Bracelets argent", "Bagues corail", "Boucles d'oreilles", "Colliers traditionnels"],
-    services: ["Création sur mesure", "Restauration bijoux", "Gravure", "Conseil personnalisé"],
+    description:
+      "Création de bijoux corses traditionnels et contemporains en argent et corail.",
+    descriptionLongue:
+      "L'Orfèvrerie Marina, dirigée par Paul Marina, maître artisan bijoutier, perpétue l'art de la bijouterie corse traditionnelle tout en proposant des créations contemporaines. Spécialisé dans le travail de l'argent et l'utilisation du corail rouge de Méditerranée, l'atelier crée des pièces uniques inspirées des symboles corses : têtes de Maure, croix corse, mains de Fatma. Chaque bijou est entièrement réalisé à la main selon des techniques ancestrales transmises de maître à apprenti. L'atelier propose également la restauration de bijoux anciens et des créations sur mesure pour des occasions particulières.",
+    produits: [
+      "Pendentifs tête de Maure",
+      "Croix corses",
+      "Bracelets argent",
+      "Bagues corail",
+      "Boucles d'oreilles",
+      "Colliers traditionnels",
+    ],
+    services: [
+      "Création sur mesure",
+      "Restauration bijoux",
+      "Gravure",
+      "Conseil personnalisé",
+    ],
     horaires: "Mar-Sam 9h30-12h30 et 15h-19h",
     paiement: ["Espèces", "Chèque", "Carte bancaire"],
     labels: ["Maître artisan", "Bijouterie traditionnelle"],
     image: "/photos/PentadiCasinca.jpg",
-    images: [
-      "/photos/PentadiCasinca.jpg"
-    ],
+    images: ["/photos/PentadiCasinca.jpg"],
     coordonnees: {
       lat: 42.3789,
-      lng: 9.5234
+      lng: 9.5234,
     },
     note: 4.8,
     nombreAvis: 76,
@@ -203,15 +277,15 @@ export const artisanatTerroir = [
     saisonOptimale: "Toute l'année",
     languesParless: ["Français", "Italien", "Anglais"],
     reseauxSociaux: {
-      facebook: "orfevrerie-marina"
-    }
-  }
+      facebook: "orfevrerie-marina",
+    },
+  },
 ];
 
 export const typesArtisanat = [
   { value: "tous", label: "Tous les types" },
   { value: "producteur", label: "Producteurs" },
-  { value: "artisan", label: "Artisans" }
+  { value: "artisan", label: "Artisans" },
 ];
 
 export const categoriesArtisanat = [
@@ -223,7 +297,7 @@ export const categoriesArtisanat = [
   { value: "poterie", label: "Poterie & Céramique" },
   { value: "bijouterie", label: "Bijouterie" },
   { value: "textile", label: "Textile & Tissage" },
-  { value: "bois", label: "Travail du bois" }
+  { value: "bois", label: "Travail du bois" },
 ];
 
 export const communesArtisanat = [
@@ -232,7 +306,7 @@ export const communesArtisanat = [
   { value: "Cervione", label: "Cervione" },
   { value: "Morosaglia", label: "Morosaglia" },
   { value: "Aléria", label: "Aléria" },
-  { value: "Moriani-Plage", label: "Moriani-Plage" }
+  { value: "Moriani-Plage", label: "Moriani-Plage" },
 ];
 
 export const servicesArtisanat = [
@@ -244,7 +318,7 @@ export const servicesArtisanat = [
   "Livraison",
   "Boutique en ligne",
   "Stages",
-  "Démonstrations"
+  "Démonstrations",
 ];
 
 export const labelsArtisanat = [
@@ -253,5 +327,5 @@ export const labelsArtisanat = [
   "Artisan d'art",
   "Fait main",
   "Produit fermier",
-  "Tradition corse"
+  "Tradition corse",
 ];

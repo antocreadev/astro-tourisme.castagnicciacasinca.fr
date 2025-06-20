@@ -1,0 +1,20 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import InformationDetail from "../../components/detail/InformationDetail.jsx";
+import { informationsPratiques } from "../../data/informationsPratiques.js";
+
+export function getStaticPaths() {
+  return informationsPratiques.map((information) => ({
+    params: { slug: information.slug },
+    props: { information },
+  }));
+}
+
+const { information } = Astro.props;
+---
+
+<Layout
+  title={`${information.nom} - Informations pratiques - Castagniccia Casinca`}
+>
+  <InformationDetail information={information} client:load />
+</Layout>

@@ -1,98 +1,55 @@
-import { plages } from '../data/plages.js';
-
 export default function LesPlages() {
-  // Plages vedettes pour l'affichage
-  const plagesVedettes = plages.slice(0, 3);
-  const totalPlages = plages.length;
-
   return (
     <div className="bg-white">
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
           {/* Image - Takes up 3/5 of the space on desktop, appears between text and button on mobile */}
           <div className="lg:col-span-3 order-2 lg:order-1">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Image principale */}
-              <div className="md:col-span-2">
-                <img
-                  src="/photos/Plage-de-Cap-Sud.jpg"
-                  alt="Vue aérienne des plages de la Castagniccia Casinca"
-                  className="w-full h-64 object-cover rounded-lg shadow-lg"
-                />
-              </div>
-              {/* Images des plages vedettes */}
-              {plagesVedettes.slice(0, 2).map((plage, index) => (
-                <div key={plage.id} className="relative">
-                  <img
-                    src={plage.image}
-                    alt={plage.nom}
-                    className="w-full h-32 object-cover rounded-lg shadow-md"
-                  />
-                  <div className="absolute bottom-2 left-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-sm">
-                    {plage.nom}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <img
+              src="/photos/Plage-de-Cap-Sud.jpg"
+              alt="Vue aérienne des plages de la Castagniccia Casinca"
+              className="w-full h-96 object-cover rounded-lg shadow-lg"
+            />
           </div>
 
-          {/* Content - Takes up 2/5 of the space on desktop, appears first on mobile */}
-          <div className="lg:col-span-2 order-1 lg:order-2">
-            <div className="space-y-8">
-              <h1 className="text-5xl font-bold text-black mb-6">Les plages</h1>
-              <p className="text-gray-700 text-lg leading-relaxed">
-                Plongez dans un véritable paradis méditerranéen où chaque plage raconte une histoire. Entre étendues de
-                sable fin, criques sauvages et eaux turquoise, le littoral de la Castagniccia Casinca vous invite à la
-                détente et à l'évasion.
-              </p>
-              
-              {/* Statistiques des plages */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-blue-600">{totalPlages}</div>
-                    <div className="text-sm text-gray-600">Plages répertoriées</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-blue-600">
-                      {plages.filter(p => p.drapeauBleu).length}
-                    </div>
-                    <div className="text-sm text-gray-600">Drapeaux Bleus</div>
-                  </div>
-                </div>
-              </div>
+          {/* Text Content - Takes up 2/5 of the space on desktop */}
+          <div className="lg:col-span-2 order-1 lg:order-2 flex flex-col justify-center">
+            <div className="space-y-6">
+              <h2 className="text-4xl lg:text-5xl font-bold text-black leading-tight">
+                Les plages
+              </h2>
 
-              {/* Aperçu des plages */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Nos plages vedettes</h3>
-                <div className="space-y-2">
-                  {plagesVedettes.map((plage) => (
-                    <a
-                      key={plage.id}
-                      href={`/plages/${plage.slug}`}
-                      className="block p-3 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium text-gray-800">{plage.nom}</div>
-                          <div className="text-sm text-gray-600">{plage.commune} • {plage.longueur}</div>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <span className="text-yellow-400">⭐</span>
-                          <span className="text-sm font-medium">{plage.note}</span>
-                        </div>
-                      </div>
-                    </a>
-                  ))}
+              <p className="text-gray-600 text-lg leading-relaxed">
+                Découvrez les plus belles plages de la Castagniccia Casinca, 
+                des criques sauvages aux grandes étendues de sable fin. 
+                Un littoral préservé aux eaux cristallines vous attend.
+              </p>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-black rounded-full"></div>
+                  <span className="text-gray-700">Plages de sable fin</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-black rounded-full"></div>
+                  <span className="text-gray-700">Criques sauvages</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-black rounded-full"></div>
+                  <span className="text-gray-700">Eaux cristallines</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-black rounded-full"></div>
+                  <span className="text-gray-700">Spots de baignade familiale</span>
                 </div>
               </div>
             </div>
             {/* Button visible only on desktop */}
             <a 
               href="/plages"
-              className="hidden lg:block w-auto bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-colors"
+              className="hidden lg:block w-auto bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-colors mt-8"
             >
-              Découvrir toutes les plages
+              Découvrir les plages
             </a>
           </div>
 
@@ -102,7 +59,7 @@ export default function LesPlages() {
               href="/plages"
               className="w-full bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-colors block text-center"
             >
-              Découvrir toutes les plages
+              Découvrir les plages
             </a>
           </div>
         </div>

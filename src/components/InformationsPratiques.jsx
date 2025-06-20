@@ -58,10 +58,13 @@ export default function InformationsPratiques() {
                 <p className="text-gray-600 text-base sm:text-lg leading-relaxed">{info.description}</p>
 
                 {/* Link */}
-                <button className="inline-flex items-center text-black font-medium hover:text-gray-600 transition-colors group mt-4">
+                <a 
+                  href="/informations-pratiques"
+                  className="inline-flex items-center text-black font-medium hover:text-gray-600 transition-colors group mt-4"
+                >
                   <span className="mr-2">En savoir plus</span>
                   <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
-                </button>
+                </a>
               </div>
             )
           })}

@@ -1,7 +1,7 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import SiteDetail from '../../components/detail/SiteDetail.jsx';
-import { sites } from '../../data/sites.js';
+import Layout from "../../layouts/Layout.astro";
+import SiteDetail from "../../components/detail/SiteDetail.jsx";
+import { sites } from "../../data/sites.js";
 
 export async function getStaticPaths() {
   return sites.map((site) => ({

@@ -1,0 +1,9 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ActivitesListing from "../../components/listing/ActivitesListing.jsx";
+import { activites } from "../../data/activites.js";
+---
+
+<Layout title="Activités et loisirs - Castagniccia Casinca">
+  <ActivitesListing activites={activites} client:load />
+</Layout>
