@@ -18,10 +18,10 @@ export default function Agenda() {
         <div className="flex flex-col items-center justify-center md:items-start md:justify-start md:flex-row gap-8 overflow-x-auto pb-4 md:p-0">
           {events.slice(0, 4).map((event, index) => (
             <div key={index} className="flex-shrink-0 w-full md:w-[25rem] px-4">
-              <a href={`/agenda/${event.slug}`} className="block group">
-                <div className="bg-white rounded-lg overflow-hidden shadow-sm group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-1">
+              <a href={`/agenda/${event.slug}`} className="block group h-full">
+                <div className="bg-white rounded-lg overflow-hidden shadow-sm group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-1 h-[360px] flex flex-col">
                   {/* Date Section */}
-                  <div className="flex">
+                  <div className="flex flex-shrink-0">
                     <div className="bg-gray-200 w-24 flex flex-col items-center justify-center py-8">
                       <div className="text-4xl font-bold text-gray-400">{event.day}</div>
                       <div className="text-sm font-medium text-gray-400 mt-1">{event.month}</div>
@@ -36,10 +36,10 @@ export default function Agenda() {
                   </div>
 
                   {/* Content Section */}
-                  <div className="p-6">
+                  <div className="p-6 flex-1 flex flex-col">
                     <div className="text-sm font-medium text-gray-600 mb-2">{event.category}</div>
-                    <h3 className="text-lg font-semibold text-black leading-tight group-hover:text-blue-600 transition-colors">{event.title}</h3>
-                    <p className="text-sm text-gray-600 mt-2 line-clamp-2">{event.description}</p>
+                    <h3 className="text-lg font-semibold text-black leading-tight group-hover:text-blue-600 transition-colors line-clamp-2 mb-2">{event.title}</h3>
+                    <p className="text-sm text-gray-600 line-clamp-2 flex-1">{event.description}</p>
                   </div>
                 </div>
               </a>

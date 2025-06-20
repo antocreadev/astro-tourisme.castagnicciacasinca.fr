@@ -21,9 +21,9 @@ export default function EventCard({ event, href, onClick }) {
   };
 
   const CardContent = () => (
-    <div className={`bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 ${isPassed ? 'opacity-60' : ''}`}>
+    <div className={`bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 h-[400px] flex flex-col ${isPassed ? 'opacity-60' : ''}`}>
       {/* Date Section & Image */}
-      <div className="flex">
+      <div className="flex flex-shrink-0">
         <div className="bg-gray-100 w-20 sm:w-24 flex flex-col items-center justify-center py-6 sm:py-8">
           <div className="text-2xl sm:text-4xl font-bold text-gray-600">{event.day}</div>
           <div className="text-xs sm:text-sm font-medium text-gray-500 mt-1">{event.month}</div>
@@ -52,12 +52,12 @@ export default function EventCard({ event, href, onClick }) {
       </div>
 
       {/* Content Section */}
-      <div className="p-4 sm:p-6">
+      <div className="p-4 sm:p-6 flex-1 flex flex-col">
         <h3 className="text-lg sm:text-xl font-semibold text-black leading-tight mb-3 line-clamp-2">
           {event.title}
         </h3>
         
-        <div className="space-y-2 mb-4">
+        <div className="space-y-2 mb-4 flex-shrink-0">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <MapPin className="w-4 h-4 flex-shrink-0" />
             <span className="truncate">{event.location}, {event.commune}</span>
@@ -74,11 +74,11 @@ export default function EventCard({ event, href, onClick }) {
           </div>
         </div>
 
-        <p className="text-gray-700 text-sm mb-4 line-clamp-2">
+        <p className="text-gray-700 text-sm mb-4 line-clamp-2 flex-1">
           {event.description}
         </p>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <Users className="w-4 h-4" />
             <span>{event.details.organizer}</span>
