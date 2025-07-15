@@ -11,6 +11,20 @@ import LesPlages from "../components/LesPlages";
 import ActiviteLoisir from "../components/ActiviteLoisir";
 import DecouvreTerritoire from "../components/DecouvreTerritoire";
 import ArtisanatTerroirReal from "../components/ArtisanatTerroirReal";
+import { type RootGlobal } from "../types/gloabal";
+
+import { PUBLIC_API_URL } from "astro:env/client";
+console.log("API URL:", PUBLIC_API_URL);
+
+const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const globalData: RootGlobal = await data.json();
+console.log("Global Data:", globalData);
 ---
 
 <Layout>
@@ -24,5 +38,5 @@ import ArtisanatTerroirReal from "../components/ArtisanatTerroirReal";
   <ArtisanatTerroirReal client:visible />
   <ActiviteLoisir client:visible />
   <InformationsPratiques client:visible />
-  <Footer client:visible />
+  <Footer client:visible data={globalData} />
 </Layout>

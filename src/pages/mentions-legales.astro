@@ -1,0 +1,386 @@
+---
+import Footer from "../components/Footer";
+import Layout from "../layouts/Layout.astro";
+import { Building2, Code, Server, ShieldCheck, Scale } from "lucide-react";
+import { type RootGlobal } from "../types/gloabal";
+
+import { PUBLIC_API_URL } from "astro:env/client";
+console.log("API URL:", PUBLIC_API_URL);
+
+const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const globalData: RootGlobal = await data.json();
+console.log("Global Data:", globalData);
+---
+
+<Layout>
+  <div class="bg-slate-50 min-h-screen">
+    <div class="max-w-5xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h1
+          class="text-4xl font-extrabold text-slate-900 sm:text-5xl tracking-tight"
+        >
+          Mentions Légales
+        </h1>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="p-8 md:p-12 space-y-12">
+          <section class="space-y-6">
+            <div class="flex items-center space-x-4">
+              <div class="bg-blue-100 p-3 rounded-full">
+                <Building2
+                  className="h-5 w-5 m-2 text-blue-600"
+                  aria-hidden="true"
+                />
+              </div>
+              <h2 class="text-2xl font-bold text-slate-800 tracking-tight pr-4">
+                Éditeur du Site Web
+              </h2>
+            </div>
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 text-slate-700"
+            >
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Nom / Organisation</p>
+                <p>Communauté de communes de la Castagniccia Casinca</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Adresse postale</p>
+                <p>Petraolo, 20215 VESCOVATO</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Téléphone</p>
+                <p>+33 4 95 30 61 09</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Adresse e-mail</p>
+                <p>contact@castagnicciacasinca.fr</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">SIRET</p>
+                <p>20007325200013</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Code APE</p>
+                <p>8411Z - Administration publique générale</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="border-t border-slate-200"></div>
+
+          <section class="space-y-6">
+            <div class="flex items-center space-x-4">
+              <div class="bg-purple-100 p-3 rounded-full">
+                <Code
+                  className="h-5 w-5 m-2 text-purple-600"
+                  aria-hidden="true"
+                />
+              </div>
+              <h2 class="text-2xl font-bold text-slate-800 tracking-tight pr-4">
+                Réalisation du Site Web
+              </h2>
+            </div>
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 text-slate-700"
+            >
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Nom / Organisation</p>
+                <p>Anthony Menghi - antocreadev</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Adresse postale</p>
+                <p>Route de l'Aéroport, Res. L'avenue</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Téléphone</p>
+                <p>+33 (0)7 83 26 75 95</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Adresse e-mail</p>
+                <p>contact@antocreadev.com</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">SIRET</p>
+                <p>91411683500010</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Code APE</p>
+                <p>7410Z - Activités spécialisées de design</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="border-t border-slate-200"></div>
+
+          <section class="space-y-6">
+            <div class="flex items-center space-x-4">
+              <div class="bg-green-100 p-3 rounded-full">
+                <Server
+                  className="h-5 w-5 m-2 text-green-600"
+                  aria-hidden="true"
+                />
+              </div>
+              <h2 class="text-2xl font-bold text-slate-800 tracking-tight pr-4">
+                Hébergement
+              </h2>
+            </div>
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 text-slate-700"
+            >
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Société</p>
+                <p>OVH</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Adresse postale</p>
+                <p>140 QUAI DE SARTEL 59100 ROUBAIX</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">SIRET</p>
+                <p>42476141900011</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">Code APE</p>
+                <p>721Z</p>
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-900">
+                  Localisation du serveur
+                </p>
+                <p>Roubaix / France</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="border-t border-slate-200"></div>
+
+          <section class="space-y-6">
+            <div class="flex items-center space-x-4">
+              <div class="bg-yellow-100 p-3 rounded-full">
+                <Scale
+                  className="h-5 w-5 m-2 text-yellow-600"
+                  aria-hidden="true"
+                />
+              </div>
+              <h2 class="text-2xl font-bold text-slate-800 tracking-tight pr-4">
+                Mentions Légales
+              </h2>
+            </div>
+            <ul class="list-disc list-inside space-y-2 text-slate-700">
+              <li>
+                Une information sur leur utilisation et leur finalité précise
+              </li>
+              <li>
+                La possibilité de s’opposer au profilage avec la démarche à
+                suivre
+              </li>
+            </ul>
+          </section>
+
+          <div class="border-t border-slate-200"></div>
+
+          <section class="space-y-6">
+            <div class="flex items-center space-x-4">
+              <div class="bg-red-100 p-3 rounded-full">
+                <ShieldCheck
+                  className="h-5 w-5 m-2 text-red-600"
+                  aria-hidden="true"
+                />
+              </div>
+              <h2 class="text-2xl font-bold text-slate-800 tracking-tight pr-4">
+                Données personnelles
+              </h2>
+            </div>
+            <div class="prose prose-slate max-w-none">
+              <p>
+                Nous sommes respectueux de votre vie privée et de vos choix.
+              </p>
+              <p>
+                Nous veillons à ce que les questions de protection des données à
+                caractère personnel et de sécurité soient au cœur de tout ce que
+                nous entreprenons.
+              </p>
+              <p>
+                Nous vous adressons des communications commerciales uniquement
+                si vous nous en avez fait la demande. Vous pouvez changer d’avis
+                à tout moment.
+              </p>
+              <p>
+                Nous nous interdisons de communiquer ou de vendre vos données.
+              </p>
+              <p>
+                Nous sommes soucieux de sécuriser et de protéger vos données à
+                caractère personnel. Cela suppose que nous ne collaborons
+                qu’avec des partenaires de confiance.
+              </p>
+              <p>
+                Nous sommes attachés à faire preuve d’ouverture et de
+                transparence sur la manière dont nous utilisons vos données.
+              </p>
+              <p>
+                Nous nous interdisons d’utiliser vos données à caractère
+                personnel selon des modalités que nous n’aurions pas portées à
+                votre connaissance.
+              </p>
+              <p>
+                Nous sommes respectueux de vos droits et nous nous efforçons
+                constamment de satisfaire à vos demandes dans la mesure du
+                possible, en respectant nos propres responsabilités juridiques
+                et opérationnelles.
+              </p>
+              <p>
+                Afin d’exposer plus avant nos pratiques en matière de protection
+                des données à caractère personnel et de respect de la vie
+                privée, nous présentons ci-dessous les différents types de
+                données à caractère personnel que nous pouvons obtenir
+                directement de votre part ou suite à votre interaction avec
+                nous, la manière dont nous pouvons les utiliser, les personnes
+                avec qui nous les pouvons les partager, la manière dont nous les
+                protégeons et assurons leur sécurité, ainsi que les droits dont
+                vous bénéficiez concernant vos données à caractère personnel.
+                Vous pouvez bien sûr ne pas être concerné par toutes ces
+                situations. La présente politique de protection des données à
+                caractère personnel a pour but de vous donner un aperçu de
+                l’ensemble des situations dans lesquelles nous pourrions être
+                amenés à interagir ensemble.
+              </p>
+
+              <h3 class="text-xl font-semibold text-slate-800 mt-8 mb-4">
+                QUELLES CATEGORIES DE DONNEES COLLECTONS-NOUS ?
+              </h3>
+              <p>
+                Nous collectons les catégories de données suivantes, pour les
+                finalités décrites ci-après dans Notre Politique :
+              </p>
+              <ul>
+                <li>
+                  Votre identité et vos coordonnées (tels que nom, adresse,
+                  numéro de téléphone ou adresse e-mail), lorsque vous décidez
+                  de les communiquer, par exemple pour créer un compte en ligne
+                  ou envoyer une demande via le formulaire de contact
+                </li>
+                <li>
+                  Informations de paiement : par exemple les numéros de carte
+                  bancaire, de compte bancaire, les informations du compte
+                  PayPal ou autres informations de paiement que vous devez
+                  fournir pour payer les produits ou services que vous avez
+                  commandés chez Nous ;
+                </li>
+                <li>
+                  Informations démographiques telles que votre sexe et votre
+                  date de naissance ;
+                </li>
+                <li>
+                  Informations que vous communiqueisez publiquement, sur Nos
+                  réseaux sociaux ou Nos sites Web, par exemple pour donner
+                  votre avis sur un produit ;
+                </li>
+                <li>
+                  Informations relatives à vos achats en ligne ou en boutique
+                  (type, quantité de produits achetés et leurs prix) ;
+                </li>
+                <li>
+                  Des informations sur votre navigateur et votre comportement de
+                  navigation ;
+                </li>
+              </ul>
+              <p>
+                Nous collectons également, sur les sites internet de tiers ou
+                les réseaux sociaux, des informations publiées par des personnes
+                à propos de nos produits ou services, pour les finalités
+                décrites ci-après.
+              </p>
+              <p>
+                Si vous ne souhaitez pas soumettre de données vous concernant
+                alors que celles-ci sont nécessaires à l’exécution d’un contrat
+                ou d’un service que vous sollicitez, ou lorsqu’elles sont
+                requises par la loi, vous ne pourrez pas recevoir le produit ou
+                le service demandé.
+              </p>
+
+              <h3 class="text-xl font-semibold text-slate-800 mt-8 mb-4">
+                A QUELLES FINS UTILISONS-NOUS VOS DONNEES ?
+              </h3>
+              <p>
+                Vos données sont utilisées pour les finalités décrites ci-après,
+                que nous détaillerons lors de la collecte :
+              </p>
+              <ul>
+                <li>
+                  <strong>
+                    Mieux comprendre vos intérêts et mieux comprendre comment
+                    vous utilisez nos produits et services :
+                  </strong> Nous utilisons vos données pour améliorer notre site
+                  Web nos services et nos produits. Nous utilisons également vos
+                  données pour vous personnaliser votre expérience avec et adapter
+                  nos activités marketing à vos besoins et préférences, car il est
+                  dans notre intérêt légitime de mieux vous servir et répondre à
+                  vos attentes ;
+                </li>
+                <li>
+                  <strong>
+                    Traiter vos demandes, répondre à vos questions, gérer vos
+                    éventuelles réclamations :
+                  </strong> Nous utilisons vos données, notamment pour livrer vos
+                  commandes. Nous utilisons vos données pour vous transmettre les
+                  renseignements que vous demandez, ou communiquer avec vous à propos
+                  de votre compte ou de notre relation (par exemple pour recueillir
+                  vos impressions, ou vous informer de modifications du Site ou de
+                  cette Politique ou des mises à jour de service).
+                </li>
+                <li>
+                  <strong>À des fins de sécurité :</strong> nous traitons vos données
+                  pour protéger notre société, nos clients, nos sites ou nos applications
+                  contre les risques de fraude, de vol ou tout acte répréhensible
+                  pouvant affecter notre activité car il est de notre intérêt légitime
+                  d'assurer la sécurité de nos activités en ligne comme hors ligne
+                  ;
+                </li>
+                <li>
+                  <strong>À des fins marketing :</strong> pour vous contacter, avec
+                  votre consentement le cas échéant, au sujet de nouveaux produits
+                  et offres spéciales susceptibles de vous intéresser ;
+                </li>
+                <li>
+                  <strong>À des fins d'analyse et statistiques :</strong> Nous réalisons
+                  des analyses sur l'e-réputation de notre société ou de nos produits,
+                  et mesurons l'efficacité de nos campagnes ou événements en ligne
+                  comme hors ligne, car il est dans notre intérêt légitime de préserver
+                  l’image de notre société et améliorer nos campagnes marketing ;
+                </li>
+                <li>
+                  <strong>Autres finalités :</strong> nous conservons un historique
+                  des transactions et autres documents commerciaux pour répondre
+                  à des exigences juridiques, administratives, aux besoins de nos
+                  assureurs, ou à des fins d'audit.
+                </li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+  <Footer data={globalData} />
+</Layout>
+<style>
+  .prose {
+    color: #334155;
+  }
+  .prose h3 {
+    color: #1e293b;
+  }
+  .prose strong {
+    color: #1e293b;
+  }
+  .prose ul > li::before {
+    background-color: #64748b;
+  }
+</style>

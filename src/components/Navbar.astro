@@ -1,5 +1,18 @@
 ---
-// Pas de code serveur nécessaire pour cette modification
+import { type RootGlobal } from "../types/gloabal";
+
+import { PUBLIC_API_URL } from "astro:env/client";
+console.log("API URL:", PUBLIC_API_URL);
+
+const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const globalData: RootGlobal = await data.json();
+console.log("Global Data:", globalData);
 ---
 
 <nav
@@ -12,7 +25,8 @@
     <div class="flex-shrink-0">
       <a href="/" aria-label="Retour à l'accueil">
         <img
-          src="logo.jpg"
+          src={PUBLIC_API_URL +
+            globalData.data.BarreDeNavigation.logo.image.url}
           alt="Logo Placeholder"
           class="absolute h-12 lg:h-14 top-1"
         />
@@ -59,69 +73,18 @@
       class="hidden flex-col space-y-4 absolute top-0 left-0 w-full h-screen pt-24 px-6 text-center text-lg lg:flex lg:relative lg:flex-row lg:space-y-0 lg:space-x-6 lg:h-auto lg:w-auto lg:bg-transparent lg:p-0 lg:top-auto lg:left-auto lg:pt-0 lg:text-sm font-medium text-gray-800
       bg-white"
     >
-      <li class="nav-item">
-        <a
-          href="/agenda"
-          class="block py-2 px-1 relative hover:text-black transition-colors"
-          >Agenda</a
-        >
-      </li>
-      <li class="nav-item">
-        <a
-          href="#carte"
-          class="block py-2 px-1 relative hover:text-black transition-colors"
-          >Carte interactive</a
-        >
-      </li>
-      <li class="nav-item">
-        <a
-          href="/sites-phares"
-          class="block py-2 px-1 relative hover:text-black transition-colors"
-          >Incontournables</a
-        >
-      </li>
-      <li class="nav-item">
-        <a
-          href="/itineraires"
-          class="block py-2 px-1 relative hover:text-black transition-colors"
-          >Patrimoine et culture</a
-        >
-      </li>
-      <li class="nav-item">
-        <a
-          href="/hebergements"
-          class="block py-2 px-1 relative hover:text-black transition-colors"
-          >Séjourner</a
-        >
-      </li>
-      <li class="nav-item">
-        <a
-          href="/plages"
-          class="block py-2 px-1 relative hover:text-black transition-colors"
-          >Plages</a
-        >
-      </li>
-      <li class="nav-item">
-        <a
-          href="/artisanat"
-          class="block py-2 px-1 relative hover:text-black transition-colors"
-          >Artisanat et produit du terroir</a
-        >
-      </li>
-      <li class="nav-item">
-        <a
-          href="/activites"
-          class="block py-2 px-1 relative hover:text-black transition-colors"
-          >Activités et loisirs</a
-        >
-      </li>
-      <li class="nav-item">
-        <a
-          href="/informations-pratiques"
-          class="block py-2 px-1 relative hover:text-black transition-colors"
-          >Informations pratiques</a
-        >
-      </li>
+      {
+        globalData.data.BarreDeNavigation.page_de_sections.map((page) => (
+          <li class="nav-item">
+            <a
+              href={page.LienVersLaPage}
+              class="block py-2 px-1 relative hover:text-black transition-colors"
+            >
+              {page.Titre}
+            </a>
+          </li>
+        ))
+      }
 
       <span
         id="nav-highlighter"
