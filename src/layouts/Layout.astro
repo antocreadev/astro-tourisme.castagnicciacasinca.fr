@@ -4,17 +4,24 @@ import "../styles/global.css";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro Basics</title>
+    <title>Tourisme - Communauté de communes de la Castagniccia-Casinca</title>
+    <meta name="description" content="Site officiel du tourisme de la Communauté de communes de la Castagniccia-Casinca" />
+    <meta name="keywords" content="Tourisme, Castagniccia, Casinca, Corse, Communauté de communes" />
+    <meta name="author" content="antocreadev" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="stylesheet" href="/styles/global.css" />
   </head>
   <body>
     <Navbar />
-    <slot />
+  <div class="mt-16">
+      <slot />
+    </div>
   </body>
 </html>
 
