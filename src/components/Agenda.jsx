@@ -1,4 +1,5 @@
-import { sortEventsByDate } from '../utils/eventUtils.js';
+import { sortEventsByDate, getImageUrl } from '../utils/eventUtils.js';
+import { convertSimpleMarkdown } from '../utils/markdownUtils.js';
 
 export default function Agenda({ data, events }) {
   // Fonction pour formater la date pour l'affichage en cards
@@ -27,6 +28,7 @@ export default function Agenda({ data, events }) {
         <div className="flex flex-col items-center justify-center md:items-start md:justify-start md:flex-row gap-8 overflow-x-auto pb-4 md:p-0">
           {displayEvents.map((event, index) => {
             const { day, month } = formatEventDate(event.Date);
+            const imageUrl = getImageUrl(event.image);
             return (
               <div key={event.id || index} className="flex-shrink-0 w-full md:w-[25rem] px-4">
                 <a href={`/agenda/${event.documentId}`} className={`block group h-full ${event.isPast ? 'opacity-60' : ''}`}>
@@ -38,8 +40,16 @@ export default function Agenda({ data, events }) {
                         <div className={`text-sm font-medium ${event.isPast ? 'text-gray-500' : 'text-gray-400'} mt-1`}>{month}</div>
                       </div>
                       <div className="flex-1">
-                        <div className="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                          <span className="text-gray-500 text-sm">Image événement</span>
+                        <div className="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center overflow-hidden">
+                          {imageUrl ? (
+                            <img 
+                              src={imageUrl} 
+                              alt={event.Nom}
+                              className={`w-full h-full object-cover ${event.isPast ? 'opacity-75 grayscale' : ''}`}
+                            />
+                          ) : (
+                            <span className="text-gray-500 text-sm">Image événement</span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -52,9 +62,15 @@ export default function Agenda({ data, events }) {
                       <h3 className={`text-lg font-semibold leading-tight group-hover:text-blue-600 transition-colors line-clamp-2 mb-2 ${event.isPast ? 'text-gray-600' : 'text-black'}`}>
                         {event.Nom}
                       </h3>
-                      <p className={`text-sm line-clamp-2 flex-1 ${event.isPast ? 'text-gray-500' : 'text-gray-600'}`}>
-                        {event.Description}
-                      </p>
+                      <div className={`text-sm line-clamp-2 flex-1 ${event.isPast ? 'text-gray-500' : 'text-gray-600'}`}>
+                        {event.Description && (
+                          <div 
+                            dangerouslySetInnerHTML={{ 
+                              __html: convertSimpleMarkdown(event.Description.substring(0, 120) + (event.Description.length > 120 ? '...' : ''))
+                            }} 
+                          />
+                        )}
+                      </div>
                     </div>
                   </div>
                 </a>
