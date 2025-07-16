@@ -19,20 +19,39 @@ const parseHeroText = (text) => {
     };
 
   const lines = text.split("\n").filter((line) => line.trim());
-  const title =
-    lines
-      .find((line) => line.startsWith("# "))
-      ?.replace("# ", "")
-      .replace(/\*\*/g, "") || "Destination Castagniccia Casinca,";
-  const subtitle =
-    lines
-      .find((line) => line.startsWith("## "))
-      ?.replace("## ", "")
-      .replace(/\*\*/g, "") ||
-    "à la découverte d'une Corse authentique, entre villages perchés, plages et saveurs du terroir";
-  const description =
-    lines.filter((line) => !line.startsWith("#")).join(" ") ||
-    "Explorez l'une des régions les plus authentiques de Corse...";
+
+  // Fonction pour convertir **texte** en <strong>texte</strong> et ajouter le compteur
+  const convertMarkdownToHtml = (text) => {
+    // Convertir les ** en <strong>
+    let html = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+    // Chercher et remplacer {conteur} par un span avec id="counter"
+    html = html.replace(
+      /\{conteur\}/g,
+      '<span id="counter" class="font-bold inline-block min-w-[3.5rem] relative overflow-hidden" style="top: 8px;">0</span>'
+    );
+
+    return html;
+  };
+
+  // Extraire le titre (première ligne avec #)
+  const titleLine = lines.find((line) => line.startsWith("# "));
+  let title = titleLine
+    ? convertMarkdownToHtml(titleLine.replace("# ", ""))
+    : "Destination Castagniccia Casinca,";
+
+  // Extraire le sous-titre (première ligne avec ##)
+  const subtitleLine = lines.find((line) => line.startsWith("## "));
+  let subtitle = subtitleLine
+    ? convertMarkdownToHtml(subtitleLine.replace("## ", ""))
+    : "à la découverte d'une Corse authentique, entre villages perchés, plages et saveurs du terroir";
+
+  // Extraire la description (tout le reste sans les # et ##)
+  const descriptionLines = lines.filter((line) => !line.startsWith("#"));
+  let description =
+    descriptionLines.length > 0
+      ? convertMarkdownToHtml(descriptionLines.join(" "))
+      : "Explorez l'une des régions les plus authentiques de Corse...";
 
   return { title, subtitle, description };
 };
@@ -62,35 +81,18 @@ const heroContent = parseHeroText(data?.texte);
         <div
           class="block text-4xl md:text-5xl lg:text-6xl tracking-tight text-gray-900 opacity-0"
           id="title-part1"
-        >
-          <span class="font-bold">Destination</span> Castagniccia Casinca,
-        </div>
+          set:html={heroContent.title}
+        />
       </h1>
 
       <div class="mt-2 text-center">
         <h2 class="text-xl md:text-4xl font-medium text-gray-700">
-          <div class="inline-block opacity-0 transform" id="subtitle-part1">
-            à la <span class="font-bold">découverte</span> d'une
-          </div>
-          <span
-            class="font-semibold inline-block opacity-0 transform"
-            id="subtitle-part2"
-          >
-            Corse authentique</span
-          ><span class="inline-block opacity-0 transform" id="subtitle-part3"
-            >,</span
-          >
-          <span class="inline-block opacity-0 transform" id="subtitle-part4">
-            entre</span
-          >
+          <div
+            class="inline-block opacity-0 transform"
+            id="subtitle-part1"
+            set:html={heroContent.subtitle}
+          />
         </h2>
-        <div class="text-xl md:text-4xl font-medium text-gray-700 mt-2">
-          <h3 class="inline-block opacity-0 transform" id="subtitle-part5">
-            <span class="font-bold">villages perchés</span>, <span
-              class="font-bold">plages</span
-            > et <span class="font-bold">saveurs du terroir</span>
-          </h3>
-        </div>
       </div>
 
       <div
@@ -102,24 +104,51 @@ const heroContent = parseHeroText(data?.texte);
 
       <div class="mt-4 flex flex-col sm:flex-row justify-center gap-4">
         {
-          data?.Boutons?.map((bouton, index) => (
-            <a
-              href={bouton.Lien}
-              class={`inline-block px-8 py-4 text-base font-medium rounded-md shadow-sm opacity-0 transform translate-y-4 ${
-                index === 0
-                  ? "text-white bg-black hover:bg-gray-900"
-                  : "text-gray-900 bg-white border border-gray-300 hover:bg-gray-50"
-              }`}
-              style={
-                bouton.Couleur
-                  ? `background-color: ${bouton.Couleur}; color: ${bouton.TexteColor || "#ffffff"}; border-color: ${bouton.BorderColor || bouton.Couleur}`
-                  : ""
-              }
-              id={`btn-${index}`}
-            >
-              {bouton.Label}
-            </a>
-          ))
+          data?.Boutons?.map((bouton, index) => {
+            // Classes CSS de base pour tous les boutons
+            let cssClasses = `inline-block px-8 py-4 text-base font-medium rounded-md shadow-sm opacity-0 transform translate-y-4 hero-btn`;
+
+            // Construire le style inline avec les couleurs hexadécimales
+            let inlineStyles = [];
+
+            // Définir les couleurs pour les custom properties CSS
+            const bgColor =
+              bouton.Couleur || (index === 0 ? "#000000" : "#ffffff");
+            const textColor =
+              bouton.TexteColor || (index === 0 ? "#ffffff" : "#1f2937");
+            const borderColor =
+              bouton.BorderColor || (index !== 0 ? "#d1d5db" : "transparent");
+
+            // CSS Custom Properties pour le hover dynamique
+            inlineStyles.push(`--btn-bg: ${bgColor}`);
+            inlineStyles.push(`--btn-text: ${textColor}`);
+            inlineStyles.push(`--btn-border: ${borderColor}`);
+
+            // Background color (Couleur)
+            inlineStyles.push(`background-color: var(--btn-bg)`);
+
+            // Text color (TexteColor)
+            inlineStyles.push(`color: var(--btn-text)`);
+
+            // Border color (BorderColor)
+            if (bouton.BorderColor || index !== 0) {
+              inlineStyles.push(`border: 1px solid var(--btn-border)`);
+            }
+
+            // Joindre tous les styles inline
+            const styleAttribute = inlineStyles.join("; ");
+
+            return (
+              <a
+                href={bouton.Lien}
+                class={cssClasses}
+                style={styleAttribute}
+                id={`btn-${index}`}
+              >
+                {bouton.Label}
+              </a>
+            );
+          })
         }
         {
           !data?.Boutons && (
@@ -150,7 +179,10 @@ const heroContent = parseHeroText(data?.texte);
   </div>
 </section>
 
-<script>
+<script define:vars={{ apiUrl: import.meta.env.PUBLIC_API_URL }}>
+  // Variable globale pour l'URL de l'API
+  window.API_URL = apiUrl;
+
   // Attend que le DOM soit complètement chargé
   document.addEventListener("DOMContentLoaded", function () {
     // Animation d'entrée séquentielle pour chaque élément de texte
@@ -166,11 +198,9 @@ const heroContent = parseHeroText(data?.texte);
     const elements = [
       { id: "title-part1", delay: 300 },
       { id: "subtitle-part1", delay: 600 },
-      { id: "subtitle-part2", delay: 700 },
-      { id: "subtitle-part3", delay: 750 },
-      { id: "subtitle-part4", delay: 800 },
-      { id: "subtitle-part5", delay: 900 },
       { id: "description", delay: 1100 },
+      { id: "btn-0", delay: 1300 },
+      { id: "btn-1", delay: 1450 },
       { id: "btn-carte", delay: 1300 },
       { id: "btn-incontournables", delay: 1450 },
     ];
@@ -214,10 +244,29 @@ const heroContent = parseHeroText(data?.texte);
     });
   }
 
-  // Animation du compteur améliorée avec effet visuel
-  function animateCounter() {
+  // Animation du compteur améliorée avec effet visuel et appel API
+  async function animateCounter() {
     const counter = document.getElementById("counter");
-    const targetValue = 12300;
+    if (!counter) return; // Si pas de compteur, on ne fait rien
+
+    let targetValue = 12300; // valeur par défaut
+
+    try {
+      // Récupérer l'URL de l'API depuis la variable globale
+      const apiUrl = window.API_URL || window.location.origin;
+      const response = await fetch(`${apiUrl}/api/visiteurs`);
+
+      if (response.ok) {
+        const data = await response.json();
+        targetValue =
+          data.count || data.visiteurs || data.nombre || targetValue;
+      }
+    } catch (error) {
+      console.log(
+        "Impossible de récupérer le nombre de visiteurs, utilisation de la valeur par défaut"
+      );
+    }
+
     const duration = 2500; // 2.5 secondes
     const steps = 60; // Augmenté pour une animation plus fluide
     const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3); // Fonction d'easing
@@ -225,6 +274,7 @@ const heroContent = parseHeroText(data?.texte);
     // Préparation du style
     counter.style.position = "relative";
     counter.style.overflow = "hidden";
+    // top: 8px déjà appliqué dans le HTML initial
 
     // Ajoute les styles d'animation si pas déjà présents
     if (!document.getElementById("counter-animations")) {
@@ -305,9 +355,7 @@ const heroContent = parseHeroText(data?.texte);
 
   // Animation d'arrière-plan moderne avec des gradients
   function initModernBackgroundAnimation() {
-    const canvas = document.getElementById(
-      "backgroundCanvas"
-    ) as HTMLCanvasElement;
+    const canvas = document.getElementById("backgroundCanvas");
     const ctx = canvas.getContext("2d");
 
     // Détection des appareils mobiles et de la performance
@@ -532,5 +580,56 @@ const heroContent = parseHeroText(data?.texte);
     100% {
       background: rgba(255, 255, 255, 0);
     }
+  }
+
+  /* Effets de hover dynamique pour les boutons */
+  .hero-btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--btn-bg) 85%, white 15%),
+      color-mix(in srgb, var(--btn-bg) 90%, black 10%)
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+  }
+
+  .hero-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow:
+      0 8px 25px color-mix(in srgb, var(--btn-bg) 30%, transparent 70%),
+      0 4px 12px color-mix(in srgb, var(--btn-bg) 20%, transparent 80%);
+  }
+
+  .hero-btn:hover::before {
+    opacity: 1;
+  }
+
+  .hero-btn:active {
+    transform: translateY(-1px) scale(1.01);
+    transition: all 0.1s ease;
+  }
+
+  /* Amélioration pour les boutons clairs/blancs */
+  .hero-btn:hover {
+    filter: brightness(0.96) saturate(1.1);
+  }
+
+  /* Animation de focus pour l'accessibilité */
+  .hero-btn:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--btn-bg) 70%, transparent 30%);
+    outline-offset: 2px;
   }
 </style>
