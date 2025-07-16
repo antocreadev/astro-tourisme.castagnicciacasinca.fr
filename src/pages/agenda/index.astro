@@ -1,8 +1,19 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import AgendaListing from '../../components/listing/AgendaListing.jsx';
+import Layout from "../../layouts/Layout.astro";
+import AgendaListing from "../../components/listing/AgendaListing.jsx";
+import { PUBLIC_API_URL } from "astro:env/client";
+import type { RootEvenements } from "../../types/evenements";
+
+const dataEvenements = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const dataEvenementsJson: RootEvenements = await dataEvenements.json();
 ---
 
 <Layout title="Agenda - Castagniccia Casinca">
-  <AgendaListing client:load />
+  <AgendaListing events={dataEvenementsJson.data} client:load />
 </Layout>

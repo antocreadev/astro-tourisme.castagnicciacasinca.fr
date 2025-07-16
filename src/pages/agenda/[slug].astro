@@ -1,11 +1,21 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import EventDetail from '../../components/detail/EventDetail.jsx';
-import { events } from '../../data/agenda.js';
+import Layout from "../../layouts/Layout.astro";
+import EventDetail from "../../components/detail/EventDetail.jsx";
+import { PUBLIC_API_URL } from "astro:env/client";
+import type { RootEvenements } from "../../types/evenements";
 
 export async function getStaticPaths() {
-  return events.map((event) => ({
-    params: { slug: event.slug },
+  const response = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data: RootEvenements = await response.json();
+
+  return data.data.map((event) => ({
+    params: { slug: event.documentId },
     props: { event },
   }));
 }
@@ -13,6 +23,6 @@ export async function getStaticPaths() {
 const { event } = Astro.props;
 ---
 
-<Layout title={`${event.title} - Agenda`}>
-  <EventDetail event={event} client:load />
+<Layout title={`${event.Nom} - Agenda`}>
+  <EventDetail event={event} client:only />
 </Layout>

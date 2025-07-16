@@ -1,27 +1,35 @@
 import { useState, useCallback, useEffect } from 'react';
 import { filterEvents, sortEvents } from '../../utils/filters.js';
-import { events, categories, communes } from '../../data/agenda.js';
+import { sortEventsByDate } from '../../utils/eventUtils.js';
 import FilterBar from '../ui/FilterBar.jsx';
 import EventCard from '../ui/EventCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 
-export default function AgendaListing() {
-  const [filteredEvents, setFilteredEvents] = useState(events);
+export default function AgendaListing({ events = [] }) {
+  const initialEvents = sortEventsByDate(events);
+  const [filteredEvents, setFilteredEvents] = useState(initialEvents);
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('date');
   const eventsPerPage = 12;
 
+  // Mettre à jour les événements filtrés quand les événements changent
+  useEffect(() => {
+    const sortedEvents = sortEventsByDate(events);
+    setFilteredEvents(sortedEvents);
+  }, [events]);
+
   const handleFiltersChange = useCallback((filters) => {
-    const filtered = filterEvents(events, filters);
-    const sorted = sortEvents(filtered, sortBy);
+    // Pour l'instant, on garde juste le tri par date
+    // Vous pourrez étendre cette fonction pour implémenter les filtres
+    const sorted = sortEventsByDate(events);
     setFilteredEvents(sorted);
-    setCurrentPage(1); // Reset to first page when filters change
-  }, [sortBy]);
+    setCurrentPage(1);
+  }, [events]);
 
   const handleSortChange = (newSortBy) => {
     setSortBy(newSortBy);
-    const sorted = sortEvents(filteredEvents, newSortBy);
+    const sorted = sortEventsByDate(filteredEvents);
     setFilteredEvents(sorted);
   };
 
@@ -58,11 +66,11 @@ export default function AgendaListing() {
       </div>
 
       {/* Filters */}
-      <FilterBar 
+      {/* <FilterBar 
         categories={categories}
         communes={communes}
         onFiltersChange={handleFiltersChange}
-      />
+      /> */}
 
       {/* Results Header */}
       <div className="max-w-7xl mx-auto px-4 py-6">
@@ -121,11 +129,16 @@ export default function AgendaListing() {
                 : 'space-y-4'
             }`}>
               {currentEvents.map((event) => (
-                <EventCard
+                <div
                   key={event.id}
-                  event={event}
-                  href={`/agenda/${event.slug}`}
-                />
+                  className={`${event.isPast ? 'opacity-60' : ''}`}
+                >
+                  <EventCard
+                    event={event}
+                    href={`/agenda/${event.documentId}`}
+                    isPast={event.isPast}
+                  />
+                </div>
               ))}
             </div>
 

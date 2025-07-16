@@ -15,6 +15,7 @@ import { type RootGlobal } from "../types/gloabal";
 import { type RootLandingPage } from "../types/landingpage";
 
 import { PUBLIC_API_URL } from "astro:env/client";
+import type { RootEvenements } from "../types/evenements";
 console.log("API URL:", PUBLIC_API_URL);
 
 const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
@@ -36,11 +37,25 @@ const dataLandingPage = await fetch(`${PUBLIC_API_URL}/api/landing-page`, {
 
 const dataLandingPageJson: RootLandingPage = await dataLandingPage.json();
 console.log("dataLandingPageJson Data:", dataLandingPageJson);
+
+const dataEvenements = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const dataEvenementsJson: RootEvenements = await dataEvenements.json();
+console.log("dataEvenementsJson Data:", dataEvenementsJson);
 ---
 
 <Layout>
   <Hero data={dataLandingPageJson.data.Hero} />
-  <Agenda data={dataLandingPageJson.data.Agenda} client:load/>
+  <Agenda
+    data={dataLandingPageJson.data.Agenda}
+    events={dataEvenementsJson.data}
+    client:load
+  />
   <CarteSection data={dataLandingPageJson.data.CarteInteractive} />
   <LesIncontournables data={dataLandingPageJson.data.LesIncontournables} />
   <DecouvreTerritoire data={dataLandingPageJson.data.DecouvrezLeTerritoire} />

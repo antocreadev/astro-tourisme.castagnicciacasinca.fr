@@ -1,6 +1,17 @@
-import { events } from '../data/agenda.js';
+import { sortEventsByDate } from '../utils/eventUtils.js';
 
-export default function Agenda({ data }) {
+export default function Agenda({ data, events }) {
+  // Fonction pour formater la date pour l'affichage en cards
+  const formatEventDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const months = ['JAN', 'FEV', 'MAR', 'AVR', 'MAI', 'JUN', 'JUL', 'AOU', 'SEP', 'OCT', 'NOV', 'DEC'];
+    const month = months[date.getMonth()];
+    return { day, month };
+  };
+
+  const sortedEvents = sortEventsByDate(events);
+  const displayEvents = sortedEvents.slice(0, 4);
   return (
     <div className="py-16">
       <div className="mx-auto">
@@ -14,35 +25,42 @@ export default function Agenda({ data }) {
 
         {/* Events Grid */}
         <div className="flex flex-col items-center justify-center md:items-start md:justify-start md:flex-row gap-8 overflow-x-auto pb-4 md:p-0">
-          {events.slice(0, 4).map((event, index) => (
-            <div key={index} className="flex-shrink-0 w-full md:w-[25rem] px-4">
-              <a href={`/agenda/${event.slug}`} className="block group h-full">
-                <div className="bg-white rounded-lg overflow-hidden shadow-sm group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-1 h-[360px] flex flex-col">
-                  {/* Date Section */}
-                  <div className="flex flex-shrink-0">
-                    <div className="bg-gray-200 w-24 flex flex-col items-center justify-center py-8">
-                      <div className="text-4xl font-bold text-gray-400">{event.day}</div>
-                      <div className="text-sm font-medium text-gray-400 mt-1">{event.month}</div>
+          {displayEvents.map((event, index) => {
+            const { day, month } = formatEventDate(event.Date);
+            return (
+              <div key={event.id || index} className="flex-shrink-0 w-full md:w-[25rem] px-4">
+                <a href={`/agenda/${event.documentId}`} className={`block group h-full ${event.isPast ? 'opacity-60' : ''}`}>
+                  <div className={`bg-white rounded-lg overflow-hidden shadow-sm group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-1 h-[360px] flex flex-col ${event.isPast ? 'grayscale' : ''}`}>
+                    {/* Date Section */}
+                    <div className="flex flex-shrink-0">
+                      <div className={`${event.isPast ? 'bg-gray-300' : 'bg-gray-200'} w-24 flex flex-col items-center justify-center py-8`}>
+                        <div className={`text-4xl font-bold ${event.isPast ? 'text-gray-500' : 'text-gray-400'}`}>{day}</div>
+                        <div className={`text-sm font-medium ${event.isPast ? 'text-gray-500' : 'text-gray-400'} mt-1`}>{month}</div>
+                      </div>
+                      <div className="flex-1">
+                        <div className="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                          <span className="text-gray-500 text-sm">Image événement</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <img
-                        src={event.image || "/placeholder.svg"}
-                        alt={event.title}
-                        className="w-full h-48 object-cover"
-                      />
-                    </div>
-                  </div>
 
-                  {/* Content Section */}
-                  <div className="p-6 flex-1 flex flex-col">
-                    <div className="text-sm font-medium text-gray-600 mb-2">{event.category}</div>
-                    <h3 className="text-lg font-semibold text-black leading-tight group-hover:text-blue-600 transition-colors line-clamp-2 mb-2">{event.title}</h3>
-                    <p className="text-sm text-gray-600 line-clamp-2 flex-1">{event.description}</p>
+                    {/* Content Section */}
+                    <div className="p-6 flex-1 flex flex-col">
+                      <div className={`text-sm font-medium ${event.isPast ? 'text-gray-500' : 'text-gray-600'} mb-2`}>
+                        {event.commune?.Nom || 'Événement'}
+                      </div>
+                      <h3 className={`text-lg font-semibold leading-tight group-hover:text-blue-600 transition-colors line-clamp-2 mb-2 ${event.isPast ? 'text-gray-600' : 'text-black'}`}>
+                        {event.Nom}
+                      </h3>
+                      <p className={`text-sm line-clamp-2 flex-1 ${event.isPast ? 'text-gray-500' : 'text-gray-600'}`}>
+                        {event.Description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </a>
-            </div>
-          ))}
+                </a>
+              </div>
+            );
+          })}
         </div>
 
         {/* See All Button */}
