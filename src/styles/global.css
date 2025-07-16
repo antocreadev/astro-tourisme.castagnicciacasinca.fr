@@ -51,3 +51,85 @@ html {
   transform: translateY(-20px);
   transition: opacity 300ms ease-in, transform 300ms ease-in;
 }
+
+/* Styles pour les boutons dynamiques */
+.carte-btn,
+.agenda-btn,
+.decouvre-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.carte-btn::before,
+.agenda-btn::before,
+.decouvre-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--btn-bg) 85%, white 15%),
+    color-mix(in srgb, var(--btn-bg) 90%, black 10%)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.carte-btn:hover,
+.agenda-btn:hover,
+.decouvre-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--btn-bg) 30%, transparent 70%),
+    0 4px 12px color-mix(in srgb, var(--btn-bg) 20%, transparent 80%);
+  filter: brightness(0.96) saturate(1.1);
+}
+
+.carte-btn:hover::before,
+.agenda-btn:hover::before,
+.decouvre-btn:hover::before {
+  opacity: 1;
+}
+
+.carte-btn:active,
+.agenda-btn:active,
+.decouvre-btn:active {
+  transform: translateY(-1px) scale(1.01);
+  transition: all 0.1s ease;
+}
+
+.carte-btn:focus-visible,
+.agenda-btn:focus-visible,
+.decouvre-btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--btn-bg) 70%, transparent 30%);
+  outline-offset: 2px;
+}
+
+/* Styles pour les liens dynamiques */
+.incontournables-link {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.incontournables-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+
+.incontournables-link:hover::after {
+  width: 100%;
+}
+
+.incontournables-link:hover {
+  transform: translateX(4px);
+  filter: brightness(0.8);
+}

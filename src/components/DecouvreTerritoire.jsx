@@ -52,11 +52,28 @@ export default function DecouvreTerritoire({ data }) {
             </div>
 
             {/* Button */}
-            <div className="pt-4">
-              <button className="w-full bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-colors">
-                En savoir plus
-              </button>
-            </div>
+            {/* <div className="pt-4">
+              {data?.Bouton ? (
+                <a 
+                  href={data.Bouton.Lien}
+                  className="inline-block w-full px-8 py-4 text-base font-medium rounded-md shadow-sm transition-all duration-300 relative overflow-hidden text-center decouvre-btn"
+                  style={{
+                    '--btn-bg': data.Bouton.Couleur || '#000000',
+                    '--btn-text': data.Bouton.TexteColor || '#ffffff', 
+                    '--btn-border': data.Bouton.BorderColor || 'transparent',
+                    backgroundColor: 'var(--btn-bg)',
+                    color: 'var(--btn-text)',
+                    border: data.Bouton.BorderColor ? '1px solid var(--btn-border)' : 'none'
+                  }}
+                >
+                  {data.Bouton.Label}
+                </a>
+              ) : (
+                <button className="w-full px-8 py-4 text-base font-medium rounded-md shadow-sm bg-black text-white hover:bg-gray-800 transition-colors">
+                  En savoir plus
+                </button>
+              )}
+            </div> */}
           </div>
         </div>
       </div>

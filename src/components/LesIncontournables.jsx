@@ -36,10 +36,11 @@ export default function LesIncontournables({ data }) {
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-bold text-black">{data?.SousTitre1 || 'Les sites phares'}</h2>
             <a 
-              href="/sites-phares" 
-              className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2 transition-colors"
+              href={data?.LienSection1?.Lien || "/sites-phares"}
+              className="font-medium flex items-center gap-2 transition-colors incontournables-link"
+              style={{ color: data?.LienSection1?.TextColor || '#2563eb' }}
             >
-              Voir tous les sites
+              {data?.LienSection1?.Label || "Voir tous les sites"}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -79,10 +80,11 @@ export default function LesIncontournables({ data }) {
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-bold text-black">{data?.SousTitre2 || 'Les itinéraires'}</h2>
             <a 
-              href="/itineraires" 
-              className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2 transition-colors"
+              href={data?.LienSection2?.Lien || "/itineraires"}
+              className="font-medium flex items-center gap-2 transition-colors incontournables-link"
+              style={{ color: data?.LienSection2?.TextColor || '#2563eb' }}
             >
-              Voir tous les itinéraires
+              {data?.LienSection2?.Label || "Voir tous les itinéraires"}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>

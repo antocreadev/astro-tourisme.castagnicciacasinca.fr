@@ -40,7 +40,7 @@ console.log("dataLandingPageJson Data:", dataLandingPageJson);
 
 <Layout>
   <Hero data={dataLandingPageJson.data.Hero} />
-  <Agenda data={dataLandingPageJson.data.Agenda} />
+  <Agenda data={dataLandingPageJson.data.Agenda} client:load/>
   <CarteSection data={dataLandingPageJson.data.CarteInteractive} />
   <LesIncontournables data={dataLandingPageJson.data.LesIncontournables} />
   <DecouvreTerritoire data={dataLandingPageJson.data.DecouvrezLeTerritoire} />

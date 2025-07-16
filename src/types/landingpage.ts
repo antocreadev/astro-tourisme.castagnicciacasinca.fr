@@ -2,7 +2,6 @@ export interface RootLandingPage {
   data: Data;
   meta: Meta;
 }
-
 export interface Data {
   id: number;
   documentId: string;
@@ -113,32 +112,42 @@ export interface Bouton {
   id: number;
   Label: string;
   Lien: string;
-  Couleur?: string;
-  TexteColor?: string;
-  BorderColor?: string;
+  Couleur: string;
+  TexteColor: string;
+  BorderColor: string;
 }
 
 export interface Agenda {
   id: number;
   Titre: string;
   Description: string;
-}
-
-export interface CarteInteractive {
-  id: number;
-  Titre: string;
-  Description: string;
   Bouton: Bouton2;
-  image: Image2;
 }
 
 export interface Bouton2 {
   id: number;
   Label: string;
   Lien: string;
-  Couleur: any;
+  Couleur: string;
   TexteColor: string;
-  BorderColor: any;
+  BorderColor: string;
+}
+
+export interface CarteInteractive {
+  id: number;
+  Titre: string;
+  Description: string;
+  Bouton: Bouton3;
+  image: Image2;
+}
+
+export interface Bouton3 {
+  id: number;
+  Label: string;
+  Lien: string;
+  Couleur: string;
+  TexteColor: string;
+  BorderColor: string;
 }
 
 export interface Image2 {
@@ -227,6 +236,22 @@ export interface LesIncontournables {
   Titre: string;
   SousTitre1: string;
   SousTitre2: string;
+  LienSection2: LienSection2;
+  LienSection1: LienSection1;
+}
+
+export interface LienSection2 {
+  id: number;
+  Label: string;
+  Lien: string;
+  TextColor: string;
+}
+
+export interface LienSection1 {
+  id: number;
+  Label: string;
+  Lien: string;
+  TextColor: string;
 }
 
 export interface DecouvrezLeTerritoire {
@@ -324,37 +349,22 @@ export interface Large3 {
 export interface Sejourner {
   id: number;
   Titre: string;
-  Bouton: Bouton3;
-}
-
-export interface Bouton3 {
-  id: number;
-  Label: string;
-  Lien: string;
-  Couleur: any;
-  TexteColor: string;
-  BorderColor: any;
-}
-
-export interface LesPlages {
-  id: number;
-  Titre: string;
-  Description: string;
-  bouton: Bouton4;
+  Bouton: Bouton4;
 }
 
 export interface Bouton4 {
   id: number;
   Label: string;
   Lien: string;
-  Couleur: any;
+  Couleur: string;
   TexteColor: string;
-  BorderColor: any;
+  BorderColor: string;
 }
 
-export interface ArtisanatEtProduitsDuTerroir {
+export interface LesPlages {
   id: number;
   Titre: string;
+  Description: string;
   bouton: Bouton5;
 }
 
@@ -362,9 +372,24 @@ export interface Bouton5 {
   id: number;
   Label: string;
   Lien: string;
-  Couleur: any;
+  Couleur: string;
   TexteColor: string;
-  BorderColor: any;
+  BorderColor: string;
+}
+
+export interface ArtisanatEtProduitsDuTerroir {
+  id: number;
+  Titre: string;
+  bouton: Bouton6;
+}
+
+export interface Bouton6 {
+  id: number;
+  Label: string;
+  Lien: string;
+  Couleur: string;
+  TexteColor: string;
+  BorderColor: string;
 }
 
 export interface ActiviteLoisir {

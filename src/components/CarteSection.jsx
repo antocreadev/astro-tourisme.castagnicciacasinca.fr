@@ -1,3 +1,5 @@
+import { events } from '../data/agenda.js';
+
 export default function CarteInteractive({ data }) {
   const features = [
     {
@@ -63,12 +65,29 @@ export default function CarteInteractive({ data }) {
 
             {/* Explorer Button */}
             <div className="pt-4">
-              <a 
-                href={data?.Bouton?.Lien || '/carte-interactive'} 
-                className="inline-block w-full lg:w-auto bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-colors text-center"
-              >
-                {data?.Bouton?.Label || 'Explorer'}
-              </a>
+              {data?.Bouton ? (
+                <a 
+                  href={data.Bouton.Lien}
+                  className="inline-block w-full lg:w-auto px-8 py-4 text-base font-medium rounded-md shadow-sm transition-all duration-300 relative overflow-hidden text-center carte-btn"
+                  style={{
+                    '--btn-bg': data.Bouton.Couleur || '#000000',
+                    '--btn-text': data.Bouton.TexteColor || '#ffffff', 
+                    '--btn-border': data.Bouton.BorderColor || 'transparent',
+                    backgroundColor: 'var(--btn-bg)',
+                    color: 'var(--btn-text)',
+                    border: data.Bouton.BorderColor ? '1px solid var(--btn-border)' : 'none'
+                  }}
+                >
+                  {data.Bouton.Label}
+                </a>
+              ) : (
+                <a 
+                  href="/carte-interactive" 
+                  className="inline-block w-full lg:w-auto px-8 py-4 text-base font-medium rounded-md shadow-sm bg-black text-white hover:bg-gray-800 transition-colors text-center"
+                >
+                  Explorer
+                </a>
+              )}
             </div>
           </div>
 
