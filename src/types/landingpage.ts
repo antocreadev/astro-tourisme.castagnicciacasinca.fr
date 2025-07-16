@@ -350,6 +350,7 @@ export interface Sejourner {
   id: number;
   Titre: string;
   Bouton: Bouton4;
+  type_sejourners: TypeSejourner[];
 }
 
 export interface Bouton4 {
@@ -361,11 +362,53 @@ export interface Bouton4 {
   BorderColor: string;
 }
 
+export interface TypeSejourner {
+  id: number;
+  documentId: string;
+  Denomination: string;
+  Description: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  lien: Lien;
+  Icone: Icone;
+}
+
+export interface Lien {
+  id: number;
+  Label: string;
+  Lien: string;
+  TextColor: any;
+}
+
+export interface Icone {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: any;
+  caption: any;
+  width: number;
+  height: number;
+  formats: any;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: any;
+  provider: string;
+  provider_metadata: any;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
 export interface LesPlages {
   id: number;
   Titre: string;
   Description: string;
   bouton: Bouton5;
+  image: Image3;
 }
 
 export interface Bouton5 {
@@ -377,10 +420,191 @@ export interface Bouton5 {
   BorderColor: string;
 }
 
+export interface Image3 {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: any;
+  caption: any;
+  width: number;
+  height: number;
+  formats: Formats4;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: any;
+  provider: string;
+  provider_metadata: any;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+export interface Formats4 {
+  thumbnail: Thumbnail4;
+  small: Small4;
+  medium: Medium4;
+  large: Large4;
+}
+
+export interface Thumbnail4 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
+export interface Small4 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
+export interface Medium4 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
+export interface Large4 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
 export interface ArtisanatEtProduitsDuTerroir {
   id: number;
   Titre: string;
+  type_artisanat_et_produits: TypeArtisanatEtProduit[];
   bouton: Bouton6;
+}
+
+export interface TypeArtisanatEtProduit {
+  id: number;
+  documentId: string;
+  Titre: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  lien: Lien2;
+  image: Image4;
+}
+
+export interface Lien2 {
+  id: number;
+  Label: string;
+  Lien: string;
+  TextColor: any;
+}
+
+export interface Image4 {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: any;
+  caption: any;
+  width?: number;
+  height?: number;
+  formats?: Formats5;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: any;
+  provider: string;
+  provider_metadata: any;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+export interface Formats5 {
+  thumbnail: Thumbnail5;
+  small: Small5;
+  medium: Medium5;
+  large?: Large5;
+}
+
+export interface Thumbnail5 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
+export interface Small5 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
+export interface Medium5 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
+export interface Large5 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
 }
 
 export interface Bouton6 {
@@ -395,11 +619,95 @@ export interface Bouton6 {
 export interface ActiviteLoisir {
   id: number;
   Titre: string;
+  type_activite_loisirs: TypeActiviteLoisir[];
+}
+
+export interface TypeActiviteLoisir {
+  id: number;
+  documentId: string;
+  Titre: string;
+  Description: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  Lien: Lien3;
+  Icone: Icone2;
+}
+
+export interface Lien3 {
+  id: number;
+  Label: string;
+  Lien: string;
+  TextColor: any;
+}
+
+export interface Icone2 {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: any;
+  caption: any;
+  width: number;
+  height: number;
+  formats: any;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: any;
+  provider: string;
+  provider_metadata: any;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
 }
 
 export interface InformationsPratiques {
   id: number;
   Titre: string;
+  type_information_pratiques: TypeInformationPratique[];
+}
+
+export interface TypeInformationPratique {
+  id: number;
+  documentId: string;
+  Titre: string;
+  Description: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  Lien: Lien4;
+  Icone: Icone3;
+}
+
+export interface Lien4 {
+  id: number;
+  Label: string;
+  Lien: string;
+  TextColor: any;
+}
+
+export interface Icone3 {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: any;
+  caption: any;
+  width: number;
+  height: number;
+  formats: any;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: any;
+  provider: string;
+  provider_metadata: any;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
 }
 
 export interface Meta {}

@@ -1,4 +1,6 @@
 export default function LesPlages({ data }) {
+  const API_URL = import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337';
+  
   // Parser la description pour extraire les points de liste
   const parseDescription = (description) => {
     if (!description) return [];
@@ -7,6 +9,14 @@ export default function LesPlages({ data }) {
   };
 
   const features = parseDescription(data?.Description);
+  
+  // Obtenir l'URL de l'image depuis l'API
+  const getImageUrl = () => {
+    if (data?.image?.url) {
+      return `${API_URL}${data.image.url}`;
+    }
+    return '/photos/Plage-de-Cap-Sud.jpg'; // Image par défaut
+  };
 
   return (
     <div className="bg-white">
@@ -15,8 +25,8 @@ export default function LesPlages({ data }) {
           {/* Image - Takes up 3/5 of the space on desktop, appears between text and button on mobile */}
           <div className="lg:col-span-3 order-2 lg:order-1">
             <img
-              src="/photos/Plage-de-Cap-Sud.jpg"
-              alt="Vue aérienne des plages de la Castagniccia Casinca"
+              src={getImageUrl()}
+              alt={data?.image?.alternativeText || "Vue aérienne des plages de la Castagniccia Casinca"}
               className="w-full h-96 object-cover rounded-lg shadow-lg"
             />
           </div>
@@ -63,22 +73,44 @@ export default function LesPlages({ data }) {
               </div>
             </div>
             {/* Button visible only on desktop */}
-            <a 
-              href={data?.bouton?.Lien || "/plages"}
-              className="hidden lg:block w-auto bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-colors mt-8"
-            >
-              {data?.bouton?.Label || 'Découvrir les plages'}
-            </a>
+            {data?.bouton && (
+              <a 
+                href={data.bouton.Lien || "/plages"}
+                className="mt-4 plages-btn hidden lg:inline-block w-auto px-8 py-3 font-medium rounded-lg transition-all duration-300 relative overflow-hidden"
+                style={{
+                  '--btn-bg': data.bouton.Couleur || '#000000',
+                  '--btn-text': data.bouton.TexteColor || '#ffffff',
+                  '--btn-border': data.bouton.BorderColor || '#000000',
+                  backgroundColor: 'var(--btn-bg)',
+                  color: 'var(--btn-text)',
+                  borderColor: 'var(--btn-border)',
+                  border: '1px solid var(--btn-border)'
+                }}
+              >
+                {data.bouton.Label || 'Découvrir les plages'}
+              </a>
+            )}
           </div>
 
           {/* Button for mobile - appears after image */}
           <div className="lg:hidden order-3">
-            <a 
-              href={data?.bouton?.Lien || "/plages"}
-              className="w-full bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-colors block text-center"
-            >
-              {data?.bouton?.Label || 'Découvrir les plages'}
-            </a>
+            {data?.bouton && (
+              <a 
+                href={data.bouton.Lien || "/plages"}
+                className="plages-btn w-full px-8 py-3 font-medium rounded-lg transition-all duration-300 relative overflow-hidden block text-center"
+                style={{
+                  '--btn-bg': data.bouton.Couleur || '#000000',
+                  '--btn-text': data.bouton.TexteColor || '#ffffff',
+                  '--btn-border': data.bouton.BorderColor || '#000000',
+                  backgroundColor: 'var(--btn-bg)',
+                  color: 'var(--btn-text)',
+                  borderColor: 'var(--btn-border)',
+                  border: '1px solid var(--btn-border)'
+                }}
+              >
+                {data.bouton.Label || 'Découvrir les plages'}
+              </a>
+            )}
           </div>
         </div>
       </div>

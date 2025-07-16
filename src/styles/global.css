@@ -55,14 +55,20 @@ html {
 /* Styles pour les boutons dynamiques */
 .carte-btn,
 .agenda-btn,
-.decouvre-btn {
+.decouvre-btn,
+.sejourner-btn,
+.artisanat-btn,
+.plages-btn {
   position: relative;
   overflow: hidden;
 }
 
 .carte-btn::before,
 .agenda-btn::before,
-.decouvre-btn::before {
+.decouvre-btn::before,
+.sejourner-btn::before,
+.artisanat-btn::before,
+.plages-btn::before {
   content: "";
   position: absolute;
   top: 0;
@@ -81,7 +87,10 @@ html {
 
 .carte-btn:hover,
 .agenda-btn:hover,
-.decouvre-btn:hover {
+.decouvre-btn:hover,
+.sejourner-btn:hover,
+.artisanat-btn:hover,
+.plages-btn:hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 8px 25px color-mix(in srgb, var(--btn-bg) 30%, transparent 70%),
     0 4px 12px color-mix(in srgb, var(--btn-bg) 20%, transparent 80%);
@@ -90,20 +99,29 @@ html {
 
 .carte-btn:hover::before,
 .agenda-btn:hover::before,
-.decouvre-btn:hover::before {
+.decouvre-btn:hover::before,
+.sejourner-btn:hover::before,
+.artisanat-btn:hover::before,
+.plages-btn:hover::before {
   opacity: 1;
 }
 
 .carte-btn:active,
 .agenda-btn:active,
-.decouvre-btn:active {
+.decouvre-btn:active,
+.sejourner-btn:active,
+.artisanat-btn:active,
+.plages-btn:active {
   transform: translateY(-1px) scale(1.01);
   transition: all 0.1s ease;
 }
 
 .carte-btn:focus-visible,
 .agenda-btn:focus-visible,
-.decouvre-btn:focus-visible {
+.decouvre-btn:focus-visible,
+.sejourner-btn:focus-visible,
+.artisanat-btn:focus-visible,
+.plages-btn:focus-visible {
   outline: 2px solid color-mix(in srgb, var(--btn-bg) 70%, transparent 30%);
   outline-offset: 2px;
 }

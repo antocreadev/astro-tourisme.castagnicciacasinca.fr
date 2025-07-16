@@ -1,7 +1,7 @@
 
 export default function DecouvreTerritoire({ data }) {
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-[90vh]">
       
       <div className="max-w-7xl mx-auto px-4 py-16">
                       <h1 className="text-4xl font-bold text-black mb-6 leading-tight text-center">

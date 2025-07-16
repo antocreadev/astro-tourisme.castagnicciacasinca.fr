@@ -1,28 +1,53 @@
 import { Ticket, Ship, Sparkles, Mountain, ChevronRight } from "lucide-react"
 
 export default function ActivitesLoisirs({ data }) {
-  const activities = [
-    {
-      icon: Ticket,
-      title: "Évènements",
-      description: "Immersion totale au cœur de la Castagniccia lors de nos événements festifs !",
-    },
-    {
-      icon: Ship,
-      title: "Activités nautiques",
-      description: "Explorez les côtes sauvages de la Casinca en kayak, paddle ou bateau.",
-    },
-    {
-      icon: Sparkles,
-      title: "Festivals, Marchés et foires",
-      description: "Partez à l'aventure sur les sentiers de randonnée de la Castagniccia.",
-    },
-    {
-      icon: Mountain,
-      title: "Les randonnées, balades",
-      description: "Détendez-vous dans nos hôtels confortables et accueillants.",
-    },
-  ]
+  // Utilise les données dynamiques de l'API ou les données statiques en fallback
+  const getActiviteItems = () => {
+    if (data?.type_activite_loisirs && data.type_activite_loisirs.length > 0) {
+      return data.type_activite_loisirs.map(item => ({
+        title: item.Titre,
+        description: item.Description,
+        link: item.Lien?.Lien || "/activites",
+        linkLabel: item.Lien?.Label || "En savoir plus",
+        linkColor: item.Lien?.TextColor,
+        iconUrl: item.Icone?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${item.Icone.url}` : null
+      }));
+    }
+
+    // Fallback vers les données statiques si pas de données API
+    return [
+      {
+        icon: Ticket,
+        title: "Évènements",
+        description: "Immersion totale au cœur de la Castagniccia lors de nos événements festifs !",
+        link: "/activites",
+        linkLabel: "En savoir plus"
+      },
+      {
+        icon: Ship,
+        title: "Activités nautiques",
+        description: "Explorez les côtes sauvages de la Casinca en kayak, paddle ou bateau.",
+        link: "/activites",
+        linkLabel: "En savoir plus"
+      },
+      {
+        icon: Sparkles,
+        title: "Festivals, Marchés et foires",
+        description: "Partez à l'aventure sur les sentiers de randonnée de la Castagniccia.",
+        link: "/activites",
+        linkLabel: "En savoir plus"
+      },
+      {
+        icon: Mountain,
+        title: "Les randonnées, balades",
+        description: "Détendez-vous dans nos hôtels confortables et accueillants.",
+        link: "/activites",
+        linkLabel: "En savoir plus"
+      },
+    ];
+  };
+
+  const activiteItems = getActiviteItems();
 
   return (
     <div className="bg-white py-8 sm:py-8 px-4">
@@ -34,7 +59,7 @@ export default function ActivitesLoisirs({ data }) {
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {activities.map((activity, index) => {
+          {activiteItems.map((activity, index) => {
             const IconComponent = activity.icon
             return (
               <div
@@ -43,7 +68,17 @@ export default function ActivitesLoisirs({ data }) {
               >
                 {/* Icon */}
                 <div className="inline-block p-3 rounded-lg bg-gray-50">
-                  <IconComponent size={32} className="text-black" strokeWidth={1.5} />
+                  {activity.iconUrl ? (
+                    <img 
+                      src={activity.iconUrl} 
+                      alt={activity.title}
+                      className="w-8 h-8 text-black"
+                    />
+                  ) : IconComponent ? (
+                    <IconComponent size={32} className="text-black" strokeWidth={1.5} />
+                  ) : (
+                    <div className="w-8 h-8 bg-gray-300 rounded"></div>
+                  )}
                 </div>
 
                 {/* Title */}
@@ -54,10 +89,11 @@ export default function ActivitesLoisirs({ data }) {
 
                 {/* Link */}
                 <a 
-                  href="/activites"
-                  className="inline-flex items-center text-black font-medium hover:text-gray-600 transition-colors group mt-4"
+                  href={activity.link}
+                  className="inline-flex items-center font-medium hover:opacity-80 transition-colors group mt-4"
+                  style={{ color: activity.linkColor || '#000000' }}
                 >
-                  <span className="mr-2">En savoir plus</span>
+                  <span className="mr-2">{activity.linkLabel}</span>
                   <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
                 </a>
               </div>
