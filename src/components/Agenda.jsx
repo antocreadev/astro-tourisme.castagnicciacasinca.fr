@@ -1,16 +1,15 @@
 import { events } from '../data/agenda.js';
 
-export default function Agenda() {
+export default function Agenda({ data }) {
 
   return (
     <div className="py-16">
       <div className="mx-auto">
         {/* Header Section */}
         <div className="text-center mb-16">
-          <h1 className="text-6xl font-bold text-black mb-8">Agenda</h1>
+          <h1 className="text-6xl font-bold text-black mb-8">{data?.Titre || 'Agenda'}</h1>
           <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
-            Tout au long de l'année, des multitudes de rendez-vous culturels, musicaux, cinématographiques,
-            sportifs et gourmands avec des lieux de vie aux multiples facettes
+            {data?.Description || 'Tout au long de l\'année, des multitudes de rendez-vous culturels, musicaux, cinématographiques, sportifs et gourmands avec des lieux de vie aux multiples facettes'}
           </p>
         </div>
 

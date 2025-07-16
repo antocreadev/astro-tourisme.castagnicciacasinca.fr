@@ -1,7 +1,7 @@
 import { sites } from '../data/sites.js';
 import { itineraires } from '../data/itineraires.js';
 
-export default function LesIncontournables() {
+export default function LesIncontournables({ data }) {
   // Utilise les vraies données des sites
   const sitesPhares = sites.slice(0, 4); // Prend les 4 premiers sites
   
@@ -28,13 +28,13 @@ export default function LesIncontournables() {
       <div className="max-w-7xl mx-auto">
         {/* Main Title */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-black">Les incontournables</h1>
+          <h1 className="text-5xl font-bold text-black">{data?.Titre || 'Les incontournables'}</h1>
         </div>
 
         {/* Sites Phares Section */}
         <div className="mb-20">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-black">Les sites phares</h2>
+            <h2 className="text-3xl font-bold text-black">{data?.SousTitre1 || 'Les sites phares'}</h2>
             <a 
               href="/sites-phares" 
               className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2 transition-colors"
@@ -77,7 +77,7 @@ export default function LesIncontournables() {
         {/* Itinéraires Section */}
         <div>
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-black">Les itinéraires</h2>
+            <h2 className="text-3xl font-bold text-black">{data?.SousTitre2 || 'Les itinéraires'}</h2>
             <a 
               href="/itineraires" 
               className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2 transition-colors"

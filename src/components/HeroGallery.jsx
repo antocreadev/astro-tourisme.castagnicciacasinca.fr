@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-const InfiniteScroll = () => {
+const InfiniteScroll = ({ images = [] }) => {
   const [scrollY, setScrollY] = useState(0);
   const [visibleImages, setVisibleImages] = useState(new Set());
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 768);
@@ -8,8 +8,8 @@ const InfiniteScroll = () => {
   const rafId = useRef(null);
   const timeoutIds = useRef([]);
 
-  // Images pour chaque rangée
-  const topRowImages = [
+  // Images par défaut si aucune image n'est fournie
+  const defaultTopRowImages = [
     "photos/Campile.jpg",
     "photos/Camping-Domaine-d-anghione.jpg",
     "photos/Hotel-Residence-A-Torra-2.jpg",
@@ -18,7 +18,7 @@ const InfiniteScroll = () => {
     "photos/IMG_2089.JPG"
   ];
 
-  const bottomRowImages = [
+  const defaultBottomRowImages = [
     "photos/VillagevacanceSandayaCapSud.jpg",
     "photos/PentadiCasinca.jpg",
     "photos/PentaAcquatella.jpg",
@@ -26,6 +26,16 @@ const InfiniteScroll = () => {
     "photos/Ortiporiu.JPG",
     "photos/Mont-San-Petrone.jpg"
   ];
+
+  // Utiliser les images fournies ou les images par défaut
+  const apiUrl = import.meta.env.PUBLIC_API_URL || '';
+  const topRowImages = images.length > 0 
+    ? images.slice(0, Math.ceil(images.length / 2)).map(img => apiUrl + img.url)
+    : defaultTopRowImages;
+  
+  const bottomRowImages = images.length > 0 
+    ? images.slice(Math.ceil(images.length / 2)).map(img => apiUrl + img.url)
+    : defaultBottomRowImages;
 
   // Handler de scroll optimisé
   const handleScroll = () => {

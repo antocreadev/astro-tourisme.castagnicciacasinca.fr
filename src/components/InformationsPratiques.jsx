@@ -1,6 +1,6 @@
 import { Ambulance, Sun, Heart, User, Shield, ChevronRight } from "lucide-react"
 
-export default function InformationsPratiques() {
+export default function InformationsPratiques({ data }) {
   const informations = [
     {
       icon: Ambulance,
@@ -34,7 +34,7 @@ export default function InformationsPratiques() {
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <div className="mb-8 sm:mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-black">Informations pratiques</h1>
+          <h1 className="text-4xl sm:text-5xl font-bold text-black">{data?.Titre || 'Informations pratiques'}</h1>
         </div>
 
         {/* Grid */}

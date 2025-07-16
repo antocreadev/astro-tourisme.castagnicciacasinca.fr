@@ -1,6 +1,6 @@
 import { Ticket, Ship, Sparkles, Mountain, ChevronRight } from "lucide-react"
 
-export default function ActivitesLoisirs() {
+export default function ActivitesLoisirs({ data }) {
   const activities = [
     {
       icon: Ticket,
@@ -29,7 +29,7 @@ export default function ActivitesLoisirs() {
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <div className="mb-8 sm:mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-black">Activités et loisirs</h1>
+          <h1 className="text-4xl sm:text-5xl font-bold text-black">{data?.Titre || 'Activités et loisirs'}</h1>
         </div>
 
         {/* Grid */}

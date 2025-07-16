@@ -1,7 +1,7 @@
 import { Building2, Building, Home, Tent, ShoppingBasket, UtensilsCrossed, ChevronRight } from "lucide-react"
 import { hebergements, typesHebergement } from '../data/hebergements.js';
 
-export default function Sejourner() {
+export default function Sejourner({ data }) {
   // Compter les hébergements par type
   const countByType = (type) => {
     if (type === "tous") return hebergements.length;
@@ -61,7 +61,7 @@ export default function Sejourner() {
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <div className="mb-8 sm:mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-black">Séjourner</h1>
+          <h1 className="text-4xl sm:text-5xl font-bold text-black">{data?.Titre || 'Séjourner'}</h1>
         </div>
 
         {/* Grid */}
@@ -109,10 +109,10 @@ export default function Sejourner() {
         {/* Bouton pour voir tous les hébergements */}
         <div className="text-center mt-12">
           <a
-            href="/hebergements"
+            href={data?.Bouton?.Lien || "/hebergements"}
             className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-200"
           >
-            Voir tous les hébergements
+            {data?.Bouton?.Label || 'Voir tous les hébergements'}
             <ChevronRight size={20} className="ml-2" />
           </a>
         </div>

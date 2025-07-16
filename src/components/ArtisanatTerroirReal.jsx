@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react"
 
-export default function ArtisanatTerroirReal() {
+export default function ArtisanatTerroirReal({ data }) {
   const products = [
     {
       image: "/photos/PentadiCasinca.jpg",
@@ -27,7 +27,7 @@ export default function ArtisanatTerroirReal() {
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-black">Artisanat et produits du terroir</h1>
+          <h1 className="text-5xl font-bold text-black">{data?.Titre || 'Artisanat et produits du terroir'}</h1>
         </div>
 
         {/* Grid */}
@@ -62,10 +62,10 @@ export default function ArtisanatTerroirReal() {
         {/* Call to Action */}
         <div className="text-center mt-12">
           <a
-            href="/artisanat"
+            href={data?.bouton?.Lien || "/artisanat"}
             className="inline-flex items-center bg-black hover:bg-gray-800 text-white px-8 py-3 font-medium transition-colors"
           >
-            Découvrir tous nos artisans
+            {data?.bouton?.Label || 'Découvrir tous nos artisans'}
             <ChevronRight size={20} className="ml-2" />
           </a>
         </div>

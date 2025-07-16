@@ -12,6 +12,7 @@ import ActiviteLoisir from "../components/ActiviteLoisir";
 import DecouvreTerritoire from "../components/DecouvreTerritoire";
 import ArtisanatTerroirReal from "../components/ArtisanatTerroirReal";
 import { type RootGlobal } from "../types/gloabal";
+import { type RootLandingPage } from "../types/landingpage";
 
 import { PUBLIC_API_URL } from "astro:env/client";
 console.log("API URL:", PUBLIC_API_URL);
@@ -25,18 +26,32 @@ const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
 
 const globalData: RootGlobal = await data.json();
 console.log("Global Data:", globalData);
+
+const dataLandingPage = await fetch(`${PUBLIC_API_URL}/api/landing-page`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const dataLandingPageJson: RootLandingPage = await dataLandingPage.json();
+console.log("dataLandingPageJson Data:", dataLandingPageJson);
 ---
 
 <Layout>
-  <Hero />
-  <Agenda client:visible />
-  <CarteSection client:visible />
-  <LesIncontournables client:visible />
-  <DecouvreTerritoire client:visible />
-  <Sejourner client:visible />
-  <LesPlages client:visible />
-  <ArtisanatTerroirReal client:visible />
-  <ActiviteLoisir client:visible />
-  <InformationsPratiques client:visible />
-  <Footer client:visible data={globalData} />
+  <Hero data={dataLandingPageJson.data.Hero} />
+  <Agenda data={dataLandingPageJson.data.Agenda} />
+  <CarteSection data={dataLandingPageJson.data.CarteInteractive} />
+  <LesIncontournables data={dataLandingPageJson.data.LesIncontournables} />
+  <DecouvreTerritoire data={dataLandingPageJson.data.DecouvrezLeTerritoire} />
+  <Sejourner data={dataLandingPageJson.data.Sejourner} />
+  <LesPlages data={dataLandingPageJson.data.LesPlages} />
+  <ArtisanatTerroirReal
+    data={dataLandingPageJson.data.ArtisanatEtProduitsDuTerroir}
+  />
+  <ActiviteLoisir data={dataLandingPageJson.data.ActiviteLoisir} />
+  <InformationsPratiques
+    data={dataLandingPageJson.data.InformationsPratiques}
+  />
+  <Footer data={globalData} />
 </Layout>

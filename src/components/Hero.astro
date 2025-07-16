@@ -1,5 +1,43 @@
 ---
 import HeroGallery from "./HeroGallery.jsx";
+
+export interface Props {
+  data?: any;
+}
+
+const { data } = Astro.props;
+
+// Parser le texte markdown pour extraire les parties
+const parseHeroText = (text) => {
+  if (!text)
+    return {
+      title: "Destination Castagniccia Casinca,",
+      subtitle:
+        "à la découverte d'une Corse authentique, entre villages perchés, plages et saveurs du terroir",
+      description:
+        "Explorez l'une des régions les plus authentiques de Corse...",
+    };
+
+  const lines = text.split("\n").filter((line) => line.trim());
+  const title =
+    lines
+      .find((line) => line.startsWith("# "))
+      ?.replace("# ", "")
+      .replace(/\*\*/g, "") || "Destination Castagniccia Casinca,";
+  const subtitle =
+    lines
+      .find((line) => line.startsWith("## "))
+      ?.replace("## ", "")
+      .replace(/\*\*/g, "") ||
+    "à la découverte d'une Corse authentique, entre villages perchés, plages et saveurs du terroir";
+  const description =
+    lines.filter((line) => !line.startsWith("#")).join(" ") ||
+    "Explorez l'une des régions les plus authentiques de Corse...";
+
+  return { title, subtitle, description };
+};
+
+const heroContent = parseHeroText(data?.texte);
 ---
 
 <section
@@ -59,40 +97,56 @@ import HeroGallery from "./HeroGallery.jsx";
         class="mt-6 max-w-3xl mx-auto text-center opacity-0"
         id="description"
       >
-        <p class="text-lg text-gray-700">
-          Explorez l'une des régions les plus authentiques de Corse grâce à
-          notre application interactive. Déjà <span
-            id="counter"
-            class="font-bold inline-block min-w-[3.5rem] relative overflow-hidden top-2"
-            >0</span
-          > visiteurs ont exploré notre site pour découvrir les trésors uniques de
-          la Castagniccia Casinca. Que vous soyez à la recherche de paysages préservés,
-          d'expériences culturelles uniques ou d'adresses incontournables, nous avons
-          tout prévu pour que votre séjour soit inoubliable
-        </p>
+        <p class="text-lg text-gray-700" set:html={heroContent.description} />
       </div>
 
       <div class="mt-4 flex flex-col sm:flex-row justify-center gap-4">
-        <a
-          href="#"
-          class="inline-block px-8 py-4 text-base font-medium text-white bg-black rounded-md shadow-sm hover:bg-gray-900 opacity-0 transform translate-y-4"
-          id="btn-carte"
-        >
-          Carte interactive
-        </a>
-        <a
-          href="#"
-          class="inline-block px-8 py-4 text-base font-medium text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 opacity-0 transform translate-y-4"
-          id="btn-incontournables"
-        >
-          Incontournables
-        </a>
+        {
+          data?.Boutons?.map((bouton, index) => (
+            <a
+              href={bouton.Lien}
+              class={`inline-block px-8 py-4 text-base font-medium rounded-md shadow-sm opacity-0 transform translate-y-4 ${
+                index === 0
+                  ? "text-white bg-black hover:bg-gray-900"
+                  : "text-gray-900 bg-white border border-gray-300 hover:bg-gray-50"
+              }`}
+              style={
+                bouton.Couleur
+                  ? `background-color: ${bouton.Couleur}; color: ${bouton.TexteColor || "#ffffff"}; border-color: ${bouton.BorderColor || bouton.Couleur}`
+                  : ""
+              }
+              id={`btn-${index}`}
+            >
+              {bouton.Label}
+            </a>
+          ))
+        }
+        {
+          !data?.Boutons && (
+            <>
+              <a
+                href="/carte-interactive"
+                class="inline-block px-8 py-4 text-base font-medium text-white bg-black rounded-md shadow-sm hover:bg-gray-900 opacity-0 transform translate-y-4"
+                id="btn-carte"
+              >
+                Carte interactive
+              </a>
+              <a
+                href="/incontournables"
+                class="inline-block px-8 py-4 text-base font-medium text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 opacity-0 transform translate-y-4"
+                id="btn-incontournables"
+              >
+                Incontournables
+              </a>
+            </>
+          )
+        }
       </div>
     </div>
   </div>
 
   <div class="mt-16">
-    <HeroGallery client:only />
+    <HeroGallery client:only images={data?.images} />
   </div>
 </section>
 
