@@ -18,6 +18,7 @@ import { PUBLIC_API_URL } from "astro:env/client";
 import type { RootEvenements } from "../types/evenements";
 import type { RootSejourner } from "../types/sejourner";
 import type { RootPlage } from "../types/plages";
+import type { RootartisanatEtProduit } from "../types/artisanat-et-produit";
 console.log("API URL:", PUBLIC_API_URL);
 
 // ---- fetch Global
@@ -78,6 +79,21 @@ const dataPlages = await fetch(`${PUBLIC_API_URL}/api/plages`, {
 
 const dataPlagesJson: RootPlage = await dataPlages.json();
 console.log("dataPlagesJson Data:", dataPlagesJson);
+
+// fetch artisanat-et-produit
+const dataArtisanatEtProduit = await fetch(
+  `${PUBLIC_API_URL}/api/artisanat-et-produits`,
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+);
+
+const dataArtisanatEtProduitJson: RootartisanatEtProduit =
+  await dataArtisanatEtProduit.json();
+console.log("dataArtisanatEtProduitJson Data:", dataArtisanatEtProduitJson);
 ---
 
 <Layout>
@@ -97,6 +113,7 @@ console.log("dataPlagesJson Data:", dataPlagesJson);
   />
   <ArtisanatTerroirReal
     data={dataLandingPageJson.data.ArtisanatEtProduitsDuTerroir}
+    artisanat={dataArtisanatEtProduitJson.data}
   />
   <ActiviteLoisir data={dataLandingPageJson.data.ActiviteLoisir} />
   <InformationsPratiques

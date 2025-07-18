@@ -1,12 +1,29 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ArtisanatDetail from "../../components/detail/ArtisanatDetail.jsx";
-import { artisanatTerroir } from "../../data/artisanat.js";
-import { getArtisanatBySlug } from "../../utils/artisanatFilters.js";
+import { PUBLIC_API_URL } from "astro:env/client";
+import type { RootartisanatEtProduit } from "../../types/artisanat-et-produit";
 
 export async function getStaticPaths() {
-  return artisanatTerroir.map((artisan) => ({
-    params: { slug: artisan.slug },
+  // Récupérer les artisans depuis l'API
+  const response = await fetch(`${PUBLIC_API_URL}/api/artisanat-et-produits`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const artisanatData: RootartisanatEtProduit = await response.json();
+
+  // Générer les paths statiques
+  return artisanatData.data.map((artisan) => ({
+    params: {
+      slug: artisan.Titre.toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, ""),
+    },
     props: { artisan },
   }));
 }
@@ -18,8 +35,8 @@ if (!artisan) {
   return Astro.redirect("/404");
 }
 
-const title = `${artisan.nom} - Artisanat & Terroir - Castagniccia Casinca`;
-const description = artisan.description;
+const title = `${artisan.Titre} - Artisanat & Terroir - Castagniccia Casinca`;
+const description = artisan.Description;
 ---
 
 <Layout title={title} description={description}>

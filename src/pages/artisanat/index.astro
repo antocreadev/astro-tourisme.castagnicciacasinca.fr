@@ -1,10 +1,22 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ArtisanatListing from "../../components/listing/ArtisanatListing.jsx";
+import { PUBLIC_API_URL } from "astro:env/client";
+import type { RootartisanatEtProduit } from "../../types/artisanat-et-produit";
+
+// Fetch artisanat data
+const response = await fetch(`${PUBLIC_API_URL}/api/artisanat-et-produits`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const artisanatData: RootartisanatEtProduit = await response.json();
 ---
 
 <Layout title="Artisanat & Terroir - Castagniccia Casinca">
   <main>
-    <ArtisanatListing client:load />
+    <ArtisanatListing artisanat={artisanatData.data} client:load />
   </main>
 </Layout>

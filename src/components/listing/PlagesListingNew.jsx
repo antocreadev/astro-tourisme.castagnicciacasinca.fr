@@ -1,74 +1,69 @@
 import React, { useState, useEffect } from 'react';
-import ArtisanatCard from '../ui/ArtisanatCard.jsx';
-import { Grid, List, ChevronLeft, ChevronRight, Search, Filter } from 'lucide-react';
+import PlageCard from '../ui/PlageCard.jsx';
+import { Grid, List, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 
-const ArtisanatListing = ({ artisanat = [] }) => {
-  // Récupérer les paramètres URL pour initialiser les filtres
-  const getInitialFilters = () => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const type = urlParams.get('type');
-      return {
-        type: type || 'tous'
-      };
-    }
-    return {
-      type: 'tous'
-    };
-  };
-
-  const [filteredArtisanat, setFilteredArtisanat] = useState(artisanat);
+const PlagesListing = ({ plages = [] }) => {
+  const [filteredPlages, setFilteredPlages] = useState(plages);
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedType, setSelectedType] = useState(getInitialFilters().type);
-  const [showFilters, setShowFilters] = useState(false);
+  const [selectedCommune, setSelectedCommune] = useState('toutes');
+  const [selectedPMR, setSelectedPMR] = useState('tous');
   const itemsPerPage = 9;
 
-  // Obtenir les types uniques
-  const getUniqueTypes = () => {
-    const types = artisanat.map(item => item.type_artisanat_et_produit?.Titre).filter(Boolean);
-    return [...new Set(types)].sort();
+  // Obtenir les communes uniques
+  const getUniqueCommunes = () => {
+    const communes = plages.map(plage => plage.commune?.Nom).filter(Boolean);
+    return [...new Set(communes)].sort();
   };
 
   useEffect(() => {
     applyFilters();
-  }, [artisanat, searchTerm, selectedType]);
+  }, [plages, searchTerm, selectedCommune, selectedPMR]);
 
   const applyFilters = () => {
-    let filtered = [...artisanat];
+    let filtered = [...plages];
 
     // Filtre par recherche
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(item => 
-        item.Titre.toLowerCase().includes(term) ||
-        item.Description.toLowerCase().includes(term) ||
-        item.type_artisanat_et_produit?.Titre.toLowerCase().includes(term)
+      filtered = filtered.filter(plage => 
+        plage.Nom.toLowerCase().includes(term) ||
+        plage.commune?.Nom.toLowerCase().includes(term) ||
+        plage.Description.toLowerCase().includes(term)
       );
     }
 
-    // Filtre par type
-    if (selectedType !== 'tous') {
-      filtered = filtered.filter(item => item.type_artisanat_et_produit?.Titre === selectedType);
+    // Filtre par commune
+    if (selectedCommune !== 'toutes') {
+      filtered = filtered.filter(plage => plage.commune?.Nom === selectedCommune);
     }
 
-    setFilteredArtisanat(filtered);
+    // Filtre par PMR
+    if (selectedPMR !== 'tous') {
+      if (selectedPMR === 'accessible') {
+        filtered = filtered.filter(plage => plage.Niveau > 0);
+      } else if (selectedPMR === 'non-accessible') {
+        filtered = filtered.filter(plage => plage.Niveau === 0);
+      }
+    }
+
+    setFilteredPlages(filtered);
     setCurrentPage(1);
   };
 
   // Pagination
-  const totalPages = Math.ceil(filteredArtisanat.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredPlages.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentArtisanat = filteredArtisanat.slice(startIndex, endIndex);
+  const currentPlages = filteredPlages.slice(startIndex, endIndex);
 
   const goToPage = (page) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const uniqueTypes = getUniqueTypes();
+  const uniqueCommunes = getUniqueCommunes();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -76,43 +71,54 @@ const ArtisanatListing = ({ artisanat = [] }) => {
         {/* En-tête */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Artisanat & Produits du Terroir
+            Les Plages de la Castagniccia Casinca
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Découvrez les artisans et producteurs locaux de la Castagniccia Casinca. 
-            Produits authentiques, savoir-faire traditionnel et goûts d'exception.
+            Découvrez les plus belles plages de la côte orientale de la Corse : 
+            sable fin, eaux cristallines et paysages préservés vous attendent.
           </p>
         </div>
 
-        {/* Barre de filtres */}
+        {/* Filtres */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
             {/* Recherche */}
-            <div className="relative flex-1">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
-                placeholder="Rechercher un artisan, produit..."
+                placeholder="Rechercher une plage..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
 
-            {/* Type de produit */}
+            {/* Commune */}
             <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
+              value={selectedCommune}
+              onChange={(e) => setSelectedCommune(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="tous">Tous les types</option>
-              {uniqueTypes.map(type => (
-                <option key={type} value={type}>{type}</option>
+              <option value="toutes">Toutes les communes</option>
+              {uniqueCommunes.map(commune => (
+                <option key={commune} value={commune}>{commune}</option>
               ))}
             </select>
 
+            {/* PMR */}
+            <select
+              value={selectedPMR}
+              onChange={(e) => setSelectedPMR(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="tous">Tous les accès</option>
+              <option value="accessible">PMR accessible</option>
+              <option value="non-accessible">Non PMR</option>
+            </select>
+
             {/* Mode d'affichage */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-end space-x-2">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}
@@ -129,9 +135,9 @@ const ArtisanatListing = ({ artisanat = [] }) => {
           </div>
 
           {/* Statistiques */}
-          <div className="flex items-center justify-between text-sm text-gray-600 mt-4">
+          <div className="flex items-center justify-between text-sm text-gray-600">
             <span>
-              {filteredArtisanat.length} artisan{filteredArtisanat.length !== 1 ? 's' : ''} trouvé{filteredArtisanat.length !== 1 ? 's' : ''}
+              {filteredPlages.length} plage{filteredPlages.length !== 1 ? 's' : ''} trouvée{filteredPlages.length !== 1 ? 's' : ''}
             </span>
             <span>
               Page {currentPage} sur {totalPages}
@@ -141,17 +147,17 @@ const ArtisanatListing = ({ artisanat = [] }) => {
 
         {/* Résultats */}
         <div className={`grid gap-6 mb-8 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
-          {currentArtisanat.map((artisan) => (
-            <ArtisanatCard key={artisan.id} artisan={artisan} />
+          {currentPlages.map((plage) => (
+            <PlageCard key={plage.id} plage={plage} />
           ))}
         </div>
 
         {/* Message si aucun résultat */}
-        {filteredArtisanat.length === 0 && (
+        {filteredPlages.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-gray-400 text-6xl mb-4">🏺</div>
+            <div className="text-gray-400 text-6xl mb-4">🏖️</div>
             <h3 className="text-xl font-semibold text-gray-700 mb-2">
-              Aucun artisan trouvé
+              Aucune plage trouvée
             </h3>
             <p className="text-gray-600">
               Essayez de modifier vos critères de recherche
@@ -198,4 +204,4 @@ const ArtisanatListing = ({ artisanat = [] }) => {
   );
 };
 
-export default ArtisanatListing;
+export default PlagesListing;

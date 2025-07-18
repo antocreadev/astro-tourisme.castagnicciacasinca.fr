@@ -3,25 +3,11 @@ import ArtisanatCard from '../ui/ArtisanatCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Search, Filter } from 'lucide-react';
 
 const ArtisanatListing = ({ artisanat = [] }) => {
-  // Récupérer les paramètres URL pour initialiser les filtres
-  const getInitialFilters = () => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const type = urlParams.get('type');
-      return {
-        type: type || 'tous'
-      };
-    }
-    return {
-      type: 'tous'
-    };
-  };
-
   const [filteredArtisanat, setFilteredArtisanat] = useState(artisanat);
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedType, setSelectedType] = useState(getInitialFilters().type);
+  const [selectedType, setSelectedType] = useState('tous');
   const [showFilters, setShowFilters] = useState(false);
   const itemsPerPage = 9;
 

@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react"
 
-export default function ArtisanatTerroirReal({ data }) {
+export default function ArtisanatTerroirReal({ data, artisanat = [] }) {
   // Utilise les données dynamiques de l'API ou les données statiques en fallback
   const getArtisanatItems = () => {
     if (data?.type_artisanat_et_produits && data.type_artisanat_et_produits.length > 0) {
@@ -8,9 +8,37 @@ export default function ArtisanatTerroirReal({ data }) {
         title: item.Titre,
         image: item.image?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${item.image.url}` : "/photos/PentadiCasinca.jpg",
         alt: item.Titre,
-        link: item.lien?.Lien || "/artisanat",
+        link: `${item.lien?.Lien || '/artisanat'}?type=${encodeURIComponent(item.Titre)}`,
         linkColor: item.lien?.TextColor
       }));
+    }
+
+    // Si on a des données d'artisanat réelles, on génère les items par type
+    if (artisanat.length > 0) {
+      // Grouper par type d'artisanat
+      const typeGroups = {};
+      artisanat.forEach(item => {
+        const type = item.type_artisanat_et_produit?.Titre;
+        if (type) {
+          if (!typeGroups[type]) {
+            typeGroups[type] = [];
+          }
+          typeGroups[type].push(item);
+        }
+      });
+
+      // Créer les items pour chaque type
+      return Object.entries(typeGroups).map(([type, items]) => {
+        // Prendre la première image disponible pour ce type
+        const firstItemWithImage = items.find(item => item.image);
+        return {
+          title: type,
+          image: firstItemWithImage?.image?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${firstItemWithImage.image.url}` : "/photos/PentadiCasinca.jpg",
+          alt: `${type} - Produits artisanaux de Castagniccia Casinca`,
+          link: `/artisanat?type=${encodeURIComponent(type)}`,
+          linkColor: '#000000'
+        };
+      });
     }
 
     // Fallback vers les données statiques si pas de données API
@@ -19,19 +47,19 @@ export default function ArtisanatTerroirReal({ data }) {
         image: "/photos/PentadiCasinca.jpg",
         title: "Miel & Apiculture",
         alt: "Production de miel artisanal en Castagniccia",
-        link: "/artisanat?categorie=miel"
+        link: "/artisanat?type=Miel & Apiculture"
       },
       {
         image: "/photos/PentadiCasinca.jpg",
         title: "Charcuterie Corse",
         alt: "Charcuterie traditionnelle corse artisanale",
-        link: "/artisanat?categorie=charcuterie"
+        link: "/artisanat?type=Charcuterie Corse"
       },
       {
         image: "/photos/PentadiCasinca.jpg",
         title: "Poterie & Artisanat",
         alt: "Artisanat local et poterie traditionnelle",
-        link: "/artisanat?categorie=poterie"
+        link: "/artisanat?type=Poterie & Artisanat"
       },
     ];
   };
