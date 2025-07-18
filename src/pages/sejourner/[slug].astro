@@ -1,0 +1,32 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SejournerDetail from "../../components/detail/SejournerDetail.jsx";
+import { PUBLIC_API_URL } from "astro:env/client";
+import type { RootSejourner } from "../../types/sejourner";
+
+export async function getStaticPaths() {
+  const response = await fetch(`${PUBLIC_API_URL}/api/sejourners?populate=*`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data: RootSejourner = await response.json();
+
+  return data.data.map((sejourner) => ({
+    params: { slug: sejourner.documentId },
+    props: { sejourner },
+  }));
+}
+
+const { sejourner } = Astro.props;
+---
+
+<Layout
+  title={`${sejourner.Titre || "Séjourner"} - Séjourner - Castagniccia Casinca`}
+>
+  <main>
+    <SejournerDetail sejourner={sejourner} client:only="react" />
+  </main>
+</Layout>

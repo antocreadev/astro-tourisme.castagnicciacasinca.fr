@@ -1,0 +1,24 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SejournerListing from "../../components/listing/SejournerListing.jsx";
+import { PUBLIC_API_URL } from "astro:env/client";
+import type { RootSejourner } from "../../types/sejourner";
+
+const dataSejourner = await fetch(
+  `${PUBLIC_API_URL}/api/sejourners?populate=*`,
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+);
+
+const dataSejournerJson: RootSejourner = await dataSejourner.json();
+---
+
+<Layout title="Séjourner - Castagniccia Casinca">
+  <main>
+    <SejournerListing sejourners={dataSejournerJson.data} client:only="react" />
+  </main>
+</Layout>

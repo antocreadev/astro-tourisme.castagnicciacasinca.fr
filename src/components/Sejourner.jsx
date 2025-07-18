@@ -33,7 +33,7 @@ export default function Sejourner({ data }) {
         title: "Hôtels",
         count: countByType("hotel"),
         description: "Détendez-vous dans nos hôtels de charme avec vue sur mer ou montagne.",
-        link: "/hebergements?type=hotel",
+        link: "/sejourner?type=hotel",
         linkLabel: "Voir les hébergements"
       },
       {
@@ -41,7 +41,7 @@ export default function Sejourner({ data }) {
         title: "Résidences de tourisme",
         count: countByType("residence"),
         description: "Profitez de l'indépendance avec nos résidences tout équipées.",
-        link: "/hebergements?type=residence",
+        link: "/sejourner?type=residence",
         linkLabel: "Voir les hébergements"
       },
       {
@@ -49,7 +49,7 @@ export default function Sejourner({ data }) {
         title: "Villages vacances",
         count: countByType("village-vacances"),
         description: "Partagez des moments inoubliables avec animations et services.",
-        link: "/hebergements?type=village-vacances",
+        link: "/sejourner?type=village-vacances",
         linkLabel: "Voir les hébergements"
       },
     ];
@@ -60,7 +60,7 @@ export default function Sejourner({ data }) {
         title: "Campings",
         count: countByType("camping"),
         description: "Campez en pleine nature avec tout le confort moderne.",
-        link: "/hebergements?type=camping",
+        link: "/sejourner?type=camping",
         linkLabel: "Voir les hébergements"
       },
       {
@@ -165,7 +165,7 @@ export default function Sejourner({ data }) {
             </a>
           ) : (
             <a
-              href="/hebergements"
+              href="/sejourner"
               className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-base font-medium rounded-md shadow-sm transition-colors duration-200"
             >
               Voir tous les hébergements

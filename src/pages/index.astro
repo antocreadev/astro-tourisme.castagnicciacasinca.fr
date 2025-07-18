@@ -16,8 +16,10 @@ import { type RootLandingPage } from "../types/landingpage";
 
 import { PUBLIC_API_URL } from "astro:env/client";
 import type { RootEvenements } from "../types/evenements";
+import type { RootSejourner } from "../types/sejourner";
 console.log("API URL:", PUBLIC_API_URL);
 
+// ---- fetch Global
 const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
   method: "GET",
   headers: {
@@ -27,6 +29,8 @@ const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
 
 const globalData: RootGlobal = await data.json();
 console.log("Global Data:", globalData);
+
+// fetch landing-page
 
 const dataLandingPage = await fetch(`${PUBLIC_API_URL}/api/landing-page`, {
   method: "GET",
@@ -38,6 +42,8 @@ const dataLandingPage = await fetch(`${PUBLIC_API_URL}/api/landing-page`, {
 const dataLandingPageJson: RootLandingPage = await dataLandingPage.json();
 console.log("dataLandingPageJson Data:", dataLandingPageJson);
 
+// fetch evenements
+
 const dataEvenements = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
   method: "GET",
   headers: {
@@ -47,6 +53,18 @@ const dataEvenements = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
 
 const dataEvenementsJson: RootEvenements = await dataEvenements.json();
 console.log("dataEvenementsJson Data:", dataEvenementsJson);
+
+// fecth sejourner
+
+const dataSejourner = await fetch(`${PUBLIC_API_URL}/api/sejourners`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const dataSejournerJson: RootSejourner = await dataSejourner.json();
+console.log("dataSejournerJson Data:", dataSejournerJson);
 ---
 
 <Layout>

@@ -82,23 +82,23 @@ export const convertSimpleMarkdown = (text) => {
   let html = text;
 
   // Nettoyer le texte d'abord - supprimer les titres markdown
-  html = html.replace(/^#{1,6}\s+/gm, '');
-  
+  html = html.replace(/^#{1,6}\s+/gm, "");
+
   // Convertir les listes en texte simple (supprimer les - en début de ligne)
-  html = html.replace(/^-\s+/gm, '• ');
-  
+  html = html.replace(/^-\s+/gm, "• ");
+
   // Convertir seulement le gras et l'italique
   html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
   html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
   html = html.replace(/_(.*?)_/g, "<em>$1</em>");
 
   // Convertir les sauts de ligne doubles en espaces simples pour l'aperçu
-  html = html.replace(/\n\n+/g, ' ');
+  html = html.replace(/\n\n+/g, " ");
   // Convertir les sauts de ligne simples en espaces
-  html = html.replace(/\n/g, ' ');
-  
+  html = html.replace(/\n/g, " ");
+
   // Nettoyer les espaces multiples
-  html = html.replace(/\s+/g, ' ').trim();
+  html = html.replace(/\s+/g, " ").trim();
 
   return html;
 };
