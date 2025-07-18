@@ -14,7 +14,7 @@ export default function Sejourner({ data }) {
       return data.type_sejourners.map(item => ({
         title: item.Denomination,
         description: item.Description,
-        link: item.lien?.Lien || "#",
+        link: `${item.lien?.Lien || '/sejourner'}?type=${encodeURIComponent(item.Denomination)}`,
         linkLabel: item.lien?.Label || "En savoir plus",
         linkColor: item.lien?.TextColor,
         iconUrl: item.Icone?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${item.Icone.url}` : null,
@@ -33,7 +33,7 @@ export default function Sejourner({ data }) {
         title: "Hôtels",
         count: countByType("hotel"),
         description: "Détendez-vous dans nos hôtels de charme avec vue sur mer ou montagne.",
-        link: "/sejourner?type=hotel",
+        link: "/sejourner?type=Hôtels",
         linkLabel: "Voir les hébergements"
       },
       {
@@ -41,7 +41,7 @@ export default function Sejourner({ data }) {
         title: "Résidences de tourisme",
         count: countByType("residence"),
         description: "Profitez de l'indépendance avec nos résidences tout équipées.",
-        link: "/sejourner?type=residence",
+        link: "/sejourner?type=Résidences de tourisme",
         linkLabel: "Voir les hébergements"
       },
       {
@@ -49,7 +49,7 @@ export default function Sejourner({ data }) {
         title: "Villages vacances",
         count: countByType("village-vacances"),
         description: "Partagez des moments inoubliables avec animations et services.",
-        link: "/sejourner?type=village-vacances",
+        link: "/sejourner?type=Villages vacances",
         linkLabel: "Voir les hébergements"
       },
     ];
@@ -60,21 +60,21 @@ export default function Sejourner({ data }) {
         title: "Campings",
         count: countByType("camping"),
         description: "Campez en pleine nature avec tout le confort moderne.",
-        link: "/sejourner?type=camping",
+        link: "/sejourner?type=Campings",
         linkLabel: "Voir les hébergements"
       },
       {
         icon: ShoppingBasket,
         title: "Commerces",
         description: "Découvrez nos produits locaux et artisanaux.",
-        link: "#commerces",
+        link: "/sejourner?type=Commerces",
         linkLabel: "En savoir plus"
       },
       {
         icon: UtensilsCrossed,
         title: "Restaurants",
         description: "Dégustez une cuisine corse authentique et savoureuse.",
-        link: "#restaurants",
+        link: "/sejourner?type=Restaurants",
         linkLabel: "En savoir plus"
       },
     ];

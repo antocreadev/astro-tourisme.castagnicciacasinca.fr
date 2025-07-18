@@ -12,15 +12,29 @@ import SejournerCard from '../ui/SejournerCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, MapPin, Star } from 'lucide-react';
 
 export default function SejournerListing({ sejourners = [] }) {
+  // Récupérer les paramètres URL pour initialiser les filtres
+  const getInitialFilters = () => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+      return {
+        commune: 'toutes',
+        type: type || 'tous',
+        search: ''
+      };
+    }
+    return {
+      commune: 'toutes',
+      type: 'tous',
+      search: ''
+    };
+  };
+
   const [filteredSejourners, setFilteredSejourners] = useState(sejourners);
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('nom');
-  const [filters, setFilters] = useState({
-    commune: 'toutes',
-    type: 'tous',
-    search: ''
-  });
+  const [filters, setFilters] = useState(getInitialFilters());
   const sejournersPerPage = 12;
 
   // Mettre à jour les séjours filtrés quand les données changent
