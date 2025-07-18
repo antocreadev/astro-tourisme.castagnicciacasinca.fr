@@ -1,12 +1,29 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import PlageDetail from "../../components/detail/PlageDetail.jsx";
-import { plages } from "../../data/plages.js";
-import { getPlageBySlug } from "../../utils/plageFilters.js";
+import { PUBLIC_API_URL } from "astro:env/client";
+import type { RootPlage } from "../../types/plages";
 
 export async function getStaticPaths() {
-  return plages.map((plage) => ({
-    params: { slug: plage.slug },
+  // Récupérer les plages depuis l'API
+  const response = await fetch(`${PUBLIC_API_URL}/api/plages`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const plagesData: RootPlage = await response.json();
+
+  // Générer les paths statiques
+  return plagesData.data.map((plage) => ({
+    params: {
+      slug: plage.Nom.toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, ""),
+    },
     props: { plage },
   }));
 }
@@ -18,8 +35,8 @@ if (!plage) {
   return Astro.redirect("/404");
 }
 
-const title = `${plage.nom} - Plages - Castagniccia Casinca`;
-const description = plage.description;
+const title = `${plage.Nom} - Plages - Castagniccia Casinca`;
+const description = plage.Description;
 ---
 
 <Layout title={title} description={description}>

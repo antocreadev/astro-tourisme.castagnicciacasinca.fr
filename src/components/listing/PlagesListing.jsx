@@ -1,77 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import PlageFilterBar from '../ui/PlageFilterBar.jsx';
 import PlageCard from '../ui/PlageCard.jsx';
-import { plages } from '../../data/plages.js';
-import {
-  filterPlagesByType,
-  filterPlagesByCommune,
-  filterPlagesByServices,
-  filterPlagesByActivites,
-  filterPlagesByAccess,
-  filterPlagesByAnimaux,
-  filterPlagesByDrapeauBleu,
-  searchPlages,
-  sortPlages
-} from '../../utils/plageFilters.js';
+import { Grid, List, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 
-const PlagesListing = () => {
+const PlagesListing = ({ plages = [] }) => {
   const [filteredPlages, setFilteredPlages] = useState(plages);
-  const [currentFilters, setCurrentFilters] = useState({
-    type: 'tous',
-    commune: 'toutes',
-    services: [],
-    activites: [],
-    acces: 'tous',
-    animaux: false,
-    drapeauBleu: false
-  });
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('nom-asc');
+  const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCommune, setSelectedCommune] = useState('toutes');
+  const [selectedPMR, setSelectedPMR] = useState('tous');
   const itemsPerPage = 9;
+
+  // Obtenir les communes uniques
+  const getUniqueCommunes = () => {
+    const communes = plages.map(plage => plage.commune?.Nom).filter(Boolean);
+    return [...new Set(communes)].sort();
+  };
 
   useEffect(() => {
     applyFilters();
-  }, [currentFilters, searchTerm, sortBy]);
+  }, [plages, searchTerm, selectedCommune, selectedPMR]);
 
   const applyFilters = () => {
-    let filtered = plages;
-    
-    // Appliquer la recherche
-    filtered = searchPlages(filtered, searchTerm);
-    
-    // Appliquer les filtres
-    filtered = filterPlagesByType(filtered, currentFilters.type);
-    filtered = filterPlagesByCommune(filtered, currentFilters.commune);
-    filtered = filterPlagesByServices(filtered, currentFilters.services);
-    filtered = filterPlagesByActivites(filtered, currentFilters.activites);
-    filtered = filterPlagesByAccess(filtered, currentFilters.acces);
-    
-    if (currentFilters.animaux) {
-      filtered = filterPlagesByAnimaux(filtered, currentFilters.animaux);
+    let filtered = [...plages];
+
+    // Filtre par recherche
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(plage => 
+        plage.Nom.toLowerCase().includes(term) ||
+        plage.commune?.Nom.toLowerCase().includes(term) ||
+        plage.Description.toLowerCase().includes(term)
+      );
     }
-    
-    if (currentFilters.drapeauBleu) {
-      filtered = filterPlagesByDrapeauBleu(filtered, currentFilters.drapeauBleu);
+
+    // Filtre par commune
+    if (selectedCommune !== 'toutes') {
+      filtered = filtered.filter(plage => plage.commune?.Nom === selectedCommune);
     }
-    
-    // Appliquer le tri
-    filtered = sortPlages(filtered, sortBy);
-    
+
+    // Filtre par PMR
+    if (selectedPMR !== 'tous') {
+      if (selectedPMR === 'accessible') {
+        filtered = filtered.filter(plage => plage.Niveau > 0);
+      } else if (selectedPMR === 'non-accessible') {
+        filtered = filtered.filter(plage => plage.Niveau === 0);
+      }
+    }
+
     setFilteredPlages(filtered);
-    setCurrentPage(1); // Reset à la première page
-  };
-
-  const handleFiltersChange = (newFilters) => {
-    setCurrentFilters(newFilters);
-  };
-
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-  };
-
-  const handleSort = (sortOption) => {
-    setSortBy(sortOption);
+    setCurrentPage(1);
   };
 
   // Pagination
@@ -85,57 +63,104 @@ const PlagesListing = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const uniqueCommunes = getUniqueCommunes();
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         {/* En-tête */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Les Plages de la Costa Verde
+            Les Plages de la Castagniccia Casinca
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Découvrez les plus belles plages de la côte orientale de la Corse : 
-            sable fin, eaux cristallines et paysages préservés vous attendent 
-            pour des moments de détente inoubliables.
+            sable fin, eaux cristallines et paysages préservés vous attendent.
           </p>
         </div>
 
         {/* Filtres */}
-        <PlageFilterBar 
-          onFiltersChange={handleFiltersChange}
-          onSearch={handleSearch}
-          onSort={handleSort}
-        />
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            {/* Recherche */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Rechercher une plage..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
 
-        {/* Résultats */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <p className="text-gray-600">
-              <span className="font-semibold">{filteredPlages.length}</span> plage{filteredPlages.length > 1 ? 's' : ''} trouvée{filteredPlages.length > 1 ? 's' : ''}
-            </p>
-            {totalPages > 1 && (
-              <p className="text-gray-600">
-                Page {currentPage} sur {totalPages}
-              </p>
-            )}
+            {/* Commune */}
+            <select
+              value={selectedCommune}
+              onChange={(e) => setSelectedCommune(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="toutes">Toutes les communes</option>
+              {uniqueCommunes.map(commune => (
+                <option key={commune} value={commune}>{commune}</option>
+              ))}
+            </select>
+
+            {/* PMR */}
+            <select
+              value={selectedPMR}
+              onChange={(e) => setSelectedPMR(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="tous">Tous les accès</option>
+              <option value="accessible">PMR accessible</option>
+              <option value="non-accessible">Non PMR</option>
+            </select>
+
+            {/* Mode d'affichage */}
+            <div className="flex items-center justify-end space-x-2">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}
+              >
+                <Grid size={20} />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}
+              >
+                <List size={20} />
+              </button>
+            </div>
+          </div>
+
+          {/* Statistiques */}
+          <div className="flex items-center justify-between text-sm text-gray-600">
+            <span>
+              {filteredPlages.length} plage{filteredPlages.length !== 1 ? 's' : ''} trouvée{filteredPlages.length !== 1 ? 's' : ''}
+            </span>
+            <span>
+              Page {currentPage} sur {totalPages}
+            </span>
           </div>
         </div>
 
-        {/* Grille des plages */}
-        {currentPlages.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {currentPlages.map((plage) => (
-              <PlageCard key={plage.id} plage={plage} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">🏖️</div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">
+        {/* Résultats */}
+        <div className={`grid gap-6 mb-8 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+          {currentPlages.map((plage) => (
+            <PlageCard key={plage.id} plage={plage} />
+          ))}
+        </div>
+
+        {/* Message si aucun résultat */}
+        {filteredPlages.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 text-6xl mb-4">🏖️</div>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
               Aucune plage trouvée
             </h3>
-            <p className="text-gray-600 mb-4">
-              Essayez de modifier vos critères de recherche ou vos filtres.
+            <p className="text-gray-600">
+              Essayez de modifier vos critères de recherche
             </p>
           </div>
         )}
@@ -146,19 +171,19 @@ const PlagesListing = () => {
             <button
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-3 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 rounded-lg bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Précédent
+              <ChevronLeft size={20} />
             </button>
             
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
                 onClick={() => goToPage(page)}
-                className={`px-3 py-2 rounded-lg border ${
+                className={`px-4 py-2 rounded-lg ${
                   page === currentPage
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50'
                 }`}
               >
                 {page}
@@ -168,9 +193,9 @@ const PlagesListing = () => {
             <button
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="px-3 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 rounded-lg bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Suivant
+              <ChevronRight size={20} />
             </button>
           </div>
         )}

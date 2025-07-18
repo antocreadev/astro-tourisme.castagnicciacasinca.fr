@@ -17,6 +17,7 @@ import { type RootLandingPage } from "../types/landingpage";
 import { PUBLIC_API_URL } from "astro:env/client";
 import type { RootEvenements } from "../types/evenements";
 import type { RootSejourner } from "../types/sejourner";
+import type { RootPlage } from "../types/plages";
 console.log("API URL:", PUBLIC_API_URL);
 
 // ---- fetch Global
@@ -65,6 +66,18 @@ const dataSejourner = await fetch(`${PUBLIC_API_URL}/api/sejourners`, {
 
 const dataSejournerJson: RootSejourner = await dataSejourner.json();
 console.log("dataSejournerJson Data:", dataSejournerJson);
+
+// fetch plages
+
+const dataPlages = await fetch(`${PUBLIC_API_URL}/api/plages`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const dataPlagesJson: RootPlage = await dataPlages.json();
+console.log("dataPlagesJson Data:", dataPlagesJson);
 ---
 
 <Layout>
@@ -78,7 +91,10 @@ console.log("dataSejournerJson Data:", dataSejournerJson);
   <LesIncontournables data={dataLandingPageJson.data.LesIncontournables} />
   <DecouvreTerritoire data={dataLandingPageJson.data.DecouvrezLeTerritoire} />
   <Sejourner data={dataLandingPageJson.data.Sejourner} />
-  <LesPlages data={dataLandingPageJson.data.LesPlages} />
+  <LesPlages
+    data={dataLandingPageJson.data.LesPlages}
+    plages={dataPlagesJson.data}
+  />
   <ArtisanatTerroirReal
     data={dataLandingPageJson.data.ArtisanatEtProduitsDuTerroir}
   />
