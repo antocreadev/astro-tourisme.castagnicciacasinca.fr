@@ -1,8 +1,9 @@
-export interface RootPlage {
-  data: Daum[];
+export interface RootRandonnee {
+  data: Randonnee[];
   meta: Meta;
 }
-export interface Daum {
+
+export interface Randonnee {
   id: number;
   documentId: string;
   Nom: string;
@@ -10,16 +11,9 @@ export interface Daum {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-  Coordonnees: Coordonnees;
-  Niveau: number;
-  commune: Commune;
-  Image: Image;
-  activites_nautiques: ActivitesNautique[];
-}
-
-export interface Coordonnees {
-  lat: number;
-  lng: number;
+  commune?: Commune;
+  Lien?: Lien;
+  image?: Image2;
 }
 
 export interface Commune {
@@ -30,6 +24,12 @@ export interface Commune {
   updatedAt: string;
   publishedAt: string;
   description: string;
+}
+
+export interface Lien {
+  id: number;
+  lien: string;
+  image: Image;
 }
 
 export interface Image {
@@ -56,12 +56,64 @@ export interface Image {
 
 export interface Formats {
   thumbnail: Thumbnail;
-  medium: Medium;
-  large: Large;
-  small: Small;
 }
 
 export interface Thumbnail {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
+export interface Image2 {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: any;
+  caption: any;
+  width: number;
+  height: number;
+  formats: Formats2;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: any;
+  provider: string;
+  provider_metadata: any;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+export interface Formats2 {
+  thumbnail: Thumbnail2;
+  small: Small;
+  medium: Medium;
+  large: Large;
+}
+
+export interface Thumbnail2 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
+export interface Small {
   name: string;
   hash: string;
   ext: string;
@@ -98,31 +150,6 @@ export interface Large {
   size: number;
   sizeInBytes: number;
   url: string;
-}
-
-export interface Small {
-  name: string;
-  hash: string;
-  ext: string;
-  mime: string;
-  path: any;
-  width: number;
-  height: number;
-  size: number;
-  sizeInBytes: number;
-  url: string;
-}
-
-export interface ActivitesNautique {
-  id: number;
-  documentId: string;
-  Nom: string;
-  Description: string;
-  Email: any;
-  Tel: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
 }
 
 export interface Meta {

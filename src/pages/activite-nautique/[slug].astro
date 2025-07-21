@@ -1,0 +1,60 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ActiviteNautiqueDetail from "../../components/detail/ActiviteNautiqueDetail.jsx";
+import { PUBLIC_API_URL } from "astro:env/client";
+import type { RootActiviteNautique } from "../../types/activite-nautique";
+
+export async function getStaticPaths() {
+  // Récupérer les activités nautiques depuis l'API
+  const response = await fetch(`${PUBLIC_API_URL}/api/activites-nautiques`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    console.error(
+      "Erreur lors de la récupération des activités nautiques:",
+      response.status
+    );
+    return [];
+  }
+
+  const activitesData: RootActiviteNautique = await response.json();
+
+  if (!activitesData || !activitesData.data) {
+    console.error("Données activités nautiques non disponibles");
+    return [];
+  }
+
+  // Générer les paths statiques
+  return activitesData.data.map((activite) => ({
+    params: {
+      slug:
+        activite.Nom?.toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, "")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "") || "activite",
+    },
+    props: { activite },
+  }));
+}
+
+const { slug } = Astro.params;
+const { activite } = Astro.props;
+
+if (!activite) {
+  return Astro.redirect("/404");
+}
+
+const title = `${activite.Nom} - Activités Nautiques - Castagniccia Casinca`;
+const description = activite.Description;
+---
+
+<Layout title={title} description={description}>
+  <main>
+    <ActiviteNautiqueDetail activite={activite} client:load />
+  </main>
+</Layout>

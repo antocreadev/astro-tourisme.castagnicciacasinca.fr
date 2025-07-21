@@ -1,0 +1,51 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ActiviteNautiqueListing from "../../components/listing/ActiviteNautiqueListing.jsx";
+import { PUBLIC_API_URL } from "astro:env/client";
+import type { RootActiviteNautique } from "../../types/activite-nautique";
+
+// Récupérer les activités nautiques depuis l'API
+const response = await fetch(`${PUBLIC_API_URL}/api/activites-nautiques`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+let activiteNautiqueData: RootActiviteNautique;
+
+if (!response.ok) {
+  console.error(
+    "Erreur lors de la récupération des activités nautiques:",
+    response.status
+  );
+  activiteNautiqueData = {
+    data: [],
+    meta: { pagination: { page: 1, pageSize: 25, pageCount: 0, total: 0 } },
+  };
+} else {
+  const responseData = await response.json();
+  if (responseData.error) {
+    console.error("Erreur API activités nautiques:", responseData.error);
+    activiteNautiqueData = {
+      data: [],
+      meta: { pagination: { page: 1, pageSize: 25, pageCount: 0, total: 0 } },
+    };
+  } else {
+    activiteNautiqueData = responseData;
+  }
+}
+
+const title = "Activités Nautiques - Castagniccia Casinca";
+const description =
+  "Découvrez les activités nautiques de la Castagniccia Casinca";
+---
+
+<Layout title={title} description={description}>
+  <main>
+    <ActiviteNautiqueListing
+      activiteNautiques={activiteNautiqueData.data}
+      client:load
+    />
+  </main>
+</Layout>

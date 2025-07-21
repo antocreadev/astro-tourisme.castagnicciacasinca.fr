@@ -1,50 +1,80 @@
 import { Ticket, Ship, Sparkles, Mountain, ChevronRight } from "lucide-react"
 
-export default function ActivitesLoisirs({ data }) {
+export default function ActivitesLoisirs({ data, randonnees = [], activitesNautiques = [] }) {
+  // S'assurer que les données sont des tableaux
+  const randonneesArray = Array.isArray(randonnees) ? randonnees : [];
+  const activitesNautiquesArray = Array.isArray(activitesNautiques) ? activitesNautiques : [];
+
   // Utilise les données dynamiques de l'API ou les données statiques en fallback
   const getActiviteItems = () => {
     if (data?.type_activite_loisirs && data.type_activite_loisirs.length > 0) {
       return data.type_activite_loisirs.map(item => ({
         title: item.Titre,
         description: item.Description,
-        link: item.Lien?.Lien || "/activites",
+        link: generateLinkForActivity(item),
         linkLabel: item.Lien?.Label || "En savoir plus",
         linkColor: item.Lien?.TextColor,
         iconUrl: item.Icone?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${item.Icone.url}` : null
       }));
     }
 
-    // Fallback vers les données statiques si pas de données API
-    return [
+    // Données enrichies avec les vraies données d'API
+    const items = [
       {
         icon: Ticket,
         title: "Évènements",
         description: "Immersion totale au cœur de la Castagniccia lors de nos événements festifs !",
-        link: "/activites",
+        link: "/agenda",
         linkLabel: "En savoir plus"
       },
       {
         icon: Ship,
         title: "Activités nautiques",
-        description: "Explorez les côtes sauvages de la Casinca en kayak, paddle ou bateau.",
-        link: "/activites",
+        description: activitesNautiquesArray.length > 0 
+          ? `Découvrez ${activitesNautiquesArray.length} activité${activitesNautiquesArray.length > 1 ? 's' : ''} nautique${activitesNautiquesArray.length > 1 ? 's' : ''} : ${activitesNautiquesArray.slice(0, 2).map(a => a.Nom).join(', ')}${activitesNautiquesArray.length > 2 ? '...' : ''}` 
+          : "Explorez les côtes sauvages de la Casinca en kayak, paddle ou bateau.",
+        link: "/activite-nautique",
         linkLabel: "En savoir plus"
       },
       {
         icon: Sparkles,
         title: "Festivals, Marchés et foires",
-        description: "Partez à l'aventure sur les sentiers de randonnée de la Castagniccia.",
-        link: "/activites",
+        description: "Participez aux événements festifs et découvrez l'artisanat local lors de nos marchés et foires.",
+        link: "/agenda",
         linkLabel: "En savoir plus"
       },
       {
         icon: Mountain,
         title: "Les randonnées, balades",
-        description: "Détendez-vous dans nos hôtels confortables et accueillants.",
-        link: "/activites",
+        description: randonneesArray.length > 0 
+          ? `Explorez ${randonneesArray.length} randonnée${randonneesArray.length > 1 ? 's' : ''} : ${randonneesArray.slice(0, 2).map(r => r.Nom).join(', ')}${randonneesArray.length > 2 ? '...' : ''}` 
+          : "Découvrez les sentiers de randonnée de la Castagniccia.",
+        link: "/randonnee",
         linkLabel: "En savoir plus"
       },
     ];
+
+    return items;
+  };
+
+  // Fonction pour générer le lien approprié selon le type d'activité
+  const generateLinkForActivity = (item) => {
+    const baseLink = item.Lien?.Lien || "/activites";
+    const title = item.Titre.toLowerCase();
+    
+    if (title.includes('randonnée') || title.includes('rando') || title.includes('sentier') || title.includes('balade')) {
+      return "/randonnee";
+    }
+    
+    if (title.includes('nautique') || title.includes('kayak') || title.includes('paddle') || title.includes('bateau') || title.includes('mer')) {
+      return "/activite-nautique";
+    }
+    
+    if (title.includes('événement') || title.includes('festival') || title.includes('marché') || title.includes('foire')) {
+      return "/agenda";
+    }
+    
+    return baseLink;
   };
 
   const activiteItems = getActiviteItems();

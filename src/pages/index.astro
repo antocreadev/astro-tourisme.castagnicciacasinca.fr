@@ -19,6 +19,8 @@ import type { RootEvenements } from "../types/evenements";
 import type { RootSejourner } from "../types/sejourner";
 import type { RootPlage } from "../types/plages";
 import type { RootartisanatEtProduit } from "../types/artisanat-et-produit";
+import type { RootRandonnee } from "../types/randonnee";
+import type { RootActiviteNautique } from "../types/activite-nautique";
 console.log("API URL:", PUBLIC_API_URL);
 
 // ---- fetch Global
@@ -94,6 +96,34 @@ const dataArtisanatEtProduit = await fetch(
 const dataArtisanatEtProduitJson: RootartisanatEtProduit =
   await dataArtisanatEtProduit.json();
 console.log("dataArtisanatEtProduitJson Data:", dataArtisanatEtProduitJson);
+
+// Randonnees
+
+const dataRandonnees = await fetch(`${PUBLIC_API_URL}/api/randonnees`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const dataRandonneesJson: RootRandonnee = await dataRandonnees.json();
+console.log("dataRandonneesJson Data:", dataRandonneesJson);
+
+// activites-nautiques
+
+const dataActiviteNautique = await fetch(
+  `${PUBLIC_API_URL}/api/activites-nautiques`,
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+);
+
+const dataActiviteNautiqueJson: RootActiviteNautique =
+  await dataActiviteNautique.json();
+console.log("dataActiviteNautiqueJson Data:", dataActiviteNautiqueJson);
 ---
 
 <Layout>
@@ -115,7 +145,11 @@ console.log("dataArtisanatEtProduitJson Data:", dataArtisanatEtProduitJson);
     data={dataLandingPageJson.data.ArtisanatEtProduitsDuTerroir}
     artisanat={dataArtisanatEtProduitJson.data}
   />
-  <ActiviteLoisir data={dataLandingPageJson.data.ActiviteLoisir} />
+  <ActiviteLoisir
+    data={dataLandingPageJson.data.ActiviteLoisir}
+    randonnees={dataRandonneesJson.data}
+    activitesNautiques={dataActiviteNautiqueJson.data}
+  />
   <InformationsPratiques
     data={dataLandingPageJson.data.InformationsPratiques}
   />

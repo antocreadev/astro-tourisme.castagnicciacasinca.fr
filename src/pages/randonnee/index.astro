@@ -1,0 +1,22 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import RandonneeListing from "../../components/listing/RandonneeListing.jsx";
+import { PUBLIC_API_URL } from "astro:env/client";
+import type { RootRandonnee } from "../../types/randonnee";
+
+// Fetch randonnees data
+const response = await fetch(`${PUBLIC_API_URL}/api/randonnees`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const randonneesData: RootRandonnee = await response.json();
+---
+
+<Layout title="Randonnées - Castagniccia Casinca">
+  <main>
+    <RandonneeListing randonnees={randonneesData.data} client:load />
+  </main>
+</Layout>

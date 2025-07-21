@@ -1,0 +1,60 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import RandonneeDetail from "../../components/detail/RandonneeDetail.jsx";
+import { PUBLIC_API_URL } from "astro:env/client";
+import type { RootRandonnee } from "../../types/randonnee";
+
+export async function getStaticPaths() {
+  // Récupérer les randonnées depuis l'API
+  const response = await fetch(`${PUBLIC_API_URL}/api/randonnees`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    console.error(
+      "Erreur lors de la récupération des randonnées:",
+      response.status
+    );
+    return [];
+  }
+
+  const randonneesData: RootRandonnee = await response.json();
+
+  if (!randonneesData || !randonneesData.data) {
+    console.error("Données randonnées non disponibles");
+    return [];
+  }
+
+  // Générer les paths statiques
+  return randonneesData.data.map((randonnee) => ({
+    params: {
+      slug:
+        randonnee.Nom?.toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, "")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "") || "randonnee",
+    },
+    props: { randonnee },
+  }));
+}
+
+const { slug } = Astro.params;
+const { randonnee } = Astro.props;
+
+if (!randonnee) {
+  return Astro.redirect("/404");
+}
+
+const title = `${randonnee.Nom} - Randonnées - Castagniccia Casinca`;
+const description = randonnee.Description;
+---
+
+<Layout title={title} description={description}>
+  <main>
+    <RandonneeDetail randonnee={randonnee} client:load />
+  </main>
+</Layout>

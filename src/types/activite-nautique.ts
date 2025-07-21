@@ -1,35 +1,21 @@
-export interface RootPlage {
-  data: Daum[];
+export interface RootActiviteNautique {
+  data: ActiviteNautique[];
   meta: Meta;
 }
-export interface Daum {
+
+export interface ActiviteNautique {
   id: number;
   documentId: string;
   Nom: string;
   Description: string;
+  Email?: string;
+  Tel?: string;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-  Coordonnees: Coordonnees;
-  Niveau: number;
-  commune: Commune;
-  Image: Image;
-  activites_nautiques: ActivitesNautique[];
-}
-
-export interface Coordonnees {
-  lat: number;
-  lng: number;
-}
-
-export interface Commune {
-  id: number;
-  documentId: string;
-  Nom: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  description: string;
+  Image?: Image;
+  commune?: Commune;
+  plage?: Plage;
 }
 
 export interface Image {
@@ -56,12 +42,25 @@ export interface Image {
 
 export interface Formats {
   thumbnail: Thumbnail;
+  small: Small;
   medium: Medium;
   large: Large;
-  small: Small;
 }
 
 export interface Thumbnail {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
+export interface Small {
   name: string;
   hash: string;
   ext: string;
@@ -100,29 +99,31 @@ export interface Large {
   url: string;
 }
 
-export interface Small {
-  name: string;
-  hash: string;
-  ext: string;
-  mime: string;
-  path: any;
-  width: number;
-  height: number;
-  size: number;
-  sizeInBytes: number;
-  url: string;
+export interface Commune {
+  id: number;
+  documentId: string;
+  Nom: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  description: string;
 }
 
-export interface ActivitesNautique {
+export interface Plage {
   id: number;
   documentId: string;
   Nom: string;
   Description: string;
-  Email: any;
-  Tel: string;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
+  Coordonnees: Coordonnees;
+  Niveau: number;
+}
+
+export interface Coordonnees {
+  lat: number;
+  lng: number;
 }
 
 export interface Meta {
