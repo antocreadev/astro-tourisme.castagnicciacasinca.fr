@@ -1,4 +1,5 @@
 import { Ambulance, Sun, Heart, User, Shield, ChevronRight } from "lucide-react"
+import { createSlug } from "../utils/slugUtils.js";
 
 export default function InformationsPratiques({ data }) {
   // Utilise les données dynamiques de l'API ou les données statiques en fallback
@@ -7,8 +8,8 @@ export default function InformationsPratiques({ data }) {
       return data.type_information_pratiques.map(item => ({
         title: item.Titre,
         description: item.Description,
-        link: item.Lien?.Lien || "/informations-pratiques",
-        linkLabel: item.Lien?.Label || "En savoir plus",
+        link: `/informations-pratiques/${createSlug(item.Titre)}`,
+        linkLabel: "Voir les informations",
         linkColor: item.Lien?.TextColor,
         iconUrl: item.Icone?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${item.Icone.url}` : null
       }));
@@ -19,37 +20,37 @@ export default function InformationsPratiques({ data }) {
       {
         icon: Ambulance,
         title: "Urgences",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        description: "Numéros d'urgences, services médicaux et de sécurité.",
         link: "/informations-pratiques",
-        linkLabel: "En savoir plus"
+        linkLabel: "Voir les informations"
       },
       {
         icon: Sun,
         title: "Météo",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        description: "Conditions météorologiques et prévisions pour la région.",
         link: "/informations-pratiques",
-        linkLabel: "En savoir plus"
+        linkLabel: "Voir les informations"
       },
       {
         icon: Heart,
         title: "Santé",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        description: "Pharmacies, médecins, laboratoires et services de santé.",
         link: "/informations-pratiques",
-        linkLabel: "En savoir plus"
+        linkLabel: "Voir les informations"
       },
       {
         icon: User,
         title: "Transports",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        description: "Taxis, transports en commun, location de voiture et accès.",
         link: "/informations-pratiques",
-        linkLabel: "En savoir plus"
+        linkLabel: "Voir les informations"
       },
       {
         icon: Shield,
         title: "Administration",
-        description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        description: "Services administratifs et démarches officielles.",
         link: "/informations-pratiques",
-        linkLabel: "En savoir plus"
+        linkLabel: "Voir les informations"
       },
     ];
   };
