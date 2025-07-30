@@ -31,7 +31,7 @@ const EventDetail = ({ event }) => {
 
   const getLinkImageUrl = (lien) => {
     if (!lien.image) return null;
-    const baseUrl = import.meta.env.PUBLIC_STRAPI_URL || import.meta.env.PUBLIC_API_URL || 'http://localhost:1337';
+    const baseUrl = import.meta.env.PUBLIC_STRAPI_URL || import.meta.env.PUBLIC_API_URL || 'https://cms.castagnicciacasinca.fr';
     return `${baseUrl}${lien.image.url}`;
   };
 

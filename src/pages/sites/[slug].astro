@@ -1,0 +1,44 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SiteDetail from "../../components/detail/SiteDetail.jsx";
+import {
+  fetchSites,
+  fetchSiteBySlug,
+  transformSiteData,
+  generateSlug,
+} from "../../services/sitesService.js";
+
+export async function getStaticPaths() {
+  try {
+    const sitesData = await fetchSites();
+
+    return sitesData.data.map((site) => ({
+      params: { slug: site.documentId },
+      props: { site: transformSiteData(site) },
+    }));
+  } catch (error) {
+    console.error("Erreur lors de la génération des chemins statiques:", error);
+    return [];
+  }
+}
+
+const { slug } = Astro.params;
+let { site } = Astro.props;
+
+// En cas de problème avec les props, essayer de récupérer le site directement
+if (!site) {
+  const apiSite = await fetchSiteBySlug(slug);
+  if (apiSite) {
+    site = transformSiteData(apiSite);
+  }
+}
+
+// Si aucun site trouvé, renvoyer une 404
+if (!site) {
+  return Astro.redirect("/404");
+}
+---
+
+<Layout title={`${site.title} - Sites phares`}>
+  <SiteDetail site={site} client:load />
+</Layout>

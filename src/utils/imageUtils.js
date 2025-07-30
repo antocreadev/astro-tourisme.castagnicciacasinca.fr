@@ -9,7 +9,7 @@ export const getImageUrl = (image) => {
   const baseUrl =
     import.meta.env.PUBLIC_STRAPI_URL ||
     import.meta.env.PUBLIC_API_URL ||
-    "http://localhost:1337";
+    "https://cms.castagnicciacasinca.fr";
 
   return `${baseUrl}${image.url}`;
 };

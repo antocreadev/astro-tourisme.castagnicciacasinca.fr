@@ -1,5 +1,5 @@
 export default function LesPlages({ data, plages = [] }) {
-  const API_URL = import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337';
+  const API_URL = import.meta.env.PUBLIC_STRAPI_URL || 'https://cms.castagnicciacasinca.fr';
   
   // Parser la description pour extraire les points de liste
   const parseDescription = (description) => {

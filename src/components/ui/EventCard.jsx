@@ -22,7 +22,7 @@ export default function EventCard({ event, href, onClick, isPast }) {
   // Fonction pour obtenir l'URL de l'image
   const getImageUrl = (image) => {
     if (!image) return null;
-    const baseUrl = import.meta.env.PUBLIC_STRAPI_URL || import.meta.env.PUBLIC_API_URL || 'http://localhost:1337';
+    const baseUrl = import.meta.env.PUBLIC_STRAPI_URL || import.meta.env.PUBLIC_API_URL || 'https://cms.castagnicciacasinca.fr';
     return `${baseUrl}${image.url}`;
   };
 

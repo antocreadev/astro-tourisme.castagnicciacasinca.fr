@@ -236,6 +236,8 @@ export interface LesIncontournables {
   Titre: string;
   SousTitre1: string;
   SousTitre2: string;
+  Section1Visible: boolean;
+  Section2Visible: boolean;
   LienSection2: LienSection2;
   LienSection1: LienSection1;
 }

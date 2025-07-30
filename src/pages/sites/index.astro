@@ -1,0 +1,13 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SitesListing from "../../components/listing/SitesListing.jsx";
+import { fetchSites, transformSiteData } from "../../services/sitesService.js";
+
+// Récupérer les sites depuis l'API
+const sitesData = await fetchSites();
+const sites = sitesData.data.map(transformSiteData);
+---
+
+<Layout title="Sites phares - Castagniccia Casinca">
+  <SitesListing sites={sites} client:load />
+</Layout>

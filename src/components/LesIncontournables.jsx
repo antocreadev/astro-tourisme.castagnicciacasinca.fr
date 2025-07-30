@@ -1,8 +1,8 @@
-import { sites } from '../data/sites.js';
+import { sites as fallbackSites } from '../data/sites.js';
 import { itineraires } from '../data/itineraires.js';
 
-export default function LesIncontournables({ data }) {
-  // Utilise les vraies données des sites
+export default function LesIncontournables({ data, sites = fallbackSites }) {
+  // Utilise les vraies données des sites (dynamiques ou fallback)
   const sitesPhares = sites.slice(0, 4); // Prend les 4 premiers sites
   
   // Utilise les vraies données des itinéraires

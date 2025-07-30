@@ -13,6 +13,7 @@ import DecouvreTerritoire from "../components/DecouvreTerritoire";
 import ArtisanatTerroirReal from "../components/ArtisanatTerroirReal";
 import { type RootGlobal } from "../types/gloabal";
 import { type RootLandingPage } from "../types/landingpage";
+import { fetchSites, transformSiteData } from "../services/sitesService.js";
 
 import { PUBLIC_API_URL } from "astro:env/client";
 import type { RootEvenements } from "../types/evenements";
@@ -21,6 +22,7 @@ import type { RootPlage } from "../types/plages";
 import type { RootartisanatEtProduit } from "../types/artisanat-et-produit";
 import type { RootRandonnee } from "../types/randonnee";
 import type { RootActiviteNautique } from "../types/activite-nautique";
+import type { RootSite } from "../types/site";
 console.log("API URL:", PUBLIC_API_URL);
 
 // ---- fetch Global
@@ -124,6 +126,11 @@ const dataActiviteNautique = await fetch(
 const dataActiviteNautiqueJson: RootActiviteNautique =
   await dataActiviteNautique.json();
 console.log("dataActiviteNautiqueJson Data:", dataActiviteNautiqueJson);
+
+// fetch sites
+const sitesData = await fetchSites();
+const sites = sitesData.data.map(transformSiteData);
+console.log("Sites Data:", sites);
 ---
 
 <Layout>
@@ -134,7 +141,11 @@ console.log("dataActiviteNautiqueJson Data:", dataActiviteNautiqueJson);
     client:load
   />
   <CarteSection data={dataLandingPageJson.data.CarteInteractive} />
-  <LesIncontournables data={dataLandingPageJson.data.LesIncontournables} />
+  <LesIncontournables
+    data={dataLandingPageJson.data.LesIncontournables}
+    sites={sites}
+    client:load
+  />
   <DecouvreTerritoire data={dataLandingPageJson.data.DecouvrezLeTerritoire} />
   <Sejourner data={dataLandingPageJson.data.Sejourner} />
   <LesPlages

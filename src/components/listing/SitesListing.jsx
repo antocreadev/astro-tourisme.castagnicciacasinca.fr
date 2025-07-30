@@ -1,11 +1,11 @@
 import { useState, useCallback } from 'react';
 import { filterSites, sortSites } from '../../utils/siteFilters.js';
-import { sites, siteTypes, difficulties, durations, sitesCommunes } from '../../data/sites.js';
+import { sites as fallbackSites, siteTypes, difficulties, durations, sitesCommunes } from '../../data/sites.js';
 import SiteFilterBar from '../ui/SiteFilterBar.jsx';
 import SiteCard from '../ui/SiteCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Mountain } from 'lucide-react';
 
-export default function SitesListing() {
+export default function SitesListing({ sites = fallbackSites }) {
   const [filteredSites, setFilteredSites] = useState(sites);
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,7 +17,7 @@ export default function SitesListing() {
     const sorted = sortSites(filtered, sortBy);
     setFilteredSites(sorted);
     setCurrentPage(1); // Reset to first page when filters change
-  }, [sortBy]);
+  }, [sites, sortBy]);
 
   const handleSortChange = (newSortBy) => {
     setSortBy(newSortBy);
