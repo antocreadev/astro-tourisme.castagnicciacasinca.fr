@@ -1,4 +1,5 @@
 import React from 'react';
+import { createSlug } from '../../utils/slugUtils.js';
 
 const InformationCard = ({ information }) => {
   const getCategorieColor = (categorie) => {
@@ -116,7 +117,7 @@ const InformationCard = ({ information }) => {
         </div>
 
         <a 
-          href={`/informations-pratiques/${information.slug}`}
+          href={`/informations-pratiques/${information.slug || createSlug(information.type_information_pratique?.Titre || information.categorie || 'information')}`}
           className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200"
         >
           Voir les détails

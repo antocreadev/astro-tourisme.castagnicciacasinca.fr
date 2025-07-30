@@ -6,6 +6,7 @@ import type {
   TypeInformationPratique,
 } from "../../types/informations-pratiques.ts";
 import { convertMarkdownToHtml } from "../../utils/markdownUtils.js";
+import { createSlug, findCategoryBySlug } from "../../utils/slugUtils.js";
 
 export async function getStaticPaths() {
   // Récupérer toutes les informations pratiques depuis l'API
@@ -51,34 +52,45 @@ export async function getStaticPaths() {
     categoriesMap.get(typeDocumentId)!.informations.push(info);
   });
 
-  // Générer les paths statiques
+  // Générer les paths statiques avec des slugs lisibles
   return Array.from(categoriesMap.entries()).map(
     ([documentId, categoryData]) => ({
       params: {
-        slug: documentId,
+        slug: createSlug(categoryData.type.Titre),
       },
       props: {
         category: categoryData.type,
         informations: categoryData.informations,
+        allCategories: Array.from(categoriesMap.values()),
       },
     })
   );
 }
 
 const { slug } = Astro.params;
-const { category, informations } = Astro.props;
+const { category, informations, allCategories } = Astro.props;
+
+// Si on n'a pas de catégorie dans les props, on cherche par slug
+let finalCategory = category;
+let finalInformations = informations;
 
 if (!category || !informations) {
-  return Astro.redirect("/404");
+  const foundCategory = findCategoryBySlug(slug, allCategories || []);
+  if (foundCategory) {
+    finalCategory = foundCategory.type;
+    finalInformations = foundCategory.informations;
+  } else {
+    return Astro.redirect("/404");
+  }
 }
 
-const title = `${category.Titre} - Informations pratiques - Castagniccia Casinca`;
+const title = `${finalCategory.Titre} - Informations pratiques - Castagniccia Casinca`;
 ---
 
 <Layout
   title={title}
   pageCategory="informations-pratiques"
-  pageName={category.Titre}
+  pageName={finalCategory.Titre}
 >
   <div class="min-h-screen bg-gray-50">
     <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -95,7 +107,7 @@ const title = `${category.Titre} - Informations pratiques - Castagniccia Casinca
                 clip-rule="evenodd"></path></svg
             >
           </li>
-          <li class="text-gray-900 font-medium">{category.Titre}</li>
+          <li class="text-gray-900 font-medium">{finalCategory.Titre}</li>
         </ol>
       </nav>
 
@@ -104,7 +116,7 @@ const title = `${category.Titre} - Informations pratiques - Castagniccia Casinca
         <div class="p-6 lg:p-8">
           <div class="prose max-w-none">
             {
-              informations.map((info, index) => (
+              finalInformations.map((info, index) => (
                 <div
                   class={index > 0 ? "mt-12 pt-8 border-t border-gray-200" : ""}
                 >
@@ -112,15 +124,6 @@ const title = `${category.Titre} - Informations pratiques - Castagniccia Casinca
                     class="markdown-content"
                     set:html={convertMarkdownToHtml(info.Texte)}
                   />
-                  {index < informations.length - 1 && (
-                    <div class="mt-8 text-center">
-                      <div class="inline-flex items-center space-x-2 text-gray-400">
-                        <div class="w-2 h-2 bg-gray-300 rounded-full" />
-                        <div class="w-2 h-2 bg-gray-300 rounded-full" />
-                        <div class="w-2 h-2 bg-gray-300 rounded-full" />
-                      </div>
-                    </div>
-                  )}
                 </div>
               ))
             }
@@ -130,30 +133,11 @@ const title = `${category.Titre} - Informations pratiques - Castagniccia Casinca
 
       <!-- Navigation -->
       <div class="mt-8 flex justify-between items-center">
-        <a
-          href="/informations-pratiques"
-          class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200"
-        >
-          <svg
-            class="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"></path>
-          </svg>
-          Retour aux catégories
-        </a>
-
         <div class="text-sm text-gray-500">
           Dernière mise à jour : {
             new Date(
               Math.max(
-                ...informations.map((info) =>
+                ...finalInformations.map((info) =>
                   new Date(info.updatedAt).getTime()
                 )
               )
