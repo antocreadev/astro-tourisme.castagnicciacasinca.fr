@@ -95,7 +95,7 @@ export function transformSiteData(apiSite) {
     title: apiSite.Titre,
     subtitle: apiSite.commune?.Nom || "",
     description: apiSite.Description,
-    fullDescription: apiSite.Description, // Utiliser la description comme description complète
+    fullDescription: apiSite.Description,
     commune: apiSite.commune?.Nom || "",
     coordinates: apiSite.coordonnees,
     images: images,
@@ -109,23 +109,9 @@ export function transformSiteData(apiSite) {
             : `${baseUrl}${link.image.url}`
           : null,
       })) || [],
-    // Ajouter des valeurs par défaut pour la compatibilité avec les composants existants
-    type: "site",
-    difficulty: "facile",
-    duration: "Variable",
-    image: gallery[0] || "/placeholder.svg",
-    // Données détaillées pour le composant SiteDetail
-    details: {
-      access: "Accès variable selon le site",
-      parking: "Se renseigner localement",
-      equipment: "Équipement adapté recommandé",
-      season: "Accessible toute l'année",
-      viewpoints: apiSite.coordonnees
-        ? `${apiSite.coordonnees.lat}, ${apiSite.coordonnees.lng}`
-        : "",
-      flora: "Végétation méditerranéenne",
-    },
-    // Coordonnées pour la carte
+    // Image principale (première image disponible)
+    image: gallery[0] || null,
+    // Coordonnées pour la carte et les liens Maps
     lat: apiSite.coordonnees?.lat,
     lng: apiSite.coordonnees?.lng,
   };

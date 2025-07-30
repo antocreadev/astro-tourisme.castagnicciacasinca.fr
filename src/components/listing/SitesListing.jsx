@@ -1,29 +1,54 @@
-import { useState, useCallback } from 'react';
-import { filterSites, sortSites } from '../../utils/siteFilters.js';
-import { sites as fallbackSites, siteTypes, difficulties, durations, sitesCommunes } from '../../data/sites.js';
-import SiteFilterBar from '../ui/SiteFilterBar.jsx';
+import { useState, useCallback, useEffect } from 'react';
+import { sites as fallbackSites } from '../../data/sites.js';
 import SiteCard from '../ui/SiteCard.jsx';
-import { Grid, List, ChevronLeft, ChevronRight, Mountain } from 'lucide-react';
+import { Grid, List, ChevronLeft, ChevronRight, Search, Mountain } from 'lucide-react';
 
 export default function SitesListing({ sites = fallbackSites }) {
   const [filteredSites, setFilteredSites] = useState(sites);
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState('title');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCommune, setSelectedCommune] = useState('toutes');
   const sitesPerPage = 12;
 
-  const handleFiltersChange = useCallback((filters) => {
-    const filtered = filterSites(sites, filters);
-    const sorted = sortSites(filtered, sortBy);
-    setFilteredSites(sorted);
-    setCurrentPage(1); // Reset to first page when filters change
-  }, [sites, sortBy]);
-
-  const handleSortChange = (newSortBy) => {
-    setSortBy(newSortBy);
-    const sorted = sortSites(filteredSites, newSortBy);
-    setFilteredSites(sorted);
+  // Obtenir les communes uniques depuis les données de l'API
+  const getUniqueCommunes = () => {
+    const communes = sites.map(site => site.commune).filter(Boolean);
+    return [...new Set(communes)].sort();
   };
+
+  useEffect(() => {
+    applyFilters();
+  }, [sites, searchTerm, selectedCommune]);
+
+  const applyFilters = () => {
+    let filtered = [...sites];
+
+    // Filtre par recherche
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(site => 
+        site.title.toLowerCase().includes(term) ||
+        site.commune?.toLowerCase().includes(term) ||
+        site.description.toLowerCase().includes(term)
+      );
+    }
+
+    // Filtre par commune
+    if (selectedCommune !== 'toutes') {
+      filtered = filtered.filter(site => site.commune === selectedCommune);
+    }
+
+    setFilteredSites(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
+  };
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setSelectedCommune('toutes');
+  };
+
+  const activeFiltersCount = [searchTerm, selectedCommune !== 'toutes'].filter(Boolean).length;
 
   // Pagination
   const totalPages = Math.ceil(filteredSites.length / sitesPerPage);
@@ -44,11 +69,11 @@ export default function SitesListing({ sites = fallbackSites }) {
           <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
             <a href="/" className="hover:text-gray-700">Accueil</a>
             <span>/</span>
-            <span className="text-gray-900">Sites phares</span>
+            <span className="text-gray-900">Sites</span>
           </nav>
           
           <div className="text-center">
-            <h1 className="text-4xl sm:text-6xl font-bold text-black mb-4">Les sites phares</h1>
+            <h1 className="text-4xl sm:text-6xl font-bold text-black mb-4">Les sites</h1>
             <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
               Découvrez les trésors naturels et patrimoniaux de la Castagniccia-Casinca : 
               sommets panoramiques, villages authentiques, sources thermales et écosystèmes préservés.
@@ -58,13 +83,47 @@ export default function SitesListing({ sites = fallbackSites }) {
       </div>
 
       {/* Filters */}
-      <SiteFilterBar 
-        types={siteTypes}
-        communes={sitesCommunes}
-        difficulties={difficulties}
-        durations={durations}
-        onFiltersChange={handleFiltersChange}
-      />
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+            {/* Search */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Rechercher un site..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            {/* Commune Filter */}
+            <div className="flex flex-wrap items-center gap-4">
+              <select
+                value={selectedCommune}
+                onChange={(e) => setSelectedCommune(e.target.value)}
+                className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="toutes">Toutes les communes</option>
+                {getUniqueCommunes().map(commune => (
+                  <option key={commune} value={commune}>{commune}</option>
+                ))}
+              </select>
+
+              {/* Clear Filters */}
+              {activeFiltersCount > 0 && (
+                <button
+                  onClick={clearFilters}
+                  className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                >
+                  Effacer les filtres ({activeFiltersCount})
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Results Header */}
       <div className="max-w-7xl mx-auto px-4 py-6">
@@ -73,21 +132,6 @@ export default function SitesListing({ sites = fallbackSites }) {
             <p className="text-gray-600">
               <span className="font-semibold">{filteredSites.length}</span> site{filteredSites.length > 1 ? 's' : ''} trouvé{filteredSites.length > 1 ? 's' : ''}
             </p>
-            
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Trier par:</span>
-              <select
-                value={sortBy}
-                onChange={(e) => handleSortChange(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="title">Nom</option>
-                <option value="commune">Commune</option>
-                <option value="difficulty">Difficulté</option>
-                <option value="duration">Durée</option>
-                <option value="altitude">Altitude</option>
-              </select>
-            </div>
           </div>
 
           <div className="flex items-center gap-2">
@@ -128,7 +172,7 @@ export default function SitesListing({ sites = fallbackSites }) {
                 <SiteCard
                   key={site.id}
                   site={site}
-                  href={`/sites-phares/${site.slug}`}
+                  href={`/sites/${site.slug}`}
                 />
               ))}
             </div>

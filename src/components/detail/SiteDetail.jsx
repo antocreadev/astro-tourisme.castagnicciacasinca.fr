@@ -1,48 +1,31 @@
 import { 
-  Mountain, 
   MapPin, 
-  Clock, 
-  TrendingUp,
   ArrowLeft, 
   Share2,
   Heart,
-  Car,
-  Info,
-  Trees,
-  Eye,
-  Camera,
-  Compass,
-  Building,
-  Droplets,
-  Calendar
+  ExternalLink,
+  Camera
 } from 'lucide-react';
 import { useState } from 'react';
-
-const typeIcons = {
-  montagne: Mountain,
-  nature: Trees,
-  village: Building,
-  thermal: Droplets,
-  belvédère: Eye
-};
-
-const difficultyColors = {
-  facile: 'bg-green-100 text-green-800 border-green-200',
-  modéré: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  difficile: 'bg-red-100 text-red-800 border-red-200'
-};
-
-const typeColors = {
-  montagne: 'bg-green-100 text-green-800 border-green-200',
-  nature: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  village: 'bg-orange-100 text-orange-800 border-orange-200',
-  thermal: 'bg-blue-100 text-blue-800 border-blue-200',
-  belvédère: 'bg-purple-100 text-purple-800 border-purple-200'
-};
+import { openMaps, getGoogleMapsUrl } from '../../utils/mapsUtils.js';
 
 export default function SiteDetail({ site }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+
+  if (!site) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Site non trouvé</h1>
+          <p className="text-gray-600 mb-4">Ce site n'existe pas ou n'est plus disponible.</p>
+          <a href="/sites" className="text-blue-600 hover:text-blue-800">
+            ← Retour aux sites
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -67,9 +50,11 @@ export default function SiteDetail({ site }) {
     // Here you could save to localStorage or send to an API
   };
 
-  const TypeIcon = typeIcons[site.type] || Mountain;
-  const typeColor = typeColors[site.type] || 'bg-gray-100 text-gray-800 border-gray-200';
-  const difficultyColor = difficultyColors[site.difficulty] || 'bg-gray-100 text-gray-800 border-gray-200';
+  const handleOpenMaps = () => {
+    if (site.coordinates?.lat && site.coordinates?.lng) {
+      openMaps(site.coordinates.lat, site.coordinates.lng, site.title);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -89,7 +74,7 @@ export default function SiteDetail({ site }) {
               <nav className="hidden sm:flex items-center gap-2 text-sm text-gray-500">
                 <a href="/" className="hover:text-gray-700">Accueil</a>
                 <span>/</span>
-                <a href="/sites-phares" className="hover:text-gray-700">Sites phares</a>
+                <a href="/sites" className="hover:text-gray-700">Sites</a>
                 <span>/</span>
                 <span className="text-gray-900 truncate max-w-48">{site.title}</span>
               </nav>
@@ -157,195 +142,108 @@ export default function SiteDetail({ site }) {
 
             {/* Site Info */}
             <div>
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium border ${typeColor}`}>
-                      <TypeIcon className="w-4 h-4" />
-                      {site.type.charAt(0).toUpperCase() + site.type.slice(1)}
-                    </div>
-                    <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium border ${difficultyColor}`}>
-                      <TrendingUp className="w-4 h-4" />
-                      {site.difficulty.charAt(0).toUpperCase() + site.difficulty.slice(1)}
-                    </div>
+              <div className="mb-6">
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+                  {site.title}
+                </h1>
+                {site.commune && (
+                  <div className="flex items-center gap-2 text-gray-600 mb-4">
+                    <MapPin className="w-5 h-5 text-red-600" />
+                    <span className="text-lg">{site.commune}</span>
                   </div>
-                  <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
-                    {site.title}
-                  </h1>
-                  <p className="text-xl text-gray-600 mb-4">
-                    {site.subtitle}
-                  </p>
-                </div>
+                )}
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                <div className="flex items-center gap-3 text-gray-700">
-                  <MapPin className="w-5 h-5 text-red-600" />
-                  <div>
-                    <div className="font-medium">{site.commune}</div>
-                    {site.altitude && (
-                      <div className="text-sm text-gray-500">{site.altitude}</div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 text-gray-700">
-                  <Clock className="w-5 h-5 text-blue-600" />
-                  <div>
-                    <div className="font-medium">Durée</div>
-                    <div className="text-sm text-gray-500">{site.duration}</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 text-gray-700">
-                  <TrendingUp className="w-5 h-5 text-orange-600" />
-                  <div>
-                    <div className="font-medium">Difficulté</div>
-                    <div className="text-sm text-gray-500">{site.difficulty.charAt(0).toUpperCase() + site.difficulty.slice(1)}</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 text-gray-700">
-                  <Camera className="w-5 h-5 text-purple-600" />
-                  <div>
-                    <div className="font-medium">Type</div>
-                    <div className="text-sm text-gray-500">{site.type.charAt(0).toUpperCase() + site.type.slice(1)}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Activities */}
-              {site.activities && site.activities.length > 0 && (
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-3">Activités</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {site.activities.map((activity, index) => (
-                      <span
-                        key={index}
-                        className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
-                      >
-                        {activity}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               {/* Description */}
               <div className="prose prose-lg max-w-none">
-                <div dangerouslySetInnerHTML={{ __html: site.fullDescription }} />
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                  {site.description}
+                </p>
               </div>
+
+              {/* Links */}
+              {site.links && site.links.length > 0 && (
+                <div className="border-t pt-6 mt-6">
+                  <h3 className="text-lg font-semibold mb-4">Liens utiles</h3>
+                  <div className="space-y-3">
+                    {site.links.map((link, index) => {
+                      // Extraire le nom de domaine pour un affichage plus propre
+                      let displayText = link.url;
+                      try {
+                        const url = new URL(link.url);
+                        displayText = url.hostname.replace('www.', '');
+                      } catch (e) {
+                        // Si l'URL n'est pas valide, garder l'URL complète
+                      }
+                      
+                      return (
+                        <a
+                          key={index}
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors"
+                        >
+                          {link.image && (
+                            <img 
+                              src={link.image} 
+                              alt="" 
+                              className="w-6 h-6 flex-shrink-0"
+                            />
+                          )}
+                          <span className="text-blue-600 hover:text-blue-800 flex-1">
+                            {displayText}
+                          </span>
+                          <ExternalLink className="w-4 h-4 text-gray-400" />
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Quick Info Card */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Info className="w-5 h-5 text-blue-600" />
-                Informations pratiques
-              </h3>
-              
-              <div className="space-y-4">
-                {site.details.access && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Compass className="w-4 h-4 text-gray-500" />
-                      <span className="font-medium text-sm text-gray-700">Accès</span>
-                    </div>
-                    <p className="text-gray-900">{site.details.access}</p>
+            {/* Location Card */}
+            {site.coordinates && (
+              <div className="bg-white rounded-xl p-6 shadow-sm border">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-red-600" />
+                  Localisation
+                </h3>
+                
+                <div className="space-y-4">
+                  {/* Info de localisation */}
+                  <div className="text-center mb-4">
+                    <p className="font-medium text-gray-900">{site.title}</p>
+                    <p className="text-gray-600">{site.commune}</p>
+                    <p className="text-xs text-gray-400 mt-2">
+                      {site.coordinates.lat.toFixed(4)}, {site.coordinates.lng.toFixed(4)}
+                    </p>
                   </div>
-                )}
-
-                {site.details.parking && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Car className="w-4 h-4 text-gray-500" />
-                      <span className="font-medium text-sm text-gray-700">Parking</span>
-                    </div>
-                    <p className="text-gray-900">{site.details.parking}</p>
-                  </div>
-                )}
-
-                {site.details.equipment && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Info className="w-4 h-4 text-gray-500" />
-                      <span className="font-medium text-sm text-gray-700">Équipement</span>
-                    </div>
-                    <p className="text-gray-900">{site.details.equipment}</p>
-                  </div>
-                )}
-
-                {site.details.season && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Calendar className="w-4 h-4 text-gray-500" />
-                      <span className="font-medium text-sm text-gray-700">Meilleure période</span>
-                    </div>
-                    <p className="text-gray-900">{site.details.season}</p>
-                  </div>
-                )}
-
-                {site.details.viewpoints && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Eye className="w-4 h-4 text-gray-500" />
-                      <span className="font-medium text-sm text-gray-700">Points de vue</span>
-                    </div>
-                    <p className="text-gray-900">{site.details.viewpoints}</p>
-                  </div>
-                )}
-
-                {site.details.flora && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Trees className="w-4 h-4 text-gray-500" />
-                      <span className="font-medium text-sm text-gray-700">Flore</span>
-                    </div>
-                    <p className="text-gray-900">{site.details.flora}</p>
-                  </div>
-                )}
-
-                {site.details.fauna && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Info className="w-4 h-4 text-gray-500" />
-                      <span className="font-medium text-sm text-gray-700">Faune</span>
-                    </div>
-                    <p className="text-gray-900">{site.details.fauna}</p>
-                  </div>
-                )}
-
-                {site.details.heritage && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Building className="w-4 h-4 text-gray-500" />
-                      <span className="font-medium text-sm text-gray-700">Patrimoine</span>
-                    </div>
-                    <p className="text-gray-900">{site.details.heritage}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Map placeholder */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-red-600" />
-                Localisation
-              </h3>
-              <div className="bg-gray-100 rounded-lg h-48 flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <MapPin className="w-8 h-8 mx-auto mb-2" />
-                  <p className="font-medium">{site.title}</p>
-                  <p className="text-sm">{site.commune}</p>
-                  {site.altitude && (
-                    <p className="text-sm font-medium text-blue-600">{site.altitude}</p>
-                  )}
+                  
+                  {/* Bouton unique pour ouvrir dans Maps */}
+                  <button
+                    onClick={handleOpenMaps}
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <MapPin className="w-4 h-4" />
+                    Ouvrir dans Maps
+                  </button>
                 </div>
               </div>
+            )}
+
+            {/* Back to list */}
+            <div className="bg-white rounded-xl p-6 shadow-sm border">
+              <a 
+                href="/sites"
+                className="block w-full bg-gray-100 text-gray-700 text-center py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors"
+              >
+                ← Retour aux sites
+              </a>
             </div>
           </div>
         </div>

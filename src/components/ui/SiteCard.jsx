@@ -1,34 +1,8 @@
-import { Mountain, Trees, Building, Droplets, Eye, MapPin, Clock, TrendingUp } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { useState } from 'react';
-
-const typeIcons = {
-  montagne: Mountain,
-  nature: Trees,
-  village: Building,
-  thermal: Droplets,
-  belvédère: Eye
-};
-
-const difficultyColors = {
-  facile: 'bg-green-100 text-green-800',
-  modéré: 'bg-yellow-100 text-yellow-800',
-  difficile: 'bg-red-100 text-red-800'
-};
-
-const typeColors = {
-  montagne: 'bg-green-100 text-green-800',
-  nature: 'bg-emerald-100 text-emerald-800',
-  village: 'bg-orange-100 text-orange-800',
-  thermal: 'bg-blue-100 text-blue-800',
-  belvédère: 'bg-purple-100 text-purple-800'
-};
 
 export default function SiteCard({ site, href, onClick }) {
   const [imageLoaded, setImageLoaded] = useState(false);
-  
-  const TypeIcon = typeIcons[site.type] || MapPin;
-  const typeColor = typeColors[site.type] || 'bg-gray-100 text-gray-800';
-  const difficultyColor = difficultyColors[site.difficulty] || 'bg-gray-100 text-gray-800';
 
   const handleClick = (e) => {
     if (onClick) {
@@ -54,22 +28,11 @@ export default function SiteCard({ site, href, onClick }) {
           <div className="absolute inset-0 bg-gray-200 animate-pulse" />
         )}
         
-        {/* Overlay with badges */}
-        <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-          <div className="flex flex-col gap-2">
-            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${typeColor}`}>
-              <TypeIcon className="w-3 h-3" />
-              {site.type.charAt(0).toUpperCase() + site.type.slice(1)}
-            </span>
-            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${difficultyColor}`}>
-              <TrendingUp className="w-3 h-3" />
-              {site.difficulty.charAt(0).toUpperCase() + site.difficulty.slice(1)}
-            </span>
-          </div>
-          
-          {site.altitude && (
+        {/* Overlay */}
+        <div className="absolute top-3 right-3">
+          {site.commune && (
             <div className="bg-black bg-opacity-60 text-white px-2 py-1 rounded-full text-xs font-medium">
-              {site.altitude}
+              {site.commune}
             </div>
           )}
         </div>
@@ -98,38 +61,11 @@ export default function SiteCard({ site, href, onClick }) {
             <MapPin className="w-4 h-4 flex-shrink-0 text-red-500" />
             <span className="truncate">{site.commune}</span>
           </div>
-          
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Clock className="w-4 h-4 flex-shrink-0 text-blue-500" />
-            <span>{site.duration}</span>
-          </div>
         </div>
-
-        {/* Activities tags */}
-        {site.activities && site.activities.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-4">
-            {site.activities.slice(0, 3).map((activity, index) => (
-              <span
-                key={index}
-                className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
-              >
-                {activity}
-              </span>
-            ))}
-            {site.activities.length > 3 && (
-              <span className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                +{site.activities.length - 3}
-              </span>
-            )}
-          </div>
-        )}
 
         <div className="flex items-center justify-between pt-2 border-t border-gray-100">
           <div className="text-sm text-gray-500">
-            {site.type === 'montagne' ? 'Randonnée' : 
-             site.type === 'village' ? 'Visite' :
-             site.type === 'thermal' ? 'Détente' :
-             'Découverte'}
+            Site culturel
           </div>
           
           <div className="flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium text-sm">

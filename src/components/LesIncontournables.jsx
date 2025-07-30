@@ -36,7 +36,7 @@ export default function LesIncontournables({ data, sites = fallbackSites }) {
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-bold text-black">{data?.SousTitre1 || 'Les sites phares'}</h2>
             <a 
-              href={data?.LienSection1?.Lien || "/sites-phares"}
+              href={data?.LienSection1?.Lien || "/sites"}
               className="font-medium flex items-center gap-2 transition-colors incontournables-link"
               style={{ color: data?.LienSection1?.TextColor || '#2563eb' }}
             >
@@ -50,7 +50,7 @@ export default function LesIncontournables({ data, sites = fallbackSites }) {
             {sitesPhares.map((site, index) => (
               <a 
                 key={index}
-                href={`/sites-phares/${site.slug}`}
+                href={`/sites/${site.slug}`}
                 className="group block h-full"
               >
                 <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-[300px] flex flex-col">

@@ -8,6 +8,6 @@ const sitesData = await fetchSites();
 const sites = sitesData.data.map(transformSiteData);
 ---
 
-<Layout title="Sites phares - Castagniccia Casinca">
+<Layout title="Sites - Castagniccia Casinca">
   <SitesListing sites={sites} client:load />
 </Layout>
