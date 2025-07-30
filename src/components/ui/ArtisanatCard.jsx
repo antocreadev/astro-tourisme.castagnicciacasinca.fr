@@ -14,7 +14,7 @@ const ArtisanatCard = ({ artisan }) => {
   const getTypeIcon = (type) => {
     const typeMap = {
       'Miel & Apiculture': '🍯',
-      'Charcuterie Corse': '🥓',
+      'Charcuterie Corse': '',
       'Fromage & Produits Laitiers': '🧀',
       'Spiritueux & Liqueurs': '🍷',
       'Poterie & Céramique': '🏺',
@@ -38,15 +38,15 @@ const ArtisanatCard = ({ artisan }) => {
           />
         ) : (
           <div className="w-full h-48 bg-gradient-to-br from-amber-100 to-orange-200 flex items-center justify-center">
-            <span className="text-6xl">
+            {/* <span className="text-6xl">
               {getTypeIcon(artisan.type_artisanat_et_produit?.Titre)}
-            </span>
+            </span> */}
           </div>
         )}
         
         {/* Badge type */}
         <div className="absolute top-2 left-2 bg-white bg-opacity-90 backdrop-blur-sm px-2 py-1 rounded-full">
-          <span className="text-sm mr-1">{getTypeIcon(artisan.type_artisanat_et_produit?.Titre)}</span>
+          {/* <span className="text-sm mr-1">{getTypeIcon(artisan.type_artisanat_et_produit?.Titre)}</span> */}
           <span className="text-xs font-medium text-gray-700">{artisan.type_artisanat_et_produit?.Titre}</span>
         </div>
       </div>

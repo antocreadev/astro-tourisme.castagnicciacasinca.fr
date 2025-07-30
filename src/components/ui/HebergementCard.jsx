@@ -1,22 +1,22 @@
 import React from 'react';
 
 const HebergementCard = ({ hebergement }) => {
-  const getTypeIcon = (type) => {
-    switch (type) {
-      case 'hotel':
-        return '🏨';
-      case 'auberge':
-        return '🏡';
-      case 'camping':
-        return '🏕️';
-      case 'residence':
-        return '🏢';
-      case 'village-vacances':
-        return '🏖️';
-      default:
-        return '🏠';
-    }
-  };
+  // const getTypeIcon = (type) => {
+  //   switch (type) {
+  //     case 'hotel':
+  //       return '🏨';
+  //     case 'auberge':
+  //       return '🏡';
+  //     case 'camping':
+  //       return '🏕️';
+  //     case 'residence':
+  //       return '🏢';
+  //     case 'village-vacances':
+  //       return '🏖️';
+  //     default:
+  //       return '🏠';
+  //   }
+  // };
 
   const getTypeLabel = (type) => {
     switch (type) {
@@ -49,7 +49,7 @@ const HebergementCard = ({ hebergement }) => {
           className="w-full h-48 object-cover"
         />
         <div className="absolute top-3 left-3 bg-white bg-opacity-90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center space-x-1">
-          <span className="text-lg">{getTypeIcon(hebergement.type)}</span>
+          {/* <span className="text-lg">{getTypeIcon(hebergement.type)}</span> */}
           <span className="text-sm font-medium text-gray-700">{getTypeLabel(hebergement.type)}</span>
         </div>
         {hebergement.labelQualite && (

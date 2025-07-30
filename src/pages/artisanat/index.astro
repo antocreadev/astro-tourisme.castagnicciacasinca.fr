@@ -15,7 +15,11 @@ const response = await fetch(`${PUBLIC_API_URL}/api/artisanat-et-produits`, {
 const artisanatData: RootartisanatEtProduit = await response.json();
 ---
 
-<Layout title="Artisanat & Terroir - Castagniccia Casinca">
+<Layout 
+  title="Artisanat & Terroir - Castagniccia Casinca"
+  pageCategory="artisanat"
+  pageName="liste-artisanat-terroir"
+>
   <main>
     <ArtisanatListing artisanat={artisanatData.data} client:load />
   </main>

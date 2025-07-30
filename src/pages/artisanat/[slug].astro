@@ -39,7 +39,12 @@ const title = `${artisan.Titre} - Artisanat & Terroir - Castagniccia Casinca`;
 const description = artisan.Description;
 ---
 
-<Layout title={title} description={description}>
+<Layout 
+  title={title} 
+  description={description}
+  pageCategory="artisanat"
+  pageName={artisan.Titre}
+>
   <main>
     <ArtisanatDetail artisan={artisan} client:load />
   </main>

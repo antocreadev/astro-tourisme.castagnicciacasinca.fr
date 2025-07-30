@@ -17,21 +17,21 @@ const ArtisanatDetail = ({ artisan }) => {
     );
   }
 
-  // Icône par type de produit
-  const getTypeIcon = (type) => {
-    const typeMap = {
-      'Miel & Apiculture': '🍯',
-      'Charcuterie Corse': '🥓',
-      'Fromage & Produits Laitiers': '🧀',
-      'Spiritueux & Liqueurs': '🍷',
-      'Poterie & Céramique': '🏺',
-      'Bijouterie & Artisanat': '💍',
-      'Textile & Couture': '🧵',
-      'Bois & Ébénisterie': '🪵',
-      'Produits du Terroir': '🌾',
-    };
-    return typeMap[type] || '🏪';
-  };
+  // // Icône par type de produit
+  // const getTypeIcon = (type) => {
+  //   const typeMap = {
+  //     'Miel & Apiculture': '🍯',
+  //     'Charcuterie Corse': '',
+  //     'Fromage & Produits Laitiers': '🧀',
+  //     'Spiritueux & Liqueurs': '🍷',
+  //     'Poterie & Céramique': '🏺',
+  //     'Bijouterie & Artisanat': '💍',
+  //     'Textile & Couture': '🧵',
+  //     'Bois & Ébénisterie': '🪵',
+  //     'Produits du Terroir': '🌾',
+  //   };
+  //   return typeMap[type] || '🏪';
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -61,15 +61,15 @@ const ArtisanatDetail = ({ artisan }) => {
                   />
                 ) : (
                   <div className="w-full h-64 md:h-80 bg-gradient-to-br from-amber-100 to-orange-200 flex items-center justify-center">
-                    <span className="text-8xl">
+                    {/* <span className="text-8xl">
                       {getTypeIcon(artisan.type_artisanat_et_produit?.Titre)}
-                    </span>
+                    </span> */}
                   </div>
                 )}
                 
                 {/* Badge type */}
                 <div className="absolute top-4 left-4 bg-white bg-opacity-90 backdrop-blur-sm rounded-full px-3 py-2 flex items-center space-x-2">
-                  <span className="text-xl">{getTypeIcon(artisan.type_artisanat_et_produit?.Titre)}</span>
+            
                   <span className="font-medium text-gray-700">{artisan.type_artisanat_et_produit?.Titre}</span>
                 </div>
               </div>
@@ -131,7 +131,7 @@ const ArtisanatDetail = ({ artisan }) => {
                 <div>
                   <h4 className="font-medium text-gray-700 mb-2">Activité</h4>
                   <div className="flex items-center">
-                    <span className="text-2xl mr-2">{getTypeIcon(artisan.type_artisanat_et_produit?.Titre)}</span>
+                    {/* <span className="text-2xl mr-2">{getTypeIcon(artisan.type_artisanat_et_produit?.Titre)}</span> */}
                     <span className="text-gray-600">{artisan.type_artisanat_et_produit?.Titre}</span>
                   </div>
                 </div>

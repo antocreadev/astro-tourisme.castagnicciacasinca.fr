@@ -15,13 +15,13 @@ const ArtisanatDetail = ({ artisan }) => {
     );
   }
 
-  const getTypeIcon = (type) => {
-    switch (type) {
-      case 'producteur': return '🌾';
-      case 'artisan': return '🛠️';
-      default: return '🏪';
-    }
-  };
+  // const getTypeIcon = (type) => {
+  //   switch (type) {
+  //     case 'producteur': return '🌾';
+  //     case 'artisan': return '🛠️';
+  //     default: return '🏪';
+  //   }
+  // };
 
   const getTypeLabel = (type) => {
     switch (type) {
@@ -34,7 +34,7 @@ const ArtisanatDetail = ({ artisan }) => {
   const getCategorieIcon = (categorie) => {
     switch (categorie) {
       case 'miel': return '🍯';
-      case 'charcuterie': return '🥓';
+      case 'charcuterie': return '';
       case 'fromage': return '🧀';
       case 'spiritueux': return '🍷';
       case 'poterie': return '🏺';
@@ -85,7 +85,7 @@ const ArtisanatDetail = ({ artisan }) => {
                   className="w-full h-64 md:h-80 object-cover"
                 />
                 <div className="absolute top-4 left-4 bg-white bg-opacity-90 backdrop-blur-sm rounded-full px-3 py-2 flex items-center space-x-2">
-                  <span className="text-xl">{getTypeIcon(artisan.type)}</span>
+                  
                   <span className="font-medium text-gray-700">{getTypeLabel(artisan.type)}</span>
                 </div>
                 <div className="absolute top-4 right-4 bg-blue-600 text-white rounded-full px-4 py-2 flex items-center space-x-2">

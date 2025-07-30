@@ -39,7 +39,12 @@ const title = `${plage.Nom} - Plages - Castagniccia Casinca`;
 const description = plage.Description;
 ---
 
-<Layout title={title} description={description}>
+<Layout 
+  title={title} 
+  description={description}
+  pageCategory="plages"
+  pageName={plage.Nom}
+>
   <main>
     <PlageDetail plage={plage} client:load />
   </main>

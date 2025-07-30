@@ -14,6 +14,10 @@ const dataEvenements = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
 const dataEvenementsJson: RootEvenements = await dataEvenements.json();
 ---
 
-<Layout title="Agenda - Castagniccia Casinca">
+<Layout 
+  title="Agenda - Castagniccia Casinca"
+  pageCategory="agenda"
+  pageName="liste-evenements"
+>
   <AgendaListing events={dataEvenementsJson.data} client:load />
 </Layout>

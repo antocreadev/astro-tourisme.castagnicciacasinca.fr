@@ -25,6 +25,8 @@ const { sejourner } = Astro.props;
 
 <Layout
   title={`${sejourner.Titre || "Séjourner"} - Séjourner - Castagniccia Casinca`}
+  pageCategory="sejourner"
+  pageName={sejourner.Titre}
 >
   <main>
     <SejournerDetail sejourner={sejourner} client:only="react" />

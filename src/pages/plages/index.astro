@@ -15,7 +15,11 @@ const response = await fetch(`${PUBLIC_API_URL}/api/plages`, {
 const plagesData: RootPlage = await response.json();
 ---
 
-<Layout title="Plages - Castagniccia Casinca">
+<Layout 
+  title="Plages - Castagniccia Casinca"
+  pageCategory="plages"
+  pageName="liste-plages"
+>
   <main>
     <PlagesListing plages={plagesData.data} client:load />
   </main>

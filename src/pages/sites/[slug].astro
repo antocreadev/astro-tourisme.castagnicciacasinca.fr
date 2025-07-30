@@ -39,6 +39,10 @@ if (!site) {
 }
 ---
 
-<Layout title={`${site.title} - Sites phares`}>
+<Layout 
+  title={`${(site as any).title} - Sites phares`}
+  pageCategory="sites"
+  pageName={(site as any).title}
+>
   <SiteDetail site={site} client:load />
 </Layout>

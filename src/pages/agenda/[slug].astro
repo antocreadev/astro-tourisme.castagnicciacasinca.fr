@@ -23,6 +23,10 @@ export async function getStaticPaths() {
 const { event } = Astro.props;
 ---
 
-<Layout title={`${event.Nom} - Agenda`}>
+<Layout 
+  title={`${event.Nom} - Agenda`}
+  pageCategory="agenda"
+  pageName={event.Nom}
+>
   <EventDetail event={event} client:only />
 </Layout>

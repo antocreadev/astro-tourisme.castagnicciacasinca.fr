@@ -17,7 +17,11 @@ const dataSejourner = await fetch(
 const dataSejournerJson: RootSejourner = await dataSejourner.json();
 ---
 
-<Layout title="Séjourner - Castagniccia Casinca">
+<Layout 
+  title="Séjourner - Castagniccia Casinca"
+  pageCategory="sejourner"
+  pageName="liste-hebergements"
+>
   <main>
     <SejournerListing sejourners={dataSejournerJson.data} client:only="react" />
   </main>

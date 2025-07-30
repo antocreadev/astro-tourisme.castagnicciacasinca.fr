@@ -15,16 +15,16 @@ const HebergementDetail = ({ hebergement }) => {
     );
   }
 
-  const getTypeIcon = (type) => {
-    switch (type) {
-      case 'hotel': return '🏨';
-      case 'auberge': return '🏡';
-      case 'camping': return '🏕️';
-      case 'residence': return '🏢';
-      case 'village-vacances': return '🏖️';
-      default: return '🏠';
-    }
-  };
+  // const getTypeIcon = (type) => {
+  //   switch (type) {
+  //     case 'hotel': return '🏨';
+  //     case 'auberge': return '🏡';
+  //     case 'camping': return '🏕️';
+  //     case 'residence': return '🏢';
+  //     case 'village-vacances': return '🏖️';
+  //     default: return '🏠';
+  //   }
+  // };
 
   const getTypeLabel = (type) => {
     switch (type) {

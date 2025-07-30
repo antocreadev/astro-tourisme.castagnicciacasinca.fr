@@ -1,16 +1,16 @@
 import React from 'react';
 
 const ArtisanatCard = ({ artisan }) => {
-  const getTypeIcon = (type) => {
-    switch (type) {
-      case 'producteur':
-        return '🌾';
-      case 'artisan':
-        return '🛠️';
-      default:
-        return '🏪';
-    }
-  };
+  // const getTypeIcon = (type) => {
+  //   switch (type) {
+  //     case 'producteur':
+  //       return '🌾';
+  //     case 'artisan':
+  //       return '🛠️';
+  //     default:
+  //       return '🏪';
+  //   }
+  // };
 
   const getTypeLabel = (type) => {
     switch (type) {
@@ -28,7 +28,7 @@ const ArtisanatCard = ({ artisan }) => {
       case 'miel':
         return '🍯';
       case 'charcuterie':
-        return '🥓';
+        return '';
       case 'fromage':
         return '🧀';
       case 'spiritueux':
@@ -78,7 +78,7 @@ const ArtisanatCard = ({ artisan }) => {
           className="w-full h-48 object-cover"
         />
         <div className="absolute top-3 left-3 bg-white bg-opacity-90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center space-x-1">
-          <span className="text-lg">{getTypeIcon(artisan.type)}</span>
+          {/* <span className="text-lg">{getTypeIcon(artisan.type)}</span> */}
           <span className="text-sm font-medium text-gray-700">{getTypeLabel(artisan.type)}</span>
         </div>
         <div className="absolute top-3 right-3 bg-blue-600 text-white rounded-full px-3 py-1 flex items-center space-x-1">

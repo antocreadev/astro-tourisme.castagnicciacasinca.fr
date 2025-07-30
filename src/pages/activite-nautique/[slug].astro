@@ -53,7 +53,12 @@ const title = `${activite.Nom} - Activités Nautiques - Castagniccia Casinca`;
 const description = activite.Description;
 ---
 
-<Layout title={title} description={description}>
+<Layout 
+  title={title} 
+  description={description}
+  pageCategory="activite-nautique"
+  pageName={activite.Nom}
+>
   <main>
     <ActiviteNautiqueDetail activite={activite} client:load />
   </main>
