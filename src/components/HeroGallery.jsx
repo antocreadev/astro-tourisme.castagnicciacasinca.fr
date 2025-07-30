@@ -98,41 +98,15 @@ const InfiniteScroll = ({ images = [] }) => {
 
   return (
     <div ref={containerRef} className="w-full overflow-hidden">
-      <style jsx>{`
-        .gallery-row {
-          will-change: transform;
-          backface-visibility: hidden;
-        }
-        
-        .image-item {
-          will-change: transform, opacity;
-          transform: translateZ(0);
-        }
-        
-        .image-item img {
-          will-change: opacity, transform;
-          backface-visibility: hidden;
-        }
-        
-        .image-enter {
-          opacity: 0;
-          transform: translateY(30px) scale(0.9);
-          transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .image-visible {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-      `}</style>
-
       {/* Première rangée - défilement vers la droite */}
       <div className="relative h-48 md:h-64 mb-8 overflow-hidden">
         <div 
-          className="absolute flex gallery-row"
+          className="absolute flex"
           style={{ 
             transform: `translate3d(${topRowTransform}px, 0, 0)`,
-            width: `${extendedTopImages.length * imageWidth}px`
+            width: `${extendedTopImages.length * imageWidth}px`,
+            willChange: 'transform',
+            backfaceVisibility: 'hidden'
           }}
         >
           {extendedTopImages.map((src, index) => {
@@ -142,14 +116,23 @@ const InfiniteScroll = ({ images = [] }) => {
             return (
               <div 
                 key={`top-${index}`} 
-                className="w-48 md:w-72 h-48 md:h-64 flex-shrink-0 px-2 image-item"
+                className="w-48 md:w-72 h-48 md:h-64 flex-shrink-0 px-2"
+                style={{
+                  willChange: 'transform, opacity',
+                  transform: 'translateZ(0)'
+                }}
               >
                 <img 
                   src={src} 
                   alt={`Image ${originalIndex + 1}`} 
-                  className={`w-full h-full object-cover rounded-lg image-enter ${
-                    isVisible ? 'image-visible' : ''
-                  }`}
+                  className="w-full h-full object-cover rounded-lg"
+                  style={{
+                    willChange: 'opacity, transform',
+                    backfaceVisibility: 'hidden',
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.9)',
+                    transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
                   loading="eager"
                 />
               </div>
@@ -161,10 +144,12 @@ const InfiniteScroll = ({ images = [] }) => {
       {/* Deuxième rangée - défilement vers la gauche */}
       <div className="relative h-48 md:h-64 overflow-hidden">
         <div 
-          className="absolute flex gallery-row"
+          className="absolute flex"
           style={{ 
             transform: `translate3d(${bottomRowTransform}px, 0, 0)`,
-            width: `${extendedBottomImages.length * imageWidth}px`
+            width: `${extendedBottomImages.length * imageWidth}px`,
+            willChange: 'transform',
+            backfaceVisibility: 'hidden'
           }}
         >
           {extendedBottomImages.map((src, index) => {
@@ -174,14 +159,23 @@ const InfiniteScroll = ({ images = [] }) => {
             return (
               <div 
                 key={`bottom-${index}`} 
-                className="w-48 md:w-72 h-48 md:h-64 flex-shrink-0 px-2 image-item"
+                className="w-48 md:w-72 h-48 md:h-64 flex-shrink-0 px-2"
+                style={{
+                  willChange: 'transform, opacity',
+                  transform: 'translateZ(0)'
+                }}
               >
                 <img 
                   src={src} 
                   alt={`Image ${originalIndex + 7}`} 
-                  className={`w-full h-full object-cover rounded-lg image-enter ${
-                    isVisible ? 'image-visible' : ''
-                  }`}
+                  className="w-full h-full object-cover rounded-lg"
+                  style={{
+                    willChange: 'opacity, transform',
+                    backfaceVisibility: 'hidden',
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.9)',
+                    transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
                   loading="eager"
                 />
               </div>
