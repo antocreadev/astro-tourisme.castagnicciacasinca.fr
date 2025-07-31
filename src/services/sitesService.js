@@ -18,14 +18,31 @@ function getApiBaseUrl() {
 export async function fetchSites() {
   try {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(
-      `${API_BASE_URL}/api/sites?populate=*&pagination[pageSize]=200`
-    );
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
+    let allData = [];
+    let page = 1;
+    let pageSize = 100;
+    let total = 0;
+    let pageCount = 1;
+    let meta = {};
+
+    do {
+      const response = await fetch(
+        `${API_BASE_URL}/api/sites?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      if (result.data) {
+        allData = allData.concat(result.data);
+      }
+      meta = result.meta || {};
+      total = meta.pagination?.total || 0;
+      pageCount = meta.pagination?.pageCount || 1;
+      page++;
+    } while (page <= pageCount);
+
+    return { data: allData, meta };
   } catch (error) {
     console.error("Erreur lors de la récupération des sites:", error);
     // Retourner des données vides en cas d'erreur
