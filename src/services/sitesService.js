@@ -18,7 +18,9 @@ function getApiBaseUrl() {
 export async function fetchSites() {
   try {
     const API_BASE_URL = getApiBaseUrl();
-    const response = await fetch(`${API_BASE_URL}/api/sites?populate=*`);
+    const response = await fetch(
+      `${API_BASE_URL}/api/sites?populate=*&pagination[pageSize]=200`
+    );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -39,7 +41,7 @@ export async function fetchSiteBySlug(slug) {
     const API_BASE_URL = getApiBaseUrl();
     // Essayer d'abord par documentId
     let response = await fetch(
-      `${API_BASE_URL}/api/sites?filters[documentId][$eq]=${slug}&populate=*`
+      `${API_BASE_URL}/api/sites?filters[documentId][$eq]=${slug}&populate=*&pagination[pageSize]=200`
     );
 
     if (!response.ok) {
@@ -56,7 +58,7 @@ export async function fetchSiteBySlug(slug) {
       response = await fetch(
         `${API_BASE_URL}/api/sites?filters[Titre][$containsi]=${encodeURIComponent(
           titleSlug
-        )}&populate=*`
+        )}&populate=*&pagination[pageSize]=200`
       );
       data = await response.json();
     }
