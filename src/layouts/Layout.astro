@@ -1,5 +1,7 @@
 ---
 import Navbar from "../components/Navbar.astro";
+import PageTracker from "../components/PageTracker.jsx";
+import VisiteurButton from "../components/VisiteurButton.jsx";
 import "../styles/global.css";
 
 // Récupérer les props pour le titre et autres métadonnées
@@ -42,6 +44,10 @@ const {
     <div class="mt-16">
       <slot />
     </div>
+
+    <!-- Composants React pour le tracking et le questionnaire -->
+    <PageTracker pageName={pageName} pageCategory={pageCategory} client:load />
+    <VisiteurButton client:load />
 
     <!-- Script pour le comptage des vues selon le type de page -->
     <script>
