@@ -58,9 +58,8 @@ const VisiteurModal = ({ isOpen, onClose }) => {
     setTimeout(() => {
       if (currentStep < steps.length) {
         setCurrentStep(prev => prev + 1);
-      } else {
-        handleSubmit();
       }
+      // Ne pas appeler automatiquement handleSubmit ici
     }, 300);
   };
 
@@ -90,22 +89,8 @@ const VisiteurModal = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleClose = async () => {
-    // Envoyer les données seulement si au moins 2 questions ont été répondues
-    if (Object.values(formData).filter(value => value !== '').length >= 2) {
-      try {
-        await fetch('https://data.castagnicciacasinca.fr/api/visiteur', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData)
-        });
-        localStorage.setItem('visiteur_questionnaire_completed', 'true');
-      } catch (error) {
-        console.error('Erreur lors de l\'envoi des données:', error);
-      }
-    }
+  const handleClose = () => {
+    // Ne pas envoyer automatiquement à la fermeture
     onClose();
   };
 

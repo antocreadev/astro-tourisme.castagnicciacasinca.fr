@@ -10,6 +10,13 @@ const VisiteurButton = () => {
     const hasAlreadySubmitted = localStorage.getItem('visiteur_questionnaire_completed');
     if (hasAlreadySubmitted) {
       setHasSubmitted(true);
+      return;
+    }
+
+    // Vérifier si on a déjà montré le modal dans cette session
+    const hasShownModal = sessionStorage.getItem('visiteur_modal_shown');
+    if (hasShownModal) {
+      return;
     }
 
     // Ouvrir automatiquement le modal seulement sur certaines pages importantes
@@ -17,9 +24,10 @@ const VisiteurButton = () => {
     const importantPages = ['/', '/index', '/sites', '/activites', '/sejourner'];
     const isImportantPage = importantPages.some(page => currentPath === page || currentPath.startsWith(page));
 
-    if (!hasAlreadySubmitted && isImportantPage) {
+    if (isImportantPage) {
       const timer = setTimeout(() => {
         setIsModalOpen(true);
+        sessionStorage.setItem('visiteur_modal_shown', 'true');
       }, 15000); // 15 secondes après le chargement de la page
 
       return () => clearTimeout(timer);
@@ -28,6 +36,8 @@ const VisiteurButton = () => {
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
+    // Marquer comme montré même si ouvert manuellement
+    sessionStorage.setItem('visiteur_modal_shown', 'true');
   };
 
   const handleCloseModal = () => {
