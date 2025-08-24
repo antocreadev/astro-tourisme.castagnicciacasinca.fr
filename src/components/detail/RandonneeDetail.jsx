@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -12,11 +12,19 @@ import {
   MapPin, 
   ArrowLeft, 
   ExternalLink,
-  Star 
+  Star,
+  ChevronLeft,
+  ChevronRight,
+  Image as ImageIcon
 } from "lucide-react";
 
 const RandonneeDetail = ({ randonnee }) => {
-  const imageUrl = getImageUrl(randonnee.image);
+  const images = randonnee.images || [];
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const currentImage = images[currentIndex];
+  const imageUrl = currentImage ? getImageUrl(currentImage.formats?.large || currentImage.formats?.medium || currentImage) : getImageUrl(randonnee.image);
+  const goPrev = () => setCurrentIndex(idx => (idx === 0 ? images.length - 1 : idx - 1));
+  const goNext = () => setCurrentIndex(idx => (idx === images.length - 1 ? 0 : idx + 1));
   
   const getDifficultyColor = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
@@ -64,19 +72,71 @@ const RandonneeDetail = ({ randonnee }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contenu principal */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Image principale */}
+            {/* Galerie d'images */}
             {imageUrl && (
               <div className="relative h-96 rounded-2xl overflow-hidden shadow-lg">
                 <img
                   src={imageUrl}
-                  alt={randonnee.Nom}
+                  alt={currentImage?.alternativeText || randonnee.Nom}
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                 <div className="absolute bottom-6 left-6 text-white">
                   <h1 className="text-3xl font-bold mb-2">{randonnee.Nom}</h1>
                   <p className="text-lg opacity-90">{randonnee.commune?.Nom}</p>
                 </div>
+                {images.length > 1 && (
+                  <>
+                    <button
+                      onClick={goPrev}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-gray-900 p-2 rounded-full"
+                      aria-label="Image précédente"
+                    >
+                      <ChevronLeft size={22} />
+                    </button>
+                    <button
+                      onClick={goNext}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-gray-900 p-2 rounded-full"
+                      aria-label="Image suivante"
+                    >
+                      <ChevronRight size={22} />
+                    </button>
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                      {images.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setCurrentIndex(i)}
+                          className={`w-3 h-3 rounded-full border border-white ${i === currentIndex ? 'bg-white' : 'bg-white/50'}`}
+                          aria-label={`Image ${i + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+                {images.length > 1 && (
+                  <div className="absolute top-4 right-4 bg-black/60 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1">
+                    <ImageIcon size={14} /> {currentIndex + 1}/{images.length}
+                  </div>
+                )}
+              </div>
+            )}
+            {images.length > 1 && (
+              <div className="grid grid-cols-6 gap-2 mt-3">
+                {images.map((img, i) => (
+                  <button
+                    key={img.id || i}
+                    onClick={() => setCurrentIndex(i)}
+                    className={`h-16 rounded overflow-hidden border ${i === currentIndex ? 'ring-2 ring-blue-500 border-blue-500' : 'border-transparent'}`}
+                  >
+                    <img
+                      src={getImageUrl(img.formats?.thumbnail || img.formats?.small || img)}
+                      alt={img.alternativeText || randonnee.Nom}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </button>
+                ))}
               </div>
             )}
 
@@ -89,7 +149,7 @@ const RandonneeDetail = ({ randonnee }) => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 leading-relaxed">{randonnee.Description}</p>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">{randonnee.Description}</p>
               </CardContent>
             </Card>
 

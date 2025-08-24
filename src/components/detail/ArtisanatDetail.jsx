@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { getImageUrl } from '../../utils/eventUtils';
-import { Phone, Mail, MapPin, ExternalLink, Clock, User, Tag } from 'lucide-react';
+import { Phone, Mail, MapPin, ExternalLink, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ArtisanatDetail = ({ artisan }) => {
   if (!artisan) {
@@ -33,6 +33,14 @@ const ArtisanatDetail = ({ artisan }) => {
   //   return typeMap[type] || '🏪';
   // };
 
+  const images = artisan.images || [];
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const goPrev = () => setCurrentIndex((idx) => (idx === 0 ? images.length - 1 : idx - 1));
+  const goNext = () => setCurrentIndex((idx) => (idx === images.length - 1 ? 0 : idx + 1));
+
+  const currentImage = images[currentIndex];
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
@@ -50,28 +58,77 @@ const ArtisanatDetail = ({ artisan }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contenu principal */}
           <div className="lg:col-span-2">
-            {/* Image principale */}
+            {/* Galerie d'images */}
             <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
-              <div className="relative">
-                {artisan.image ? (
-                  <img 
-                    src={getImageUrl(artisan.image)} 
-                    alt={artisan.Titre}
-                    className="w-full h-64 md:h-80 object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-64 md:h-80 bg-gradient-to-br from-amber-100 to-orange-200 flex items-center justify-center">
-                    {/* <span className="text-8xl">
-                      {getTypeIcon(artisan.type_artisanat_et_produit?.Titre)}
-                    </span> */}
-                  </div>
-                )}
-                
-                {/* Badge type */}
-                <div className="absolute top-4 left-4 bg-white bg-opacity-90 backdrop-blur-sm rounded-full px-3 py-2 flex items-center space-x-2">
-                  {/* <span className="text-xl">{getTypeIcon(artisan.type_artisanat_et_produit?.Titre)}</span> */}
-                  <span className="font-medium text-gray-700">{artisan.type_artisanat_et_produit?.Titre}</span>
+              {images.length > 0 ? (
+                <div className="relative">
+                  {currentImage && (
+                    <img
+                      src={getImageUrl(currentImage.formats?.large || currentImage.formats?.medium || currentImage)}
+                      alt={currentImage.alternativeText || artisan.Titre}
+                      className="w-full h-72 md:h-96 object-cover"
+                      loading="lazy"
+                    />
+                  )}
+
+                  {/* Navigation */}
+                  {images.length > 1 && (
+                    <>
+                      <button
+                        onClick={goPrev}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-gray-800 p-2 rounded-full shadow"
+                        aria-label="Image précédente"
+                      >
+                        <ChevronLeft size={20} />
+                      </button>
+                      <button
+                        onClick={goNext}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-gray-800 p-2 rounded-full shadow"
+                        aria-label="Image suivante"
+                      >
+                        <ChevronRight size={20} />
+                      </button>
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                        {images.map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={() => setCurrentIndex(i)}
+                            className={`w-2.5 h-2.5 rounded-full ${i === currentIndex ? 'bg-white' : 'bg-white/50'} border border-white/60`}
+                            aria-label={`Aller à l'image ${i + 1}`}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
+              ) : (
+                <div className="w-full h-72 md:h-96 bg-gradient-to-br from-amber-100 to-orange-200" />
+              )}
+
+              {/* Vignettes */}
+              {images.length > 1 && (
+                <div className="grid grid-cols-5 gap-2 p-3 bg-gray-50 border-t">
+                  {images.map((img, i) => (
+                    <button
+                      key={img.id || i}
+                      onClick={() => setCurrentIndex(i)}
+                      className={`relative group rounded overflow-hidden border ${i === currentIndex ? 'ring-2 ring-blue-500 border-blue-500' : 'border-transparent'}`}
+                      aria-label={`Sélectionner image ${i + 1}`}
+                    >
+                      <img
+                        src={getImageUrl(img.formats?.thumbnail || img.formats?.small || img)}
+                        alt={img.alternativeText || artisan.Titre}
+                        className="w-full h-16 object-cover group-hover:opacity-90"
+                        loading="lazy"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Badge type */}
+              <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-2 flex items-center space-x-2 shadow">
+                <span className="font-medium text-gray-700">{artisan.type_artisanat_et_produit?.Titre}</span>
               </div>
             </div>
 
@@ -88,7 +145,7 @@ const ArtisanatDetail = ({ artisan }) => {
               </div>
 
               <div className="prose max-w-none">
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line mb-6">
                   {artisan.Description}
                 </p>
               </div>

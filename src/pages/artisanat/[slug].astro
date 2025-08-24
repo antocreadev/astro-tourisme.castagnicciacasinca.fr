@@ -2,20 +2,12 @@
 import Layout from "../../layouts/Layout.astro";
 import ArtisanatDetail from "../../components/detail/ArtisanatDetail.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
+import { fetchAllArtisanat } from "../../services/apiUtils.js";
 import type { RootartisanatEtProduit } from "../../types/artisanat-et-produit";
 
 export async function getStaticPaths() {
-  // Récupérer les artisans depuis l'API
-  const response = await fetch(`${PUBLIC_API_URL}/api/artisanat-et-produits`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const artisanatData: RootartisanatEtProduit = await fetchAllArtisanat({ populate: '*' });
 
-  const artisanatData: RootartisanatEtProduit = await response.json();
-
-  // Générer les paths statiques
   return artisanatData.data.map((artisan) => ({
     params: {
       slug: artisan.Titre.toLowerCase()

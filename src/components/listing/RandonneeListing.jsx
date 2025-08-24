@@ -10,25 +10,18 @@ const RandonneeListing = ({ randonnees = [] }) => {
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDifficulte, setSelectedDifficulte] = useState('toutes');
-  const [selectedDuree, setSelectedDuree] = useState('toutes');
+  const [selectedCommune, setSelectedCommune] = useState('toutes');
   const itemsPerPage = 9;
 
-  // Obtenir les difficultés uniques
-  const getUniqueDifficultes = () => {
-    const difficultes = randonneesArray.map(rando => rando.Difficulte).filter(Boolean);
-    return [...new Set(difficultes)].sort();
-  };
-
-  // Obtenir les durées uniques
-  const getUniqueDurees = () => {
-    const durees = randonneesArray.map(rando => rando.Duree).filter(Boolean);
-    return [...new Set(durees)].sort();
+  // Obtenir les communes uniques
+  const getUniqueCommunes = () => {
+    const communes = randonneesArray.map(r => r.commune?.Nom).filter(Boolean);
+    return [...new Set(communes)].sort();
   };
 
   useEffect(() => {
     applyFilters();
-  }, [randonneesArray, searchTerm, selectedDifficulte, selectedDuree]);
+  }, [randonneesArray, searchTerm, selectedCommune]);
 
   const applyFilters = () => {
     let filtered = [...randonneesArray];
@@ -43,14 +36,9 @@ const RandonneeListing = ({ randonnees = [] }) => {
       );
     }
 
-    // Filtre par difficulté
-    if (selectedDifficulte !== 'toutes') {
-      filtered = filtered.filter(rando => rando.Difficulte === selectedDifficulte);
-    }
-
-    // Filtre par durée
-    if (selectedDuree !== 'toutes') {
-      filtered = filtered.filter(rando => rando.Duree === selectedDuree);
+    // Filtre par commune
+    if (selectedCommune !== 'toutes') {
+      filtered = filtered.filter(rando => rando.commune?.Nom === selectedCommune);
     }
 
     setFilteredRandonnees(filtered);
@@ -68,8 +56,7 @@ const RandonneeListing = ({ randonnees = [] }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const uniqueDifficultes = getUniqueDifficultes();
-  const uniqueDurees = getUniqueDurees();
+  const uniqueCommunes = getUniqueCommunes();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -87,7 +74,7 @@ const RandonneeListing = ({ randonnees = [] }) => {
 
         {/* Filtres */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             {/* Recherche */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -99,28 +86,15 @@ const RandonneeListing = ({ randonnees = [] }) => {
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
-
-            {/* Difficulté */}
+            {/* Commune */}
             <select
-              value={selectedDifficulte}
-              onChange={(e) => setSelectedDifficulte(e.target.value)}
+              value={selectedCommune}
+              onChange={(e) => setSelectedCommune(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="toutes">Toutes difficultés</option>
-              {uniqueDifficultes.map(difficulte => (
-                <option key={difficulte} value={difficulte}>{difficulte}</option>
-              ))}
-            </select>
-
-            {/* Durée */}
-            <select
-              value={selectedDuree}
-              onChange={(e) => setSelectedDuree(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="toutes">Toutes durées</option>
-              {uniqueDurees.map(duree => (
-                <option key={duree} value={duree}>{duree}</option>
+              <option value="toutes">Toutes les communes</option>
+              {uniqueCommunes.map(commune => (
+                <option key={commune} value={commune}>{commune}</option>
               ))}
             </select>
 
@@ -145,6 +119,7 @@ const RandonneeListing = ({ randonnees = [] }) => {
           <div className="flex items-center justify-between text-sm text-gray-600">
             <span>
               {filteredRandonnees.length} randonnée{filteredRandonnees.length !== 1 ? 's' : ''} trouvée{filteredRandonnees.length !== 1 ? 's' : ''}
+              {selectedCommune !== 'toutes' && ` dans ${selectedCommune}`}
             </span>
             <span>
               Page {currentPage} sur {totalPages}

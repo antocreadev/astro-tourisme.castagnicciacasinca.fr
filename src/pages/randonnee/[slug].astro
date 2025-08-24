@@ -3,32 +3,10 @@ import Layout from "../../layouts/Layout.astro";
 import RandonneeDetail from "../../components/detail/RandonneeDetail.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
 import type { RootRandonnee } from "../../types/randonnee";
+import { fetchAllRandonnees } from "../../services/apiUtils.js";
 
 export async function getStaticPaths() {
-  // Récupérer les randonnées depuis l'API
-  const response = await fetch(`${PUBLIC_API_URL}/api/randonnees`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    console.error(
-      "Erreur lors de la récupération des randonnées:",
-      response.status
-    );
-    return [];
-  }
-
-  const randonneesData: RootRandonnee = await response.json();
-
-  if (!randonneesData || !randonneesData.data) {
-    console.error("Données randonnées non disponibles");
-    return [];
-  }
-
-  // Générer les paths statiques
+  const randonneesData: RootRandonnee = await fetchAllRandonnees({ populate: '*' });
   return randonneesData.data.map((randonnee) => ({
     params: {
       slug:
