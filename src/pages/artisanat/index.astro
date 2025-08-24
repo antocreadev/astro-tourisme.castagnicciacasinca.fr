@@ -6,7 +6,9 @@ import { fetchAllArtisanat } from "../../services/apiUtils.js";
 import type { RootartisanatEtProduit } from "../../types/artisanat-et-produit";
 
 // Fetch artisanat complet
-const artisanatData: RootartisanatEtProduit = await fetchAllArtisanat({ populate: '*' });
+const artisanatData: RootartisanatEtProduit = await fetchAllArtisanat({
+  populate: "*",
+});
 ---
 
 <Layout

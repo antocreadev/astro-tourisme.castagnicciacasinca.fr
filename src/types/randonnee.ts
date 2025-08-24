@@ -11,9 +11,15 @@ export interface Randonnee {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-  commune?: Commune;
-  Lien?: Lien;
-  image?: Image2;
+  depart?: Depart;
+  commune: Commune;
+  Lien: Lien;
+  images?: Image2[];
+}
+
+export interface Depart {
+  lat: number;
+  lng: number;
 }
 
 export interface Commune {
@@ -24,6 +30,7 @@ export interface Commune {
   updatedAt: string;
   publishedAt: string;
   description: string;
+  coordonnees: any;
 }
 
 export interface Lien {
@@ -40,7 +47,7 @@ export interface Image {
   caption: any;
   width: number;
   height: number;
-  formats: Formats;
+  formats?: Formats;
   hash: string;
   ext: string;
   mime: string;
@@ -95,9 +102,9 @@ export interface Image2 {
 
 export interface Formats2 {
   thumbnail: Thumbnail2;
-  small: Small;
-  medium: Medium;
-  large: Large;
+  small?: Small;
+  medium?: Medium;
+  large?: Large;
 }
 
 export interface Thumbnail2 {

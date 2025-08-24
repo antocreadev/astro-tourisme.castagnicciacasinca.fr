@@ -16,7 +16,14 @@ import { type RootLandingPage } from "../types/landingpage";
 import { fetchSites, transformSiteData } from "../services/sitesService.js";
 
 import { PUBLIC_API_URL } from "astro:env/client";
-import { fetchAllEvenements, fetchAllSejourners, fetchAllPlages, fetchAllArtisanat, fetchAllRandonnees, fetchAllActivitesNautiques } from "../services/apiUtils.js";
+import {
+  fetchAllEvenements,
+  fetchAllSejourners,
+  fetchAllPlages,
+  fetchAllArtisanat,
+  fetchAllRandonnees,
+  fetchAllActivitesNautiques,
+} from "../services/apiUtils.js";
 import type { RootEvenements } from "../types/evenements";
 import type { RootSejourner } from "../types/sejourner";
 import type { RootPlage } from "../types/plages";
@@ -51,41 +58,49 @@ console.log("dataLandingPageJson Data:", dataLandingPageJson);
 
 // fetch evenements
 
-const dataEvenementsJson: RootEvenements = await fetchAllEvenements({ populate: '*' });
+const dataEvenementsJson: RootEvenements = await fetchAllEvenements({
+  populate: "*",
+});
 console.log("dataEvenementsJson Data:", dataEvenementsJson);
 
 // fecth sejourner
 
-const dataSejournerJson: RootSejourner = await fetchAllSejourners({ populate: '*' });
+const dataSejournerJson: RootSejourner = await fetchAllSejourners({
+  populate: "*",
+});
 console.log("dataSejournerJson Data:", dataSejournerJson);
 
 // fetch plages
 
-const dataPlagesJson: RootPlage = await fetchAllPlages({ populate: '*' });
+const dataPlagesJson: RootPlage = await fetchAllPlages({ populate: "*" });
 console.log("dataPlagesJson Data:", dataPlagesJson);
 
 // fetch artisanat-et-produit
-const dataArtisanatEtProduitJson: RootartisanatEtProduit = await fetchAllArtisanat({ populate: '*' });
+const dataArtisanatEtProduitJson: RootartisanatEtProduit =
+  await fetchAllArtisanat({ populate: "*" });
 console.log("dataArtisanatEtProduitJson Data:", dataArtisanatEtProduitJson);
 
 // Randonnees
 
-const dataRandonneesJson: RootRandonnee = await fetchAllRandonnees({ populate: '*' });
+const dataRandonneesJson: RootRandonnee = await fetchAllRandonnees({
+  populate: "*",
+});
 console.log("dataRandonneesJson Data:", dataRandonneesJson);
 
 // activites-nautiques
 
-const dataActiviteNautiqueJson: RootActiviteNautique = await fetchAllActivitesNautiques({ populate: '*' });
+const dataActiviteNautiqueJson: RootActiviteNautique =
+  await fetchAllActivitesNautiques({ populate: "*" });
 console.log("dataActiviteNautiqueJson Data:", dataActiviteNautiqueJson);
 
 // fetch sites
 const sitesData = await fetchSites();
 // Adapter au format minimal utilisé par LesIncontournables (title, slug, image, subtitle)
-const sites = sitesData.data.map(transformSiteData).map(s => ({
+const sites = sitesData.data.map(transformSiteData).map((s) => ({
   slug: s.slug,
   title: s.title,
   image: s.image,
-  subtitle: s.subtitle || s.commune || ''
+  subtitle: s.subtitle || s.commune || "",
 }));
 console.log("Sites Data:", sites);
 ---

@@ -6,7 +6,9 @@ import { fetchAllEvenements } from "../../services/apiUtils.js";
 import type { RootEvenements } from "../../types/evenements";
 import type { RootTypeEvenements } from "../../types/type-evenements";
 
-const dataEvenementsJson: RootEvenements = await fetchAllEvenements({ populate: '*' });
+const dataEvenementsJson: RootEvenements = await fetchAllEvenements({
+  populate: "*",
+});
 
 // Récupération des types d'événements pour filtrage
 const dataTypeEvenements = await fetch(

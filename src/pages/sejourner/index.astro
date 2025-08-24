@@ -5,7 +5,9 @@ import { PUBLIC_API_URL } from "astro:env/client";
 import { fetchAllSejourners } from "../../services/apiUtils.js";
 import type { RootSejourner } from "../../types/sejourner";
 
-const dataSejournerJson: RootSejourner = await fetchAllSejourners({ populate: '*' });
+const dataSejournerJson: RootSejourner = await fetchAllSejourners({
+  populate: "*",
+});
 ---
 
 <Layout

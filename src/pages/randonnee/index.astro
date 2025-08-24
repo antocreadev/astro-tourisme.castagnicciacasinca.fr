@@ -6,7 +6,9 @@ import { fetchAllRandonnees } from "../../services/apiUtils.js";
 import type { RootRandonnee } from "../../types/randonnee";
 
 // Fetch randonnees (toutes pages)
-const randonneesData: RootRandonnee = await fetchAllRandonnees({ populate: '*' });
+const randonneesData: RootRandonnee = await fetchAllRandonnees({
+  populate: "*",
+});
 ---
 
 <Layout
