@@ -9,7 +9,7 @@ import {
   getUniqueTypes
 } from '../../utils/sejournerFilters.js';
 import SejournerCard from '../ui/SejournerCard.jsx';
-import { Grid, List, ChevronLeft, ChevronRight, MapPin, Star } from 'lucide-react';
+import { Grid, List, ChevronLeft, ChevronRight, MapPin, Star, Search } from 'lucide-react';
 
 export default function SejournerListing({ sejourners = [] }) {
   // Récupérer les paramètres URL pour initialiser les filtres
@@ -110,8 +110,21 @@ export default function SejournerListing({ sejourners = [] }) {
 
       {/* Filters */}
       <div className="max-w-7xl mx-auto px-4 py-6 border-b">
-        <div className="flex flex-wrap gap-4">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap gap-4 items-stretch">
+          {/* Recherche (style aligné sur artisanat) */}
+          <div className="relative flex-1 min-w-[240px] order-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              value={filters.search}
+              placeholder="Rechercher un hébergement..."
+              onChange={(e) => handleFiltersChange({ search: e.target.value })}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+            {/* Commune */}
+          <div className="flex items-center gap-2 order-2">
             <label className="text-sm font-medium text-gray-700">Commune:</label>
             <select
               value={filters.commune}
@@ -127,7 +140,8 @@ export default function SejournerListing({ sejourners = [] }) {
             </select>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Type */}
+          <div className="flex items-center gap-2 order-3">
             <label className="text-sm font-medium text-gray-700">Type:</label>
             <select
               value={filters.type}
@@ -142,17 +156,6 @@ export default function SejournerListing({ sejourners = [] }) {
               ))}
               <option value="Charté">Charté</option>
             </select>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-700">Recherche:</label>
-            <input
-              type="text"
-              value={filters.search}
-              placeholder="Rechercher un hébergement..."
-              onChange={(e) => handleFiltersChange({ search: e.target.value })}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
           </div>
         </div>
       </div>

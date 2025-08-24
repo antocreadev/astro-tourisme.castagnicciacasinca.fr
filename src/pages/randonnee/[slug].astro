@@ -6,7 +6,9 @@ import type { RootRandonnee } from "../../types/randonnee";
 import { fetchAllRandonnees } from "../../services/apiUtils.js";
 
 export async function getStaticPaths() {
-  const randonneesData: RootRandonnee = await fetchAllRandonnees({ populate: '*' });
+  const randonneesData: RootRandonnee = await fetchAllRandonnees({
+    populate: "*",
+  });
   return randonneesData.data.map((randonnee) => ({
     params: {
       slug:

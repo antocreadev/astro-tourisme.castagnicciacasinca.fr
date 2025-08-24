@@ -164,8 +164,6 @@ const ActiviteNautiqueCard = ({ activite, viewMode = 'grid' }) => {
 
 const ActiviteNautiqueListing = ({ activiteNautiques }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedType, setSelectedType] = useState("tous");
-  const [selectedNiveau, setSelectedNiveau] = useState("tous");
   const [selectedCommune, setSelectedCommune] = useState("tous");
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
@@ -175,19 +173,7 @@ const ActiviteNautiqueListing = ({ activiteNautiques }) => {
   const activiteNautiquesArray = Array.isArray(activiteNautiques) ? activiteNautiques : [];
 
   // Extraire les valeurs uniques pour les filtres
-  const types = useMemo(() => {
-    const uniqueTypes = [...new Set(activiteNautiquesArray
-      .filter(activite => activite.Type)
-      .map(activite => activite.Type))];
-    return uniqueTypes.sort();
-  }, [activiteNautiquesArray]);
-
-  const niveaux = useMemo(() => {
-    const uniqueNiveaux = [...new Set(activiteNautiquesArray
-      .filter(activite => activite.Niveau)
-      .map(activite => activite.Niveau))];
-    return uniqueNiveaux.sort();
-  }, [activiteNautiquesArray]);
+  // Filtres type et niveau retirés
 
   const communes = useMemo(() => {
     const uniqueCommunes = [...new Set(activiteNautiquesArray
@@ -201,18 +187,13 @@ const ActiviteNautiqueListing = ({ activiteNautiques }) => {
     return activiteNautiquesArray.filter(activite => {
       const matchesSearch = activite.Nom?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            activite.Description?.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesType = selectedType === "tous" || activite.Type === selectedType;
-      const matchesNiveau = selectedNiveau === "tous" || activite.Niveau === selectedNiveau;
       const matchesCommune = selectedCommune === "tous" || activite.commune?.Nom === selectedCommune;
-      
-      return matchesSearch && matchesType && matchesNiveau && matchesCommune;
+      return matchesSearch && matchesCommune;
     });
-  }, [activiteNautiquesArray, searchTerm, selectedType, selectedNiveau, selectedCommune]);
+  }, [activiteNautiquesArray, searchTerm, selectedCommune]);
 
   const resetFilters = () => {
     setSearchTerm("");
-    setSelectedType("tous");
-    setSelectedNiveau("tous");
     setSelectedCommune("tous");
   };
 
@@ -242,7 +223,7 @@ const ActiviteNautiqueListing = ({ activiteNautiques }) => {
 
         {/* Filtres */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             {/* Recherche */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -254,31 +235,6 @@ const ActiviteNautiqueListing = ({ activiteNautiques }) => {
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
-
-            {/* Type */}
-            <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="tous">Tous les types</option>
-              {types.map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
-
-            {/* Niveau */}
-            <select
-              value={selectedNiveau}
-              onChange={(e) => setSelectedNiveau(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="tous">Tous les niveaux</option>
-              {niveaux.map(niveau => (
-                <option key={niveau} value={niveau}>{niveau}</option>
-              ))}
-            </select>
-
             {/* Commune */}
             <select
               value={selectedCommune}
