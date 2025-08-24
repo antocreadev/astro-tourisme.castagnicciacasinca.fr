@@ -2,17 +2,11 @@
 import Layout from "../../layouts/Layout.astro";
 import RandonneeListing from "../../components/listing/RandonneeListing.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
+import { fetchAllRandonnees } from "../../services/apiUtils.js";
 import type { RootRandonnee } from "../../types/randonnee";
 
-// Fetch randonnees data
-const response = await fetch(`${PUBLIC_API_URL}/api/randonnees`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-const randonneesData: RootRandonnee = await response.json();
+// Fetch randonnees (toutes pages)
+const randonneesData: RootRandonnee = await fetchAllRandonnees({ populate: '*' });
 ---
 
 <Layout

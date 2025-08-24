@@ -16,6 +16,7 @@ import { type RootLandingPage } from "../types/landingpage";
 import { fetchSites, transformSiteData } from "../services/sitesService.js";
 
 import { PUBLIC_API_URL } from "astro:env/client";
+import { fetchAllEvenements, fetchAllSejourners, fetchAllPlages, fetchAllArtisanat, fetchAllRandonnees, fetchAllActivitesNautiques } from "../services/apiUtils.js";
 import type { RootEvenements } from "../types/evenements";
 import type { RootSejourner } from "../types/sejourner";
 import type { RootPlage } from "../types/plages";
@@ -24,7 +25,7 @@ import type { RootRandonnee } from "../types/randonnee";
 import type { RootActiviteNautique } from "../types/activite-nautique";
 import type { RootSite } from "../types/site";
 console.log("API URL:", PUBLIC_API_URL);
-
+// On utilise maintenant des fetchAll pour récupérer 100% des entrées.
 // ---- fetch Global
 const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
   method: "GET",
@@ -50,86 +51,42 @@ console.log("dataLandingPageJson Data:", dataLandingPageJson);
 
 // fetch evenements
 
-const dataEvenements = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-const dataEvenementsJson: RootEvenements = await dataEvenements.json();
+const dataEvenementsJson: RootEvenements = await fetchAllEvenements({ populate: '*' });
 console.log("dataEvenementsJson Data:", dataEvenementsJson);
 
 // fecth sejourner
 
-const dataSejourner = await fetch(`${PUBLIC_API_URL}/api/sejourners`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-const dataSejournerJson: RootSejourner = await dataSejourner.json();
+const dataSejournerJson: RootSejourner = await fetchAllSejourners({ populate: '*' });
 console.log("dataSejournerJson Data:", dataSejournerJson);
 
 // fetch plages
 
-const dataPlages = await fetch(`${PUBLIC_API_URL}/api/plages`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-const dataPlagesJson: RootPlage = await dataPlages.json();
+const dataPlagesJson: RootPlage = await fetchAllPlages({ populate: '*' });
 console.log("dataPlagesJson Data:", dataPlagesJson);
 
 // fetch artisanat-et-produit
-const dataArtisanatEtProduit = await fetch(
-  `${PUBLIC_API_URL}/api/artisanat-et-produits`,
-  {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }
-);
-
-const dataArtisanatEtProduitJson: RootartisanatEtProduit =
-  await dataArtisanatEtProduit.json();
+const dataArtisanatEtProduitJson: RootartisanatEtProduit = await fetchAllArtisanat({ populate: '*' });
 console.log("dataArtisanatEtProduitJson Data:", dataArtisanatEtProduitJson);
 
 // Randonnees
 
-const dataRandonnees = await fetch(`${PUBLIC_API_URL}/api/randonnees`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-const dataRandonneesJson: RootRandonnee = await dataRandonnees.json();
+const dataRandonneesJson: RootRandonnee = await fetchAllRandonnees({ populate: '*' });
 console.log("dataRandonneesJson Data:", dataRandonneesJson);
 
 // activites-nautiques
 
-const dataActiviteNautique = await fetch(
-  `${PUBLIC_API_URL}/api/activites-nautiques`,
-  {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }
-);
-
-const dataActiviteNautiqueJson: RootActiviteNautique =
-  await dataActiviteNautique.json();
+const dataActiviteNautiqueJson: RootActiviteNautique = await fetchAllActivitesNautiques({ populate: '*' });
 console.log("dataActiviteNautiqueJson Data:", dataActiviteNautiqueJson);
 
 // fetch sites
 const sitesData = await fetchSites();
-const sites = sitesData.data.map(transformSiteData);
+// Adapter au format minimal utilisé par LesIncontournables (title, slug, image, subtitle)
+const sites = sitesData.data.map(transformSiteData).map(s => ({
+  slug: s.slug,
+  title: s.title,
+  image: s.image,
+  subtitle: s.subtitle || s.commune || ''
+}));
 console.log("Sites Data:", sites);
 ---
 

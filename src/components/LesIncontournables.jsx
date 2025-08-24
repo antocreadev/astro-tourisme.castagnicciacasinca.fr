@@ -3,7 +3,13 @@ import { itineraires } from '../data/itineraires.js';
 
 export default function LesIncontournables({ data, sites = fallbackSites }) {
   // Utilise les vraies données des sites (dynamiques ou fallback)
-  const sitesPhares = sites.slice(0, 4); // Prend les 4 premiers sites
+  const sitesPhares = sites.slice(0, 4).map(s => ({
+    // Normaliser pour supporter différents formats d'entrée
+    slug: s.slug || s.documentId || s.id,
+    title: s.title || s.Titre || 'Site',
+    image: s.image || s.cover || (s.images?.[0]?.url) || s.gallery?.[0] || '',
+    subtitle: s.subtitle || s.commune || s.subtitle || ''
+  })); // Prend les 4 premiers sites
   
   // Utilise les vraies données des itinéraires
   const itinerairesData = itineraires.slice(0, 3); // Prend les 3 premiers itinéraires

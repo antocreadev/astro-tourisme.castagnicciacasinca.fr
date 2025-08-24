@@ -5,12 +5,17 @@ import { PUBLIC_API_URL } from "astro:env/client";
 import type { RootSejourner } from "../../types/sejourner";
 
 export async function getStaticPaths() {
-  const response = await fetch(`${PUBLIC_API_URL}/api/sejourners?populate=*`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  let page = 1;
+  let pageSize = 100;
+  const response = await fetch(
+    `${PUBLIC_API_URL}/api/sejourners?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   const data: RootSejourner = await response.json();
 

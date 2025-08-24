@@ -2,17 +2,11 @@
 import Layout from "../../layouts/Layout.astro";
 import AgendaListing from "../../components/listing/AgendaListing.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
+import { fetchAllEvenements } from "../../services/apiUtils.js";
 import type { RootEvenements } from "../../types/evenements";
 import type { RootTypeEvenements } from "../../types/type-evenements";
 
-const dataEvenements = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-const dataEvenementsJson: RootEvenements = await dataEvenements.json();
+const dataEvenementsJson: RootEvenements = await fetchAllEvenements({ populate: '*' });
 
 // Récupération des types d'événements pour filtrage
 const dataTypeEvenements = await fetch(
