@@ -47,7 +47,7 @@ export default function ItineraireCard({ itineraire, href, onClick }) {
       {/* Image */}
       <div className="relative aspect-video overflow-hidden">
         <img
-          src={itineraire.image || "/placeholder.svg"}
+          src={itineraire.image || `https://placehold.co/600x400?text=${encodeURIComponent(itineraire.title)}`}
           alt={itineraire.title}
           className={`w-full h-full object-cover transition-all duration-500 ${
             imageLoaded ? 'scale-100 opacity-100' : 'scale-110 opacity-0'

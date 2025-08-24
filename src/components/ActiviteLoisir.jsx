@@ -11,7 +11,8 @@ export default function ActivitesLoisirs({ data, randonnees = [], activitesNauti
       return data.type_activite_loisirs.map(item => ({
         title: item.Titre,
         description: item.Description,
-        link: generateLinkForActivity(item),
+        // Utiliser directement le lien fourni par l'API
+        link: item.Lien?.Lien || "/",
         linkLabel: item.Lien?.Label || "En savoir plus",
         linkColor: item.Lien?.TextColor,
         iconUrl: item.Icone?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${item.Icone.url}` : null
@@ -57,25 +58,7 @@ export default function ActivitesLoisirs({ data, randonnees = [], activitesNauti
     return items;
   };
 
-  // Fonction pour générer le lien approprié selon le type d'activité
-  const generateLinkForActivity = (item) => {
-    const baseLink = item.Lien?.Lien || "/activites";
-    const title = item.Titre.toLowerCase();
-    
-    if (title.includes('randonnée') || title.includes('rando') || title.includes('sentier') || title.includes('balade')) {
-      return "/randonnee";
-    }
-    
-    if (title.includes('nautique') || title.includes('kayak') || title.includes('paddle') || title.includes('bateau') || title.includes('mer')) {
-      return "/activite-nautique";
-    }
-    
-    if (title.includes('événement') || title.includes('festival') || title.includes('marché') || title.includes('foire')) {
-      return "/agenda";
-    }
-    
-    return baseLink;
-  };
+  // generateLinkForActivity supprimé: on utilise directement item.Lien?.Lien fourni par l'API.
 
   const activiteItems = getActiviteItems();
 

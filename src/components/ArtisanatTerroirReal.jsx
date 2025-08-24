@@ -6,7 +6,7 @@ export default function ArtisanatTerroirReal({ data, artisanat = [] }) {
     if (data?.type_artisanat_et_produits && data.type_artisanat_et_produits.length > 0) {
       return data.type_artisanat_et_produits.map(item => ({
         title: item.Titre,
-        image: item.image?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${item.image.url}` : "/photos/PentadiCasinca.jpg",
+        image: item.image?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${item.image.url}` : `https://placehold.co/600x400?text=${encodeURIComponent(item.Titre)}`,
         alt: item.Titre,
         link: `${item.lien?.Lien || '/artisanat'}?type=${encodeURIComponent(item.Titre)}`,
         linkColor: item.lien?.TextColor
@@ -81,7 +81,7 @@ export default function ArtisanatTerroirReal({ data, artisanat = [] }) {
               {/* Image */}
               <div className="overflow-hidden rounded-lg mb-6">
                 <img
-                  src={product.image || "/placeholder.svg"}
+                  src={product.image || `https://placehold.co/600x400?text=${encodeURIComponent(product.title)}`}
                   alt={product.alt}
                   width={600}
                   height={400}

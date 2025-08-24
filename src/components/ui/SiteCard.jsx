@@ -16,7 +16,7 @@ export default function SiteCard({ site, href, onClick }) {
       {/* Image */}
       <div className="relative aspect-video overflow-hidden">
         <img
-          src={site.image || "/placeholder.svg"}
+          src={site.image || `https://placehold.co/600x400?text=${encodeURIComponent(site.title)}`}
           alt={site.title}
           className={`w-full h-full object-cover transition-all duration-500 ${
             imageLoaded ? 'scale-100 opacity-100' : 'scale-110 opacity-0'

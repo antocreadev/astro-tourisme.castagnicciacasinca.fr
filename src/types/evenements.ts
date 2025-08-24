@@ -12,10 +12,11 @@ export interface Daum {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-  Tel?: string;
-  commune?: Commune;
-  Liens: Lien[];
-  image?: Image2;
+  Tel: any;
+  commune: Commune;
+  Liens: any[];
+  image?: Image;
+  type_evenement?: TypeEvenement;
 }
 
 export interface Coordonnees {
@@ -24,70 +25,43 @@ export interface Coordonnees {
 }
 
 export interface Commune {
-  id: number;
-  documentId: string;
-  Nom: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  description: string;
-}
-
-export interface Lien {
-  id: number;
-  lien: string;
-  image: Image;
+  id?: number;
+  documentId?: string;
+  Nom?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+  description?: string;
+  coordonnees: any;
 }
 
 export interface Image {
-  id: number;
-  documentId: string;
-  name: string;
+  id?: number;
+  documentId?: string;
+  name?: string;
   alternativeText: any;
   caption: any;
-  width: number;
-  height: number;
-  formats: any;
-  hash: string;
-  ext: string;
-  mime: string;
-  size: number;
-  url: string;
+  width?: number;
+  height?: number;
+  formats?: Formats;
+  hash?: string;
+  ext?: string;
+  mime?: string;
+  size?: number;
+  url?: string;
   previewUrl: any;
-  provider: string;
+  provider?: string;
   provider_metadata: any;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-}
-
-export interface Image2 {
-  id: number;
-  documentId: string;
-  name: string;
-  alternativeText: any;
-  caption: any;
-  width: number;
-  height: number;
-  formats: Formats;
-  hash: string;
-  ext: string;
-  mime: string;
-  size: number;
-  url: string;
-  previewUrl: any;
-  provider: string;
-  provider_metadata: any;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
 }
 
 export interface Formats {
   thumbnail: Thumbnail;
   small: Small;
-  medium: Medium;
-  large: Large;
+  medium?: Medium;
+  large?: Large;
 }
 
 export interface Thumbnail {
@@ -140,6 +114,15 @@ export interface Large {
   size: number;
   sizeInBytes: number;
   url: string;
+}
+
+export interface TypeEvenement {
+  id: number;
+  documentId: string;
+  Nom: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
 }
 
 export interface Meta {

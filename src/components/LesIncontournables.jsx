@@ -9,7 +9,7 @@ export default function LesIncontournables({ data, sites = fallbackSites }) {
   const itinerairesData = itineraires.slice(0, 3); // Prend les 3 premiers itinéraires
 
   return (
-    <div className="bg-white py-8 px-4">
+    <div className="bg-white py-8 px-4" id="incontournables">
       <div className="max-w-7xl mx-auto">
         {/* Main Title */}
         <div className="text-center mb-16">
@@ -42,7 +42,7 @@ export default function LesIncontournables({ data, sites = fallbackSites }) {
                   <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-[300px] flex flex-col">
                     <div className="overflow-hidden rounded-t-xl flex-shrink-0">
                       <img
-                        src={site.image || "/placeholder.svg"}
+                        src={site.image || `https://placehold.co/600x400?text=${encodeURIComponent(site.title)}`}
                         alt={site.title}
                         className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
                       />
@@ -88,7 +88,7 @@ export default function LesIncontournables({ data, sites = fallbackSites }) {
                   <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-[400px] flex flex-col">
                     <div className="overflow-hidden rounded-t-xl flex-shrink-0">
                       <img
-                        src={itineraire.image || "/placeholder.svg"}
+                        src={itineraire.image || `https://placehold.co/600x400?text=${encodeURIComponent(itineraire.title)}`}
                         alt={itineraire.title}
                         className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
                       />

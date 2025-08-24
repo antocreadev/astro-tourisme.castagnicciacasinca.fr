@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import AgendaListing from "../../components/listing/AgendaListing.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
 import type { RootEvenements } from "../../types/evenements";
+import type { RootTypeEvenements } from "../../types/type-evenements";
 
 const dataEvenements = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
   method: "GET",
@@ -12,6 +13,52 @@ const dataEvenements = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
 });
 
 const dataEvenementsJson: RootEvenements = await dataEvenements.json();
+
+// Récupération des types d'événements pour filtrage
+const dataTypeEvenements = await fetch(
+  `${PUBLIC_API_URL}/api/type-evenements`,
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+);
+const dataTypeEvenementsJson: RootTypeEvenements =
+  await dataTypeEvenements.json();
+
+// Lecture des paramètres de requête pour initialiser les filtres côté client
+// Nouveau format: types1=Nom, types2=Nom, types3=Nom (jusqu'à 3 noms)
+// Rétrocompatibilité: type=ID ou types=1,2 ou type=Nom / types=Nom1,Nom2
+const qp = Astro.url.searchParams;
+const legacyType = qp.get("type");
+const legacyTypes = qp.get("types");
+
+const collectedNames: string[] = [];
+
+// Collecter nouveau format par noms
+["types1", "types2", "types3"].forEach((key) => {
+  const val = qp.get(key);
+  if (val) collectedNames.push(val);
+});
+
+// Si pas de nouveau format, tenter rétrocompatibilité
+if (collectedNames.length === 0) {
+  if (legacyTypes) {
+    legacyTypes.split(",").forEach((v) => v && collectedNames.push(v));
+  } else if (legacyType) {
+    collectedNames.push(legacyType);
+  }
+}
+
+// Convertir d'éventuels IDs numériques en noms (si correspondance)
+const typeMapById = new Map(
+  dataTypeEvenementsJson.data.map((t) => [String(t.id), t.Nom])
+);
+const initialTypes = collectedNames
+  .map((v) => typeMapById.get(v) || v) // remplacer id si trouvé
+  .slice(0, 3);
+const initialPage = Number(Astro.url.searchParams.get("page") || "1");
 ---
 
 <Layout
@@ -19,5 +66,11 @@ const dataEvenementsJson: RootEvenements = await dataEvenements.json();
   pageCategory="agenda"
   pageName="liste-evenements"
 >
-  <AgendaListing events={dataEvenementsJson.data} client:load />
+  <AgendaListing
+    events={dataEvenementsJson.data}
+    typesEvenements={dataTypeEvenementsJson.data}
+    initialTypes={initialTypes}
+    initialPage={initialPage}
+    client:load
+  />
 </Layout>

@@ -34,7 +34,7 @@ export default function ArtisanatTerroir() {
               {/* Image */}
               <div className="overflow-hidden rounded-lg mb-6">
                 <img
-                  src={product.image || "/placeholder.svg"}
+                  src={product.image || `https://placehold.co/600x400?text=${encodeURIComponent(product.title)}`}
                   alt={product.alt}
                   width={600}
                   height={400}
