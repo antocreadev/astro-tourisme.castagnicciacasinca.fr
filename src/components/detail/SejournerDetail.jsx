@@ -1,28 +1,49 @@
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { ArrowLeft, MapPin, Phone, Mail, ExternalLink, Star, Images } from 'lucide-react';
 import { convertMarkdownToHtml } from '../../utils/markdownUtils.js';
 import { getImageUrl } from '../../utils/eventUtils.js';
 import CharteCard from '../ui/CharteCard.jsx';
 import CharteSidebarCard from '../ui/CharteSidebarCard.jsx';
-import 'leaflet/dist/leaflet.css';
 
 const SejournerDetail = ({ sejourner }) => {
   const [isClient, setIsClient] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [LeafletComponents, setLeafletComponents] = useState(null);
 
   useEffect(() => {
     setIsClient(true);
-    // Fix for default markers in react-leaflet
-    if (typeof window !== 'undefined') {
-      import('leaflet').then((leaflet) => {
-        delete leaflet.default.Icon.Default.prototype._getIconUrl;
-        leaflet.default.Icon.Default.mergeOptions({
+    // Import dynamique des composants Leaflet côté client uniquement
+    const loadLeaflet = async () => {
+      try {
+        // Import du CSS
+        await import('leaflet/dist/leaflet.css');
+        
+        // Import des composants Leaflet
+        const leafletModule = await import('leaflet');
+        const reactLeafletModule = await import('react-leaflet');
+        
+        // Fix for default markers in react-leaflet
+        delete leafletModule.default.Icon.Default.prototype._getIconUrl;
+        leafletModule.default.Icon.Default.mergeOptions({
           iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
           iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
           shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
         });
-      });
+        
+        // Stocker les composants chargés
+        setLeafletComponents({
+          MapContainer: reactLeafletModule.MapContainer,
+          TileLayer: reactLeafletModule.TileLayer,
+          Marker: reactLeafletModule.Marker,
+          Popup: reactLeafletModule.Popup
+        });
+      } catch (error) {
+        console.error('Erreur lors du chargement de Leaflet:', error);
+      }
+    };
+    
+    if (typeof window !== 'undefined') {
+      loadLeaflet();
     }
   }, []);
 
@@ -156,28 +177,28 @@ const SejournerDetail = ({ sejourner }) => {
             </div>
 
             {/* Map */}
-            {sejourner.Coordonnees && sejourner.Coordonnees.lat && sejourner.Coordonnees.lng && isClient && (
+            {sejourner.Coordonnees && sejourner.Coordonnees.lat && sejourner.Coordonnees.lng && isClient && LeafletComponents && (
               <div className="bg-white rounded-xl shadow-lg p-6">
                 <h2 className="text-2xl font-bold mb-4 text-gray-900">Localisation</h2>
                 <div className="h-80 rounded-lg overflow-hidden">
-                  <MapContainer 
+                  <LeafletComponents.MapContainer 
                     center={[sejourner.Coordonnees.lat, sejourner.Coordonnees.lng]} 
                     zoom={13} 
                     style={{ height: '100%', width: '100%' }}
                   >
-                    <TileLayer
+                    <LeafletComponents.TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker position={[sejourner.Coordonnees.lat, sejourner.Coordonnees.lng]}>
-                      <Popup>
+                    <LeafletComponents.Marker position={[sejourner.Coordonnees.lat, sejourner.Coordonnees.lng]}>
+                      <LeafletComponents.Popup>
                         <div className="text-center">
                           <strong>{sejourner.Titre}</strong>
                           {sejourner.commune && sejourner.commune.Nom && <div>{sejourner.commune.Nom}</div>}
                         </div>
-                      </Popup>
-                    </Marker>
-                  </MapContainer>
+                      </LeafletComponents.Popup>
+                    </LeafletComponents.Marker>
+                  </LeafletComponents.MapContainer>
                 </div>
               </div>
             )}

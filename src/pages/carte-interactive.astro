@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import InteractiveMap from "../components/InteractiveMap.jsx";
+import CarteNavigation from "../components/CarteNavigation.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
 import type { RootEvenements } from "../types/evenements";
 import type { RootSejourner } from "../types/sejourner";
@@ -75,58 +75,37 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
 ---
 
 <Layout>
-  <main class="min-h-screen bg-gray-50">
-    <!-- En-tête de la page -->
-    <div class="bg-white shadow-sm border-b">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div class="text-center">
-          <h1 class="text-4xl font-bold text-gray-900 mb-2">
-            Carte Interactive
-          </h1>
-          <p class="text-lg text-gray-600 max-w-3xl mx-auto">
-            Découvrez tous les points d'intérêt de la Castagniccia-Casinca :
-            hébergements, plages, artisanat, événements, activités nautiques et
-            randonnées.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Carte interactive -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-        <InteractiveMap
-          sejournerData={dataSejournerJson.data}
-          plagesData={dataPlagesJson.data}
-          artisanatData={dataArtisanatEtProduitJson.data}
-          evenementsData={dataEvenementsJson.data}
-          activitesNautiquesData={dataActiviteNautiqueJson.data}
-          randonneesData={dataRandonneesJson.data}
-          client:only="react"
-        />
-      </div>
-    </div>
+  <main>
+    <CarteNavigation
+      client:load
+      sejournerData={dataSejournerJson.data}
+      plagesData={dataPlagesJson.data}
+      artisanatData={dataArtisanatEtProduitJson.data}
+      evenementsData={dataEvenementsJson.data}
+      activitesNautiquesData={dataActiviteNautiqueJson.data}
+      randonneesData={dataRandonneesJson.data}
+    />
   </main>
+
+  <style>
+    /* Styles personnalisés pour la carte */
+    :global(.leaflet-popup-content-wrapper) {
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    :global(.leaflet-popup-tip) {
+      background: white;
+    }
+
+    :global(.custom-marker) {
+      background: transparent !important;
+      border: none !important;
+    }
+
+    :global(.leaflet-control-attribution) {
+      font-size: 10px;
+      background: rgba(255, 255, 255, 0.8);
+    }
+  </style>
 </Layout>
-
-<style>
-  /* Styles personnalisés pour la carte */
-  :global(.leaflet-popup-content-wrapper) {
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  :global(.leaflet-popup-tip) {
-    background: white;
-  }
-
-  :global(.custom-marker) {
-    background: transparent !important;
-    border: none !important;
-  }
-
-  :global(.leaflet-control-attribution) {
-    font-size: 10px;
-    background: rgba(255, 255, 255, 0.8);
-  }
-</style>

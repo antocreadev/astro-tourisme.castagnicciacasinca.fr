@@ -16,6 +16,6 @@ const dataSejournerJson: RootSejourner = await fetchAllSejourners({
   pageName="liste-hebergements"
 >
   <main>
-    <SejournerListing sejourners={dataSejournerJson.data} client:only="react" />
+    <SejournerListing sejourners={dataSejournerJson.data} client:load="react" />
   </main>
 </Layout>

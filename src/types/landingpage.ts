@@ -18,6 +18,7 @@ export interface Data {
   ArtisanatEtProduitsDuTerroir: ArtisanatEtProduitsDuTerroir;
   ActiviteLoisir: ActiviteLoisir;
   InformationsPratiques: InformationsPratiques;
+  guideSections: GuideSections;
 }
 
 export interface Hero {
@@ -368,12 +369,12 @@ export interface TypeSejourner {
   id: number;
   documentId: string;
   Denomination: string;
-  Description: string;
+  Description?: string;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-  lien: Lien;
-  Icone: Icone;
+  lien?: Lien;
+  Icone?: Icone;
 }
 
 export interface Lien {
@@ -517,8 +518,8 @@ export interface TypeArtisanatEtProduit {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-  lien: Lien2;
-  image: Image4;
+  lien?: Lien2;
+  image?: Image4;
 }
 
 export interface Lien2 {
@@ -710,6 +711,107 @@ export interface Icone3 {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
+}
+
+export interface GuideSections {
+  id: number;
+  PDF: Pdf[];
+}
+
+export interface Pdf {
+  id: number;
+  Titre: string;
+  Description: string;
+  Lien: Lien5;
+  image: Image5;
+}
+
+export interface Lien5 {
+  id: number;
+  Label: string;
+  Lien: string;
+  TextColor: string;
+}
+
+export interface Image5 {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: any;
+  caption: any;
+  width: number;
+  height: number;
+  formats: Formats6;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: any;
+  provider: string;
+  provider_metadata: any;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+export interface Formats6 {
+  thumbnail: Thumbnail6;
+  small: Small6;
+  medium: Medium6;
+  large?: Large6;
+}
+
+export interface Thumbnail6 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
+export interface Small6 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
+export interface Medium6 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
+}
+
+export interface Large6 {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: any;
+  width: number;
+  height: number;
+  size: number;
+  sizeInBytes: number;
+  url: string;
 }
 
 export interface Meta {}

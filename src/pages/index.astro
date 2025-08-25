@@ -6,6 +6,7 @@ import CarteSection from "../components/CarteSection.jsx";
 import LesIncontournables from "../components/LesIncontournables.jsx";
 import Sejourner from "../components/Sejourner.jsx";
 import InformationsPratiques from "../components/InformationsPratiques.jsx";
+import GuidesNumeriques from "../components/GuidesNumeriques.jsx";
 import Footer from "../components/Footer.jsx";
 import LesPlages from "../components/LesPlages";
 import ActiviteLoisir from "../components/ActiviteLoisir";
@@ -159,6 +160,8 @@ console.log("Sites Phares Data:", sites);
     randonnees={dataRandonneesJson.data}
     activitesNautiques={dataActiviteNautiqueJson.data}
   />
+  <GuidesNumeriques data={dataLandingPageJson.data.guideSections} />
+
   <InformationsPratiques
     data={dataLandingPageJson.data.InformationsPratiques}
   />

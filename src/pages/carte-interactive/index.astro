@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import InteractiveMap from "../../components/InteractiveMap.jsx";
+import InteractiveMapContainer from "../../components/InteractiveMapContainer.astro";
 import { PUBLIC_API_URL } from "astro:env/client";
 import type { RootEvenements } from "../../types/evenements";
 import type { RootSejourner } from "../../types/sejourner";
@@ -99,14 +99,13 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
     <!-- Carte interactive -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-        <InteractiveMap
+        <InteractiveMapContainer
           sejournerData={dataSejournerJson.data}
           plagesData={dataPlagesJson.data}
           artisanatData={dataArtisanatEtProduitJson.data}
           evenementsData={dataEvenementsJson.data}
           activitesNautiquesData={dataActiviteNautiqueJson.data}
           randonneesData={dataRandonneesJson.data}
-          client:only
         />
       </div>
     </div>

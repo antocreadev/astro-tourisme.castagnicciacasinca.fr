@@ -175,7 +175,7 @@ const heroContent = parseHeroText(data?.texte);
   </div>
 
   <div class="mt-16">
-    <HeroGallery client:only images={data?.images} />
+    <HeroGallery client:load images={data?.images} />
   </div>
 </section>
 

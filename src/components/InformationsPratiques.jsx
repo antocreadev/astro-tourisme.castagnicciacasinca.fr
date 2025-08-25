@@ -58,7 +58,7 @@ export default function InformationsPratiques({ data }) {
   const informationItems = getInformationItems();
 
   return (
-    <div className="bg-white py-8 sm:py-16 px-4">
+    <div className="bg-white py-8 sm:py-16 px-4" id="informations-pratiques">
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <div className="mb-8 sm:mb-16">

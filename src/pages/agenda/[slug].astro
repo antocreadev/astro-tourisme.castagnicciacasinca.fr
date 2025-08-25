@@ -28,5 +28,5 @@ const { event } = Astro.props;
   pageCategory="agenda"
   pageName={event.Nom}
 >
-  <EventDetail event={event} client:only />
+  <EventDetail event={event} client:load />
 </Layout>

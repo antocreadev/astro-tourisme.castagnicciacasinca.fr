@@ -1,25 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { ArrowLeft, Calendar, MapPin, Phone, ExternalLink } from 'lucide-react';
 import { convertMarkdownToHtml } from '../../utils/markdownUtils.js';
 import { formatEventDate, getImageUrl, isEventPast } from '../../utils/eventUtils.js';
-import 'leaflet/dist/leaflet.css';
 
 const EventDetail = ({ event }) => {
   const [isClient, setIsClient] = useState(false);
+  const [LeafletComponents, setLeafletComponents] = useState(null);
 
   useEffect(() => {
     setIsClient(true);
-    // Fix for default markers in react-leaflet
-    if (typeof window !== 'undefined') {
-      import('leaflet').then((leaflet) => {
-        delete leaflet.default.Icon.Default.prototype._getIconUrl;
-        leaflet.default.Icon.Default.mergeOptions({
+    // Import dynamique des composants Leaflet côté client uniquement
+    const loadLeaflet = async () => {
+      try {
+        // Import du CSS
+        await import('leaflet/dist/leaflet.css');
+        
+        // Import des composants Leaflet
+        const leafletModule = await import('leaflet');
+        const reactLeafletModule = await import('react-leaflet');
+        
+        // Fix for default markers in react-leaflet
+        delete leafletModule.default.Icon.Default.prototype._getIconUrl;
+        leafletModule.default.Icon.Default.mergeOptions({
           iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
           iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
           shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
         });
-      });
+        
+        // Stocker les composants chargés
+        setLeafletComponents({
+          MapContainer: reactLeafletModule.MapContainer,
+          TileLayer: reactLeafletModule.TileLayer,
+          Marker: reactLeafletModule.Marker,
+          Popup: reactLeafletModule.Popup
+        });
+      } catch (error) {
+        console.error('Erreur lors du chargement de Leaflet:', error);
+      }
+    };
+    
+    if (typeof window !== 'undefined') {
+      loadLeaflet();
     }
   }, []);
 
@@ -127,28 +148,28 @@ const EventDetail = ({ event }) => {
             </div>
 
             {/* Map */}
-            {event.Coordonnees && isClient && (
+            {event.Coordonnees && isClient && LeafletComponents && (
               <div className="bg-white rounded-xl shadow-lg p-6">
                 <h2 className="text-2xl font-bold mb-4 text-gray-900">Localisation</h2>
                 <div className="h-80 rounded-lg overflow-hidden">
-                  <MapContainer 
+                  <LeafletComponents.MapContainer 
                     center={[event.Coordonnees.lat, event.Coordonnees.lng]} 
                     zoom={13} 
                     style={{ height: '100%', width: '100%' }}
                   >
-                    <TileLayer
+                    <LeafletComponents.TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker position={[event.Coordonnees.lat, event.Coordonnees.lng]}>
-                      <Popup>
+                    <LeafletComponents.Marker position={[event.Coordonnees.lat, event.Coordonnees.lng]}>
+                      <LeafletComponents.Popup>
                         <div className="text-center">
                           <strong>{event.Nom}</strong>
                           {event.commune && <div>{event.commune.Nom}</div>}
                         </div>
-                      </Popup>
-                    </Marker>
-                  </MapContainer>
+                      </LeafletComponents.Popup>
+                    </LeafletComponents.Marker>
+                  </LeafletComponents.MapContainer>
                 </div>
               </div>
             )}

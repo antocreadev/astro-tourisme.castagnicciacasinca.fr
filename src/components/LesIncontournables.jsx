@@ -12,12 +12,11 @@ export default function LesIncontournables({ data, sites = fallbackSites }) {
       subtitle: siteObj.subtitle || siteObj.commune || siteObj.Description || ''
     };
   });
-  // Shuffle (Fisher-Yates) au build pour varier l'ordre
-  for (let i = normalized.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [normalized[i], normalized[j]] = [normalized[j], normalized[i]];
-  }
-  const sitesPhares = normalized.slice(0, 4);
+  // Pour éviter les mismatches d'hydratation, on ne randomize plus côté serveur.
+  // Option: tri alphabétique stable
+  const sitesPhares = [...normalized]
+    .sort((a,b)=> (a.title||'').localeCompare(b.title||''))
+    .slice(0,4);
 
   const itinerairesData = itineraires.slice(0, 3);
 
