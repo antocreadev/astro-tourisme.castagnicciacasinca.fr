@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import ArtisanatCard from '../ui/ArtisanatCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Search, Filter } from 'lucide-react';
+import { getInlineStyles } from '../../utils/colorUtils.js';
 
-const ArtisanatListing = ({ artisanat = [] }) => {
+const ArtisanatListing = ({ artisanat = [], colorData }) => {
+  // Utiliser les styles CSS globaux ou inline basés sur colorData
+  const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
+
   // Récupérer les paramètres URL pour initialiser les filtres
   const getInitialFilters = () => {
     if (typeof window !== 'undefined') {

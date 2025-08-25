@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { getImageUrl } from "../../utils/imageUtils";
 import { Waves, Clock, MapPin, Star, Users, Search, ExternalLink, Grid, List } from "lucide-react";
+import { getInlineStyles } from '../../utils/colorUtils.js';
 
 const ActiviteNautiqueCard = ({ activite, viewMode = 'grid' }) => {
   const imageUrl = getImageUrl(activite.Image);
@@ -162,7 +163,10 @@ const ActiviteNautiqueCard = ({ activite, viewMode = 'grid' }) => {
   );
 };
 
-const ActiviteNautiqueListing = ({ activiteNautiques }) => {
+const ActiviteNautiqueListing = ({ activiteNautiques, colorData }) => {
+  // Utiliser les styles CSS globaux ou inline basés sur colorData
+  const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCommune, setSelectedCommune] = useState("tous");
   const [viewMode, setViewMode] = useState('grid');

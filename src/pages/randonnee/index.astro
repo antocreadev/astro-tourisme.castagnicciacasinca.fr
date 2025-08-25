@@ -2,8 +2,15 @@
 import Layout from "../../layouts/Layout.astro";
 import RandonneeListing from "../../components/listing/RandonneeListing.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
-import { fetchAllRandonnees } from "../../services/apiUtils.js";
+import {
+  fetchAllRandonnees,
+  fetchColorTexte,
+} from "../../services/apiUtils.js";
 import type { RootRandonnee } from "../../types/randonnee";
+import type { RootColorTexte } from "../../types/color-texte";
+
+// Récupération des couleurs dynamiques
+const colorData: RootColorTexte = await fetchColorTexte();
 
 // Fetch randonnees (toutes pages)
 const randonneesData: RootRandonnee = await fetchAllRandonnees({
@@ -17,6 +24,10 @@ const randonneesData: RootRandonnee = await fetchAllRandonnees({
   pageName="liste-randonnees"
 >
   <main>
-    <RandonneeListing randonnees={randonneesData.data} client:load />
+    <RandonneeListing
+      randonnees={randonneesData.data}
+      colorData={colorData}
+      client:load
+    />
   </main>
 </Layout>

@@ -10,8 +10,12 @@ import {
 } from '../../utils/sejournerFilters.js';
 import SejournerCard from '../ui/SejournerCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, MapPin, Star, Search } from 'lucide-react';
+import { getInlineStyles } from '../../utils/colorUtils.js';
 
-export default function SejournerListing({ sejourners = [] }) {
+export default function SejournerListing({ sejourners = [], colorData }) {
+  // Utiliser les styles CSS globaux ou inline basés sur colorData
+  const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
+
   // Récupérer les paramètres URL pour initialiser les filtres
   const getInitialFilters = () => {
     if (typeof window !== 'undefined') {

@@ -8,6 +8,7 @@ import {
   fetchAllArtisanat,
   fetchAllRandonnees,
   fetchAllActivitesNautiques,
+  fetchColorTexte,
 } from "../services/apiUtils.js";
 import type { RootEvenements } from "../types/evenements";
 import type { RootSejourner } from "../types/sejourner";
@@ -15,6 +16,10 @@ import type { RootPlage } from "../types/plages";
 import type { RootartisanatEtProduit } from "../types/artisanat-et-produit";
 import type { RootRandonnee } from "../types/randonnee";
 import type { RootActiviteNautique } from "../types/activite-nautique";
+import type { RootColorTexte } from "../types/color-texte";
+
+// Récupération des couleurs dynamiques
+const colorData: RootColorTexte = await fetchColorTexte();
 
 // Récupération de toutes les données depuis l'API (sans limite de pagination)
 
@@ -61,6 +66,7 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
       evenementsData={dataEvenementsJson.data}
       activitesNautiquesData={dataActiviteNautiqueJson.data}
       randonneesData={dataRandonneesJson.data}
+      colorData={colorData}
     />
   </main>
 

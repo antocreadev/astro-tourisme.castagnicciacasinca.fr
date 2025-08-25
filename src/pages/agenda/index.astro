@@ -2,9 +2,16 @@
 import Layout from "../../layouts/Layout.astro";
 import AgendaListing from "../../components/listing/AgendaListing.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
-import { fetchAllEvenements } from "../../services/apiUtils.js";
+import {
+  fetchAllEvenements,
+  fetchColorTexte,
+} from "../../services/apiUtils.js";
 import type { RootEvenements } from "../../types/evenements";
 import type { RootTypeEvenements } from "../../types/type-evenements";
+import type { RootColorTexte } from "../../types/color-texte";
+
+// Récupération des couleurs dynamiques
+const colorData: RootColorTexte = await fetchColorTexte();
 
 const dataEvenementsJson: RootEvenements = await fetchAllEvenements({
   populate: "*",
@@ -67,6 +74,7 @@ const initialPage = Number(Astro.url.searchParams.get("page") || "1");
     typesEvenements={dataTypeEvenementsJson.data}
     initialTypes={initialTypes}
     initialPage={initialPage}
+    colorData={colorData}
     client:load
   />
 </Layout>

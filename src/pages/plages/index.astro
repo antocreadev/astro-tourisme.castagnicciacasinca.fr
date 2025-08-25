@@ -2,17 +2,17 @@
 import Layout from "../../layouts/Layout.astro";
 import PlagesListing from "../../components/listing/PlagesListing.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
+import { fetchColorTexte, fetchAllPlages } from "../../services/apiUtils.js";
 import type { RootPlage } from "../../types/plages";
+import type { RootColorTexte } from "../../types/color-texte";
 
-// Fetch plages data
-const response = await fetch(`${PUBLIC_API_URL}/api/plages`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
+// Récupération des couleurs dynamiques
+const colorData: RootColorTexte = await fetchColorTexte();
+
+// Fetch plages data with fetchAll to avoid pagination limits
+const plagesData: RootPlage = await fetchAllPlages({
+  populate: "*",
 });
-
-const plagesData: RootPlage = await response.json();
 ---
 
 <Layout
@@ -21,6 +21,6 @@ const plagesData: RootPlage = await response.json();
   pageName="liste-plages"
 >
   <main>
-    <PlagesListing plages={plagesData.data} client:load />
+    <PlagesListing plages={plagesData.data} colorData={colorData} client:load />
   </main>
 </Layout>

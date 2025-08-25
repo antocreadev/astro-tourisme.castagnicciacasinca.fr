@@ -5,8 +5,14 @@ import type {
   Daum,
   TypeInformationPratique,
 } from "../../types/informations-pratiques.ts";
+import type { RootColorTexte } from "../../types/color-texte";
 import { convertMarkdownToHtml } from "../../utils/markdownUtils.js";
 import { createSlug, findCategoryBySlug } from "../../utils/slugUtils.js";
+import { fetchColorTexte } from "../../services/apiUtils.js";
+import { getInlineStyles } from "../../utils/colorUtils.js";
+
+// Récupération des couleurs dynamiques
+const colorData: RootColorTexte = await fetchColorTexte();
 
 export async function getStaticPaths() {
   // Récupérer toutes les informations pratiques depuis l'API

@@ -2,7 +2,12 @@
 import Layout from "../../layouts/Layout.astro";
 import EventDetail from "../../components/detail/EventDetail.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
+import { fetchColorTexte } from "../../services/apiUtils.js";
 import type { RootEvenements } from "../../types/evenements";
+import type { RootColorTexte } from "../../types/color-texte";
+
+// Récupération des couleurs dynamiques
+const colorData: RootColorTexte = await fetchColorTexte();
 
 export async function getStaticPaths() {
   const response = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
@@ -28,5 +33,5 @@ const { event } = Astro.props;
   pageCategory="agenda"
   pageName={event.Nom}
 >
-  <EventDetail event={event} client:load />
+  <EventDetail event={event} colorData={colorData} client:load />
 </Layout>

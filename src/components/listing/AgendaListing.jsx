@@ -5,7 +5,7 @@ import FilterBar from '../ui/FilterBar.jsx';
 import EventCard from '../ui/EventCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 
-export default function AgendaListing({ events = [], typesEvenements = [], initialTypes = [], initialPage = 1 }) {
+export default function AgendaListing({ events = [], typesEvenements = [], initialTypes = [], initialPage = 1, colorData }) {
   const initialEvents = sortEventsByDate(events);
   const [filteredEvents, setFilteredEvents] = useState(initialEvents);
   // selectedTypes contient les NOMS (pas ids)
@@ -107,20 +107,29 @@ export default function AgendaListing({ events = [], typesEvenements = [], initi
     setCurrentPage(1);
   }, [selectedTypes]);
 
+  const headerStyle = {
+    backgroundColor: colorData?.data?.FondAgenda || '#ffffff',
+    color: colorData?.data?.texteAgenda || '#000000'
+  };
+
+  const bgStyle = {
+    backgroundColor: colorData?.data?.FondAgenda || '#f9fafb'
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={bgStyle}>
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="border-b" style={headerStyle}>
         <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
-          <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-            <a href="/" className="hover:text-gray-700">Accueil</a>
+          <nav className="flex items-center gap-2 text-sm mb-4" style={{ color: colorData?.data?.texteAgenda || '#6b7280' }}>
+            <a href="/" className="hover:opacity-80">Accueil</a>
             <span>/</span>
-            <span className="text-gray-900">Agenda</span>
+            <span style={{ color: colorData?.data?.texteAgenda || '#111827' }}>Agenda</span>
           </nav>
           
           <div className="text-center">
-            <h1 className="text-4xl sm:text-6xl font-bold text-black mb-4">Agenda</h1>
-            <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
+            <h1 className="text-4xl sm:text-6xl font-bold mb-4" style={{ color: colorData?.data?.texteAgenda || '#000000' }}>Agenda</h1>
+            <p className="text-lg max-w-4xl mx-auto leading-relaxed" style={{ color: colorData?.data?.texteAgenda || '#374b58' }}>
               Tout au long de l'année, des multitudes de rendez-vous culturels, musicaux, 
               cinématographiques, sportifs et gourmands avec des lieux de vie aux multiples facettes
             </p>

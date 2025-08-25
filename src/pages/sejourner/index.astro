@@ -2,8 +2,15 @@
 import Layout from "../../layouts/Layout.astro";
 import SejournerListing from "../../components/listing/SejournerListing.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
-import { fetchAllSejourners } from "../../services/apiUtils.js";
+import {
+  fetchAllSejourners,
+  fetchColorTexte,
+} from "../../services/apiUtils.js";
 import type { RootSejourner } from "../../types/sejourner";
+import type { RootColorTexte } from "../../types/color-texte";
+
+// Récupération des couleurs dynamiques
+const colorData: RootColorTexte = await fetchColorTexte();
 
 const dataSejournerJson: RootSejourner = await fetchAllSejourners({
   populate: "*",
@@ -16,6 +23,10 @@ const dataSejournerJson: RootSejourner = await fetchAllSejourners({
   pageName="liste-hebergements"
 >
   <main>
-    <SejournerListing sejourners={dataSejournerJson.data} client:load="react" />
+    <SejournerListing
+      sejourners={dataSejournerJson.data}
+      colorData={colorData}
+      client:load
+    />
   </main>
 </Layout>

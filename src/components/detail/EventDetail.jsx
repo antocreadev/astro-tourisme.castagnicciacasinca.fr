@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import { ArrowLeft, Calendar, MapPin, Phone, ExternalLink } from 'lucide-react';
 import { convertMarkdownToHtml } from '../../utils/markdownUtils.js';
 import { formatEventDate, getImageUrl, isEventPast } from '../../utils/eventUtils.js';
+import { getInlineStyles } from '../../utils/colorUtils.js';
 
-const EventDetail = ({ event }) => {
+const EventDetail = ({ event, colorData }) => {
   const [isClient, setIsClient] = useState(false);
   const [LeafletComponents, setLeafletComponents] = useState(null);
+
+  // Utiliser les styles CSS globaux ou inline basés sur colorData
+  const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
 
   useEffect(() => {
     setIsClient(true);
@@ -65,15 +69,23 @@ const EventDetail = ({ event }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: dynamicStyles.backgroundColor || 'var(--bg-primary, #f9fafb)' }}>
       {/* Header with navigation */}
-      <div className="bg-white border-b sticky top-0 z-50">
+      <div 
+        className="border-b sticky top-0 z-50"
+        style={{
+          backgroundColor: dynamicStyles.primaryColor || 'var(--color-primary, #ffffff)',
+          color: dynamicStyles.backgroundColor || 'var(--bg-primary, #ffffff)',
+          borderBottomColor: dynamicStyles.accentColor || 'var(--color-accent, #e5e7eb)'
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => window.history.back()}
-                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+                className="flex items-center gap-2 transition-colors hover:opacity-80"
+                style={{ color: dynamicStyles.backgroundColor || 'var(--bg-primary, #6b7280)' }}
               >
                 <ArrowLeft className="w-5 h-5" />
                 <span>Retour</span>

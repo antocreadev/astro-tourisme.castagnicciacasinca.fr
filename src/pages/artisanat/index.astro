@@ -2,8 +2,12 @@
 import Layout from "../../layouts/Layout.astro";
 import ArtisanatListing from "../../components/listing/ArtisanatListing.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
-import { fetchAllArtisanat } from "../../services/apiUtils.js";
+import { fetchAllArtisanat, fetchColorTexte } from "../../services/apiUtils.js";
 import type { RootartisanatEtProduit } from "../../types/artisanat-et-produit";
+import type { RootColorTexte } from "../../types/color-texte";
+
+// Récupération des couleurs dynamiques
+const colorData: RootColorTexte = await fetchColorTexte();
 
 // Fetch artisanat complet
 const artisanatData: RootartisanatEtProduit = await fetchAllArtisanat({
@@ -17,6 +21,10 @@ const artisanatData: RootartisanatEtProduit = await fetchAllArtisanat({
   pageName="liste-artisanat-terroir"
 >
   <main>
-    <ArtisanatListing artisanat={artisanatData.data} client:load />
+    <ArtisanatListing
+      artisanat={artisanatData.data}
+      colorData={colorData}
+      client:load
+    />
   </main>
 </Layout>

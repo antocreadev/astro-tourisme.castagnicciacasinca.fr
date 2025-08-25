@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import RandonneeCard from '../ui/RandonneeCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { getInlineStyles } from '../../utils/colorUtils.js';
 
-const RandonneeListing = ({ randonnees = [] }) => {
+const RandonneeListing = ({ randonnees = [], colorData }) => {
+  // Utiliser les styles CSS globaux ou inline basés sur colorData
+  const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
+  
   // S'assurer que randonnees est un tableau
   const randonneesArray = Array.isArray(randonnees) ? randonnees : [];
   

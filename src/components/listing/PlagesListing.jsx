@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PlageCard from '../ui/PlageCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { getInlineStyles } from '../../utils/colorUtils.js';
 
-const PlagesListing = ({ plages = [] }) => {
+const PlagesListing = ({ plages = [], colorData }) => {
+  // Utiliser les styles CSS globaux ou inline basés sur colorData
+  const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
+
   const [filteredPlages, setFilteredPlages] = useState(plages);
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
