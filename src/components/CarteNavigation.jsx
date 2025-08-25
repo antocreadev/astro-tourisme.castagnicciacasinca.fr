@@ -15,12 +15,17 @@ export default function CarteNavigation({
 
   useEffect(() => {
     setIsMounted(true);
-    
+  }, []);
+
+  useEffect(() => {
     // Charger la carte interactive si elle est active et que nous sommes côté client
-    if (activeView === 'interactive') {
-      loadInteractiveMap();
+    if (activeView === 'interactive' && isMounted) {
+      // Délai pour s'assurer que le DOM est prêt
+      setTimeout(() => {
+        loadInteractiveMap();
+      }, 100);
     }
-  }, [activeView]);
+  }, [activeView, isMounted]);
 
   const loadInteractiveMap = async () => {
     const wrapper = document.querySelector('.interactive-map-wrapper');
@@ -115,15 +120,6 @@ export default function CarteNavigation({
       ) : (
         <div className="bg-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Carte interactive
-              </h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                Explorez de manière interactive tous les points d'intérêt avec des informations détaillées et des filtres personnalisables.
-              </p>
-            </div>
-            
             <div className="bg-white rounded-xl shadow-lg overflow-hidden min-h-[600px]">
               {isMounted ? (
                 <div 

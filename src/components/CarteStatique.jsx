@@ -116,7 +116,7 @@ export default function CarteStatique() {
               onClick={(e) => e.stopPropagation()}
             >
               <img 
-                src="/CarteTerritoireCastagniccia.svg"
+                src="/carte-statique.png"
                 alt="Carte du territoire Castagniccia-Casinca"
                 className="w-full h-auto object-contain"
               />

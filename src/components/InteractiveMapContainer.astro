@@ -15,7 +15,7 @@ const {
   artisanatData,
   evenementsData,
   activitesNautiquesData,
-  randonneesData
+  randonneesData,
 } = Astro.props;
 ---
 
@@ -23,46 +23,54 @@ const {
   <div class="loading-placeholder">
     <div class="flex items-center justify-center h-[600px] bg-gray-100">
       <div class="text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+        <div
+          class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"
+        >
+        </div>
         <p class="text-gray-600">Chargement de la carte...</p>
       </div>
     </div>
   </div>
 </div>
 
-<script define:vars={{ 
-  sejournerData, 
-  plagesData, 
-  artisanatData, 
-  evenementsData, 
-  activitesNautiquesData, 
-  randonneesData 
-}}>
+<script
+  define:vars={{
+    sejournerData,
+    plagesData,
+    artisanatData,
+    evenementsData,
+    activitesNautiquesData,
+    randonneesData,
+  }}
+>
   // Script côté client pour charger la carte
-  document.addEventListener('DOMContentLoaded', async () => {
-    const container = document.querySelector('.interactive-map-container');
+  document.addEventListener("DOMContentLoaded", async () => {
+    const container = document.querySelector(".interactive-map-container");
     if (!container) return;
 
     try {
       // Import dynamique du module React et du composant côté client uniquement
-      const [React, ReactDOM, { default: InteractiveMapClient }] = await Promise.all([
-        import('react'),
-        import('react-dom/client'),
-        import('./InteractiveMapClient.jsx')
-      ]);
+      const [React, ReactDOM, { default: InteractiveMapClient }] =
+        await Promise.all([
+          import("react"),
+          import("react-dom/client"),
+          import("./InteractiveMapClient.jsx"),
+        ]);
 
       // Remplacer le contenu de loading par le composant React
       const root = ReactDOM.createRoot(container);
-      root.render(React.createElement(InteractiveMapClient, {
-        sejournerData,
-        plagesData,
-        artisanatData,
-        evenementsData,
-        activitesNautiquesData,
-        randonneesData
-      }));
+      root.render(
+        React.createElement(InteractiveMapClient, {
+          sejournerData,
+          plagesData,
+          artisanatData,
+          evenementsData,
+          activitesNautiquesData,
+          randonneesData,
+        })
+      );
     } catch (error) {
-      console.error('Erreur lors du chargement de la carte:', error);
+      console.error("Erreur lors du chargement de la carte:", error);
       container.innerHTML = `
         <div class="flex items-center justify-center h-[600px] bg-red-50">
           <div class="text-center">
