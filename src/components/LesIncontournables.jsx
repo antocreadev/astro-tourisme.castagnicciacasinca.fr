@@ -2,17 +2,24 @@ import { sites as fallbackSites } from '../data/sites.js';
 import { itineraires } from '../data/itineraires.js';
 
 export default function LesIncontournables({ data, sites = fallbackSites }) {
-  // Utilise les vraies données des sites (dynamiques ou fallback)
-  const sitesPhares = sites.slice(0, 4).map(s => ({
-    // Normaliser pour supporter différents formats d'entrée
-    slug: s.slug || s.documentId || s.id,
-    title: s.title || s.Titre || 'Site',
-    image: s.image || s.cover || (s.images?.[0]?.url) || s.gallery?.[0] || '',
-    subtitle: s.subtitle || s.commune || s.subtitle || ''
-  })); // Prend les 4 premiers sites
-  
-  // Utilise les vraies données des itinéraires
-  const itinerairesData = itineraires.slice(0, 3); // Prend les 3 premiers itinéraires
+  // Mélanger les sites reçus (nouveau format RootSitePhare.data[].site ou normalisé)
+  const normalized = (sites || []).map(s => {
+    const siteObj = s.site || s; // support RootSitePhare
+    return {
+      slug: siteObj.slug || siteObj.documentId || siteObj.id,
+      title: siteObj.title || siteObj.Titre || 'Site',
+  image: siteObj.image || siteObj.cover || siteObj.Image || (siteObj.Images?.[0]?.url) || (siteObj.images?.[0]?.url) || '',
+      subtitle: siteObj.subtitle || siteObj.commune || siteObj.Description || ''
+    };
+  });
+  // Shuffle (Fisher-Yates) au build pour varier l'ordre
+  for (let i = normalized.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [normalized[i], normalized[j]] = [normalized[j], normalized[i]];
+  }
+  const sitesPhares = normalized.slice(0, 4);
+
+  const itinerairesData = itineraires.slice(0, 3);
 
   return (
     <div className="bg-white py-8 px-4" id="incontournables">
@@ -39,7 +46,12 @@ export default function LesIncontournables({ data, sites = fallbackSites }) {
               </a>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {sitesPhares.map((site, index) => (
+              {sitesPhares.map((site, index) => {
+                const truncate = (txt, limit = 90) => {
+                  if (!txt) return '';
+                  return txt.length > limit ? txt.slice(0, limit - 1).trimEnd() + '…' : txt;
+                };
+                return (
                 <a 
                   key={index}
                   href={`/sites/${site.slug}`}
@@ -57,13 +69,13 @@ export default function LesIncontournables({ data, sites = fallbackSites }) {
                       <h3 className="text-lg font-semibold text-black text-center leading-tight group-hover:text-blue-600 transition-colors duration-300 line-clamp-2 mb-2">
                         {site.title}
                       </h3>
-                      <p className="text-sm text-gray-600 text-center line-clamp-2 flex-1">
-                        {site.subtitle}
+                      <p className="text-sm text-gray-600 text-center flex-1">
+                        {truncate(site.subtitle)}
                       </p>
                     </div>
                   </div>
                 </a>
-              ))}
+              );})}
             </div>
           </div>
         )}

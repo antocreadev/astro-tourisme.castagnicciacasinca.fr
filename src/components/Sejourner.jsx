@@ -1,88 +1,68 @@
 import { Building2, Building, Home, Tent, ShoppingBasket, UtensilsCrossed, ChevronRight } from "lucide-react"
-import { hebergements, typesHebergement } from '../data/hebergements.js';
+import { hebergements } from '../data/hebergements.js';
 
-export default function Sejourner({ data }) {
-  // Compter les hébergements par type (garde la logique existante pour les fallbacks)
-  const countByType = (type) => {
-    if (type === "tous") return hebergements.length;
-    return hebergements.filter(h => h.type === type).length;
+export default function Sejourner({ data, sejourners = [] }) {
+  // Construire un index dynamique par type (API) si disponible
+  const normalize = (s = '') => s
+    .toLowerCase()
+    .normalize('NFD').replace(/\p{Diacritic}/gu,'')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-|-$/g,'');
+
+  const countsFromApi = () => {
+    if (!Array.isArray(sejourners) || sejourners.length === 0) return null;
+    return sejourners.reduce((acc, item) => {
+      const raw = item.type_sejourner?.Denomination || 'Autre';
+      const key = normalize(raw);
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+  };
+  const dynamicCounts = countsFromApi();
+
+  // Fallback counts (statique) si pas d'API
+  const countStatic = (type) => hebergements.filter(h => h.type === type).length;
+
+  const mapLabelToStaticKey = (label) => {
+    const lower = label.toLowerCase();
+    if (lower.includes('hôtel')) return 'hotel';
+    if (lower.includes('résidence')) return 'residence';
+    if (lower.includes('village')) return 'village-vacances';
+    if (lower.includes('camping')) return 'camping';
+    return null; // pas de compteur statique pertinent
   };
 
-  // Utilise les données dynamiques de l'API ou les données statiques en fallback
-  const getSejournerItems = () => {
-    if (data?.type_sejourners && data.type_sejourners.length > 0) {
+  const getCount = (denomination) => {
+    if (dynamicCounts) return dynamicCounts[normalize(denomination)] || 0;
+    const key = mapLabelToStaticKey(denomination);
+    return key ? countStatic(key) : 0;
+  };
+
+  const buildItems = () => {
+    if (data?.type_sejourners?.length) {
       return data.type_sejourners.map(item => ({
         title: item.Denomination,
         description: item.Description,
         link: `${item.lien?.Lien || '/sejourner'}?type=${encodeURIComponent(item.Denomination)}`,
-        linkLabel: item.lien?.Label || "En savoir plus",
+        linkLabel: item.lien?.Label || 'En savoir plus',
         linkColor: item.lien?.TextColor,
         iconUrl: item.Icone?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${item.Icone.url}` : null,
-        // Pour garder la compatibilité avec les compteurs existants
-        count: item.Denomination.toLowerCase().includes('hôtel') ? countByType("hotel") :
-               item.Denomination.toLowerCase().includes('résidence') ? countByType("residence") :
-               item.Denomination.toLowerCase().includes('village') ? countByType("village-vacances") :
-               item.Denomination.toLowerCase().includes('camping') ? countByType("camping") : null
+  count: getCount(item.Denomination)
       }));
     }
 
-    // Fallback vers les données statiques si pas de données API
-    const accommodations = [
-      {
-        icon: Building2,
-        title: "Hôtels",
-        count: countByType("hotel"),
-        description: "Détendez-vous dans nos hôtels de charme avec vue sur mer ou montagne.",
-        link: "/sejourner?type=Hôtels",
-        linkLabel: "Voir les hébergements"
-      },
-      {
-        icon: Building,
-        title: "Résidences de tourisme",
-        count: countByType("residence"),
-        description: "Profitez de l'indépendance avec nos résidences tout équipées.",
-        link: "/sejourner?type=Résidences de tourisme",
-        linkLabel: "Voir les hébergements"
-      },
-      {
-        icon: Home,
-        title: "Villages vacances",
-        count: countByType("village-vacances"),
-        description: "Partagez des moments inoubliables avec animations et services.",
-        link: "/sejourner?type=Villages vacances",
-        linkLabel: "Voir les hébergements"
-      },
+    // Fallback statique
+    return [
+      { icon: Building2, title: 'Hôtels', description: 'Détendez-vous dans nos hôtels de charme avec vue sur mer ou montagne.', link: '/sejourner?type=Hôtels', linkLabel: 'Voir les hébergements', count: getCount('Hôtels') },
+      { icon: Building, title: 'Résidences de tourisme', description: "Profitez de l'indépendance avec nos résidences tout équipées.", link: '/sejourner?type=Résidences de tourisme', linkLabel: 'Voir les hébergements', count: getCount('Résidences de tourisme') },
+      { icon: Home, title: 'Villages vacances', description: 'Partagez des moments inoubliables avec animations et services.', link: '/sejourner?type=Villages vacances', linkLabel: 'Voir les hébergements', count: getCount('Villages vacances') },
+      { icon: Tent, title: 'Campings', description: 'Campez en pleine nature avec tout le confort moderne.', link: '/sejourner?type=Campings', linkLabel: 'Voir les hébergements', count: getCount('Campings') },
+      { icon: ShoppingBasket, title: 'Commerces', description: 'Découvrez nos produits locaux et artisanaux.', link: '/sejourner?type=Commerces', linkLabel: 'En savoir plus', count: getCount('Commerces') },
+      { icon: UtensilsCrossed, title: 'Restaurants', description: 'Dégustez une cuisine corse authentique et savoureuse.', link: '/sejourner?type=Restaurants', linkLabel: 'En savoir plus', count: getCount('Restaurants') }
     ];
-
-    const services = [
-      {
-        icon: Tent,
-        title: "Campings",
-        count: countByType("camping"),
-        description: "Campez en pleine nature avec tout le confort moderne.",
-        link: "/sejourner?type=Campings",
-        linkLabel: "Voir les hébergements"
-      },
-      {
-        icon: ShoppingBasket,
-        title: "Commerces",
-        description: "Découvrez nos produits locaux et artisanaux.",
-        link: "/sejourner?type=Commerces",
-        linkLabel: "En savoir plus"
-      },
-      {
-        icon: UtensilsCrossed,
-        title: "Restaurants",
-        description: "Dégustez une cuisine corse authentique et savoureuse.",
-        link: "/sejourner?type=Restaurants",
-        linkLabel: "En savoir plus"
-      },
-    ];
-
-    return [...accommodations, ...services];
   };
 
-  const sejournerItems = getSejournerItems();
+  const sejournerItems = buildItems();
 
   return (
     <div className="bg-white pb-8 sm:pb-16 px-4">
@@ -119,11 +99,9 @@ export default function Sejourner({ data }) {
                 {/* Title with count */}
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl sm:text-2xl font-bold text-black">{item.title}</h2>
-                  {item.count && (
-                    <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-full">
-                      {item.count}
-                    </span>
-                  )}
+                  <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-full">
+                    {item.count}
+                  </span>
                 </div>
 
                 {/* Description */}

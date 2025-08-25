@@ -31,6 +31,7 @@ import type { RootartisanatEtProduit } from "../types/artisanat-et-produit";
 import type { RootRandonnee } from "../types/randonnee";
 import type { RootActiviteNautique } from "../types/activite-nautique";
 import type { RootSite } from "../types/site";
+import type { RootSitePhare } from "../types/site-phare";
 console.log("API URL:", PUBLIC_API_URL);
 // On utilise maintenant des fetchAll pour récupérer 100% des entrées.
 // ---- fetch Global
@@ -93,16 +94,34 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
   await fetchAllActivitesNautiques({ populate: "*" });
 console.log("dataActiviteNautiqueJson Data:", dataActiviteNautiqueJson);
 
-// fetch sites
-const sitesData = await fetchSites();
-// Adapter au format minimal utilisé par LesIncontournables (title, slug, image, subtitle)
-const sites = sitesData.data.map(transformSiteData).map((s) => ({
-  slug: s.slug,
-  title: s.title,
-  image: s.image,
-  subtitle: s.subtitle || s.commune || "",
-}));
-console.log("Sites Data:", sites);
+// fetch sites phares (nouvelle route)
+const sitePharesRes = await fetch(
+  `${PUBLIC_API_URL}/api/site-phares?populate=*`
+);
+let sites = [];
+if (sitePharesRes.ok) {
+  const sitePharesData: RootSitePhare = await sitePharesRes.json();
+  sites = sitePharesData.data.map((item) => {
+    const img = item.site?.Images?.[0];
+    const sized = img?.formats?.medium || img?.formats?.small || img;
+    return {
+      slug: item.site?.documentId || item.site?.id,
+      title: item.site?.Titre,
+      image: sized ? `${PUBLIC_API_URL}${sized.url || img?.url}` : undefined,
+      subtitle: item.site?.Description?.slice(0, 80) || "",
+    };
+  });
+} else {
+  // fallback sur sites existants si la route échoue
+  const sitesData = await fetchSites();
+  sites = sitesData.data.map(transformSiteData).map((s) => ({
+    slug: s.slug,
+    title: s.title,
+    image: s.image,
+    subtitle: s.subtitle || s.commune || "",
+  }));
+}
+console.log("Sites Phares Data:", sites);
 ---
 
 <Layout
@@ -123,7 +142,10 @@ console.log("Sites Data:", sites);
     client:load
   />
   <DecouvreTerritoire data={dataLandingPageJson.data.DecouvrezLeTerritoire} />
-  <Sejourner data={dataLandingPageJson.data.Sejourner} />
+  <Sejourner
+    data={dataLandingPageJson.data.Sejourner}
+    sejourners={dataSejournerJson.data}
+  />
   <LesPlages
     data={dataLandingPageJson.data.LesPlages}
     plages={dataPlagesJson.data}
