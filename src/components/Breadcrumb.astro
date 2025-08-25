@@ -1,0 +1,67 @@
+---
+export interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+export interface Props {
+  items: BreadcrumbItem[];
+  currentPage: string;
+}
+
+const { items, currentPage } = Astro.props;
+
+// Construction du JSON-LD pour les breadcrumbs
+const breadcrumbList = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Accueil",
+      "item": "https://tourisme.castagnicciacasinca.fr"
+    },
+    ...items.map((item, index) => ({
+      "@type": "ListItem",
+      "position": index + 2,
+      "name": item.name,
+      "item": item.url
+    })),
+    {
+      "@type": "ListItem",
+      "position": items.length + 2,
+      "name": currentPage
+    }
+  ]
+};
+---
+
+<nav aria-label="Fil d'Ariane" class="breadcrumb-nav py-2 text-sm">
+  <ol class="flex items-center space-x-2 text-gray-600" itemscope itemtype="https://schema.org/BreadcrumbList">
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a href="/" class="hover:text-blue-600 transition-colors" itemprop="item">
+        <span itemprop="name">Accueil</span>
+      </a>
+      <meta itemprop="position" content="1" />
+    </li>
+    
+    {items.map((item, index) => (
+      <li class="flex items-center space-x-2" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span class="text-gray-400">/</span>
+        <a href={item.url} class="hover:text-blue-600 transition-colors" itemprop="item">
+          <span itemprop="name">{item.name}</span>
+        </a>
+        <meta itemprop="position" content={String(index + 2)} />
+      </li>
+    ))}
+    
+    <li class="flex items-center space-x-2" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <span class="text-gray-400">/</span>
+      <span class="font-medium text-gray-900" itemprop="name">{currentPage}</span>
+      <meta itemprop="position" content={String(items.length + 2)} />
+    </li>
+  </ol>
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbList)} />

@@ -1,0 +1,99 @@
+---
+export interface Props {
+  type: 'TouristDestination' | 'Organization' | 'LocalBusiness' | 'Event';
+  data: any;
+}
+
+const { type, data } = Astro.props;
+
+// Configuration de base pour les données structurées
+const baseSchema = {
+  "@context": "https://schema.org",
+  "@type": type,
+  ...data
+};
+
+// Schémas spécifiques au tourisme
+const touristDestinationSchema = {
+  "@context": "https://schema.org",
+  "@type": "TouristDestination",
+  "name": "Castagniccia-Casinca",
+  "description": "Territoire authentique de la Haute-Corse alliant patrimoine, nature et traditions",
+  "url": "https://tourisme.castagnicciacasinca.fr",
+  "image": [
+    "https://tourisme.castagnicciacasinca.fr/photos/Mont-San-Petrone.jpg",
+    "https://tourisme.castagnicciacasinca.fr/photos/LoretodiCasinca.jpg",
+    "https://tourisme.castagnicciacasinca.fr/photos/Plage-de-Cap-Sud.jpg"
+  ],
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 42.3798,
+    "longitude": 9.3017
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "FR",
+    "addressRegion": "Corse",
+    "addressLocality": "Castagniccia-Casinca"
+  },
+  "containsPlace": [
+    {
+      "@type": "City",
+      "name": "Vescovato"
+    },
+    {
+      "@type": "City", 
+      "name": "Loreto-di-Casinca"
+    },
+    {
+      "@type": "City",
+      "name": "Penta-di-Casinca"
+    }
+  ],
+  "touristType": [
+    "Nature lovers",
+    "Cultural tourists", 
+    "Adventure seekers",
+    "Family travelers"
+  ],
+  "hasMap": "https://tourisme.castagnicciacasinca.fr/carte-interactive"
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Communauté de communes de la Castagniccia-Casinca",
+  "url": "https://tourisme.castagnicciacasinca.fr",
+  "logo": "https://tourisme.castagnicciacasinca.fr/logo.jpg",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "tourist information",
+    "areaServed": "Castagniccia-Casinca",
+    "availableLanguage": ["French", "Corsican"]
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "FR",
+    "addressRegion": "Corse"
+  },
+  "sameAs": [
+    "https://www.facebook.com/castagnicciacasinca",
+    "https://www.instagram.com/castagnicciacasinca"
+  ]
+};
+
+// Sélection du schéma approprié
+let schema;
+switch (type) {
+  case 'TouristDestination':
+    schema = { ...touristDestinationSchema, ...data };
+    break;
+  case 'Organization':
+    schema = { ...organizationSchema, ...data };
+    break;
+  default:
+    schema = baseSchema;
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

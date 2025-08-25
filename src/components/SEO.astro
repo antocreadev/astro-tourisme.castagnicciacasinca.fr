@@ -1,0 +1,226 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  image?: string;
+  type?: string;
+  noindex?: boolean;
+  keywords?: string;
+}
+
+const {
+  title = "Tourisme - Communauté de communes de la Castagniccia-Casinca",
+  description = "Découvrez la Castagniccia-Casinca en Corse : villages authentiques, randonnées, patrimoine, gastronomie locale et hébergements. Guide touristique officiel.",
+  canonical,
+  image = "/logo.jpg",
+  type = "website",
+  noindex = false,
+  keywords = "Tourisme, Castagniccia, Casinca, Corse, Haute-Corse, villages corses, randonnées, patrimoine, gastronomie corse, hébergements"
+} = Astro.props;
+
+const siteURL = "https://tourisme.castagnicciacasinca.fr";
+const canonicalURL = canonical || Astro.url.href;
+const imageURL = image.startsWith('http') ? image : `${siteURL}${image}`;
+
+// Génération du titre optimisé
+const pageTitle = title.includes("Castagniccia") ? title : `${title} | Castagniccia-Casinca`;
+---
+
+<!-- Métadonnées de base -->
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+<meta name="keywords" content={keywords} />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+<meta name="author" content="Communauté de communes de la Castagniccia-Casinca" />
+<meta name="theme-color" content="#2563eb" />
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={type} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:image" content={imageURL} />
+<meta property="og:image:alt" content={title} />
+<meta property="og:site_name" content="Tourisme Castagniccia-Casinca" />
+<meta property="og:locale" content="fr_FR" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageURL} />
+<meta name="twitter:image:alt" content={title} />
+
+<!-- Géolocalisation -->
+<meta name="geo.region" content="FR-2B" />
+<meta name="geo.placename" content="Castagniccia-Casinca, Corse" />
+<meta name="geo.position" content="42.3798;9.3017" />
+<meta name="ICBM" content="42.3798, 9.3017" />
+
+<!-- Données structurées Schema.org avancées -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${siteURL}/#website`,
+      "url": siteURL,
+      "name": "Tourisme Castagniccia-Casinca",
+      "description": "Site officiel du tourisme de la Castagniccia-Casinca en Corse",
+      "publisher": {
+        "@id": `${siteURL}/#organization`
+      },
+      "potentialAction": [
+        {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": `${siteURL}/recherche?q={search_term_string}`
+          },
+          "query-input": "required name=search_term_string"
+        }
+      ],
+      "inLanguage": "fr-FR"
+    },
+    {
+      "@type": "Organization",
+      "@id": `${siteURL}/#organization`,
+      "name": "Communauté de communes de la Castagniccia-Casinca",
+      "url": siteURL,
+      "logo": {
+        "@type": "ImageObject",
+        "@id": `${siteURL}/#logo`,
+        "inLanguage": "fr-FR",
+        "url": `${siteURL}/logo.jpg`,
+        "contentUrl": `${siteURL}/logo.jpg`,
+        "width": 200,
+        "height": 200,
+        "caption": "Logo Castagniccia-Casinca"
+      },
+      "image": {
+        "@id": `${siteURL}/#logo`
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "FR",
+        "addressRegion": "Corse",
+        "addressLocality": "Castagniccia-Casinca",
+        "postalCode": "20213"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "areaServed": "FR",
+        "availableLanguage": ["fr", "co"]
+      }
+    },
+    {
+      "@type": type === "article" ? "Article" : "WebPage",
+      "@id": `${canonicalURL}/#webpage`,
+      "url": canonicalURL,
+      "name": pageTitle,
+      "isPartOf": {
+        "@id": `${siteURL}/#website`
+      },
+      "about": {
+        "@id": `${siteURL}/#organization`
+      },
+      "description": description,
+      "image": {
+        "@type": "ImageObject",
+        "url": imageURL,
+        "width": 1200,
+        "height": 630
+      },
+      "inLanguage": "fr-FR",
+      "mainEntityOfPage": {
+        "@id": `${canonicalURL}/#webpage`
+      }
+    },
+    {
+      "@type": "TouristDestination",
+      "@id": `${siteURL}/#destination`,
+      "name": "Castagniccia-Casinca",
+      "description": "Territoire authentique de la Haute-Corse alliant patrimoine, nature et traditions corses",
+      "url": siteURL,
+      "image": [
+        `${siteURL}/photos/Mont-San-Petrone.jpg`,
+        `${siteURL}/photos/LoretodiCasinca.jpg`,
+        `${siteURL}/photos/Plage-de-Cap-Sud.jpg`
+      ],
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 42.3798,
+        "longitude": 9.3017
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "FR",
+        "addressRegion": "Corse"
+      },
+      "containsPlace": [
+        {
+          "@type": "City",
+          "name": "Vescovato",
+          "alternateName": "Viscuvatu"
+        },
+        {
+          "@type": "City",
+          "name": "Loreto-di-Casinca",
+          "alternateName": "Luretu di Casinca"
+        },
+        {
+          "@type": "City",
+          "name": "Penta-di-Casinca",
+          "alternateName": "Penta di Casinca"
+        }
+      ],
+      "touristType": [
+        "Nature lovers",
+        "Cultural tourists",
+        "Adventure seekers",
+        "Family travelers"
+      ]
+    }
+  ]
+})} />
+
+<!-- Micro-données pour le breadcrumb si applicable -->
+{Astro.url.pathname !== '/' && (
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Accueil",
+        "item": siteURL
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": pageTitle.replace(` | ${siteURL.split('//')[1]}`, ''),
+        "item": canonicalURL
+      }
+    ]
+  })} />
+)}
+
+<!-- DNS Prefetch pour les performances -->
+<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+<link rel="dns-prefetch" href="//unpkg.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+<!-- Optimisations diverses -->
+<meta name="format-detection" content="telephone=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="msapplication-TileColor" content="#2563eb" />
+
+<!-- Hreflang pour le multilingue (préparation future) -->
+<link rel="alternate" hreflang="fr" href={canonicalURL} />
+<link rel="alternate" hreflang="x-default" href={canonicalURL} />

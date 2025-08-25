@@ -1,5 +1,6 @@
 ---
 import Navbar from "../components/Navbar.astro";
+import SEO from "../components/SEO.astro";
 import PageTracker from "../components/PageTracker.jsx";
 import VisiteurButton from "../components/VisiteurButton.jsx";
 import { fetchColorTexte } from "../services/apiUtils.js";
@@ -15,34 +16,49 @@ export interface Props {
   description?: string;
   pageCategory?: string;
   pageName?: string;
+  canonical?: string;
+  image?: string;
+  type?: string;
+  noindex?: boolean;
+  keywords?: string;
 }
 
 const {
-  title = "Tourisme - Communauté de communes de la Castagniccia-Casinca",
-  description = "Site officiel du tourisme de la Communauté de communes de la Castagniccia-Casinca",
+  title,
+  description,
   pageCategory = "page",
   pageName,
+  canonical,
+  image,
+  type,
+  noindex,
+  keywords,
 } = Astro.props;
 ---
 
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/logo.jpg" />
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <meta
-      name="keywords"
-      content="Tourisme, Castagniccia, Casinca, Corse, Communauté de communes"
+    
+    <!-- Composant SEO centralisé -->
+    <SEO 
+      title={title}
+      description={description}
+      canonical={canonical}
+      image={image}
+      type={type}
+      noindex={noindex}
+      keywords={keywords}
     />
-    <meta name="author" content="antocreadev" />
-    <meta name="theme-color" content="#ffffff" />
+    
+    <!-- Flux RSS -->
+    <link rel="alternate" type="application/rss+xml" title="Agenda Castagniccia-Casinca" href="/rss.xml" />
   </head>
   <body data-page-category={pageCategory} data-page-name={pageName}>
     <Navbar />
