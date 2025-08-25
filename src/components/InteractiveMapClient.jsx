@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, ImageOverlay } from 'react-leaflet';
+import { Hotel, Waves, Palette, Calendar, Sailboat, Mountain } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -17,8 +18,55 @@ const getDetailUrl = (type, item) => {
   const baseUrl = baseUrls[type];
   if (!baseUrl) return null;
   
-  // Utiliser documentId ou slug selon la structure des données
-  const slug = item.documentId || item.slug || item.id;
+  let slug;
+  
+  // Logique différente selon le type
+  switch (type) {
+    case 'sejourner':
+    case 'evenements':
+      // Ces catégories utilisent documentId
+      slug = item.documentId;
+      break;
+      
+    case 'plages':
+      // Utilise Nom transformé
+      if (!item.Nom) return null;
+      slug = item.Nom
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+      break;
+      
+    case 'artisanat':
+      // Utilise Titre transformé
+      if (!item.Titre) return null;
+      slug = item.Titre
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+      break;
+      
+    case 'activitesNautiques':
+    case 'randonnees':
+      // Utilisent Nom transformé
+      if (!item.Nom) return null;
+      slug = item.Nom
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+      break;
+      
+    default:
+      return null;
+  }
+  
+  if (!slug) return null;
   return `${baseUrl}/${slug}`;
 };
 
@@ -55,34 +103,46 @@ const getCommuneCoordinates = (communeName) => {
 const MARKER_TYPES = {
   sejourner: {
     color: '#e74c3c',
-    icon: '🏨',
+    iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 17h20v2H2zm1.15-4.05L4 11.47l.85 1.48L3 17h18l-1.85-3.05L20 11.47l.85 1.48L19 17H5l-1.85-4.05z"/><path d="M5 5v6h14V5H5zm2 2h10v2H7V7z"/></svg>',
+    icon: Hotel,
     label: 'Hébergements'
   },
   plages: {
     color: '#3498db',
-    icon: '🏖️',
+    iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>',
+    icon: Waves,
     label: 'Plages'
   },
   artisanat: {
     color: '#f39c12',
-    icon: '🎨',
+    iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="7" r="3"/><circle cx="6" cy="7" r="3"/><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 7h12"/><path d="M6 17h12"/><path d="M18 7v10"/><path d="M6 7v10"/></svg>',
+    icon: Palette,
     label: 'Artisanat'
   },
   evenements: {
     color: '#9b59b6',
-    icon: '🎭',
+    iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    icon: Calendar,
     label: 'Événements'
   },
   activitesNautiques: {
     color: '#1abc9c',
-    icon: '⛵',
+    iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 18H2a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4Z"/><path d="M21 14 10 2 3 14h18Z"/><path d="M10 2v16"/></svg>',
+    icon: Sailboat,
     label: 'Activités Nautiques'
   },
   randonnees: {
     color: '#27ae60',
-    icon: '🥾',
+    iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5v20H4L8 3z"/></svg>',
+    icon: Mountain,
     label: 'Randonnées'
   }
+};
+
+// Fonction helper pour rendre les icônes dans les popups
+const renderMarkerIcon = (type, size = 18) => {
+  const IconComponent = MARKER_TYPES[type].icon;
+  return React.createElement(IconComponent, { size });
 };
 
 // Créer une icône personnalisée pour chaque type
@@ -105,9 +165,10 @@ const createCustomIcon = (type, count = 1) => {
         font-size: ${isCluster ? '14px' : '16px'};
         box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         position: relative;
+        color: white;
       ">
-        ${isCluster ? count : markerInfo.icon}
-        ${isCluster ? `<div style="position: absolute; top: -5px; right: -5px; background: #fff; color: ${markerInfo.color}; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; border: 2px solid ${markerInfo.color};">${markerInfo.icon}</div>` : ''}
+        ${isCluster ? count : markerInfo.iconSvg}
+        ${isCluster ? `<div style="position: absolute; top: -5px; right: -5px; background: #fff; color: ${markerInfo.color}; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; border: 2px solid ${markerInfo.color};">${markerInfo.iconSvg}</div>` : ''}
       </div>
     `,
     iconSize: [isCluster ? 45 : 35, isCluster ? 45 : 35],
@@ -232,7 +293,9 @@ const CategoryFilter = ({ visibleCategories, onToggleCategory, onToggleBackgroun
           onClick={toggleExpanded}
           className="bg-white rounded-xl shadow-lg p-3 border border-gray-200 flex items-center gap-2"
         >
-          <span className="text-xl">🗺️</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-gray-600">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
           <span className="font-medium text-sm">Filtres</span>
           <span className="text-sm text-gray-500">
             {isExpanded ? '▼' : '▶'}
@@ -253,9 +316,9 @@ const CategoryFilter = ({ visibleCategories, onToggleCategory, onToggleBackgroun
                   />
                   <div
                     className="w-6 h-6 rounded-full border-2 border-white shadow-sm flex items-center justify-center text-sm font-medium"
-                    style={{ backgroundColor: info.color }}
+                    style={{ backgroundColor: info.color, color: 'white' }}
                   >
-                    {info.icon}
+                    {renderMarkerIcon(key, 14)}
                   </div>
                   <span className="text-sm font-medium text-gray-700 flex-1">
                     {info.label}
@@ -298,7 +361,9 @@ const CategoryFilter = ({ visibleCategories, onToggleCategory, onToggleBackgroun
   return (
     <div className="absolute top-4 left-4 z-[1000] category-filter rounded-xl shadow-lg p-4 max-w-xs border border-gray-200">
       <h3 className="font-bold text-lg mb-4 text-gray-800 flex items-center gap-2">
-        <span className="text-xl">🗺️</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-gray-600">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
         Filtres
       </h3>
       
@@ -313,9 +378,9 @@ const CategoryFilter = ({ visibleCategories, onToggleCategory, onToggleBackgroun
             />
             <div
               className="w-6 h-6 rounded-full border-2 border-white shadow-sm flex items-center justify-center text-sm font-medium"
-              style={{ backgroundColor: info.color }}
+              style={{ backgroundColor: info.color, color: 'white' }}
             >
-              {info.icon}
+              {renderMarkerIcon(key, 14)}
             </div>
             <span className="text-sm font-medium text-gray-700 flex-1">
               {info.label}
@@ -524,9 +589,9 @@ const InteractiveMap = ({
                   {group.map((marker, index) => (
                     <div key={marker.id} className={`${index > 0 ? 'border-t border-gray-200 pt-2 mt-2' : ''}`}>
                       <div className="flex items-start gap-2 mb-2">
-                        <span className="text-lg flex-shrink-0" style={{ color: MARKER_TYPES[marker.type].color }}>
-                          {MARKER_TYPES[marker.type].icon}
-                        </span>
+                        <div className="flex-shrink-0" style={{ color: MARKER_TYPES[marker.type].color }}>
+                          {renderMarkerIcon(marker.type, 18)}
+                        </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-sm leading-tight mb-1" style={{ color: MARKER_TYPES[marker.type].color }}>
                             {marker.title}
