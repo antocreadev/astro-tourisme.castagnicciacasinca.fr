@@ -426,6 +426,15 @@ const InteractiveMap = ({
   activitesNautiquesData,
   randonneesData
 }) => {
+  // Debug: afficher les données reçues
+  console.log('InteractiveMap - Données reçues:', {
+    sejourner: sejournerData?.length || 0,
+    plages: plagesData?.length || 0,
+    artisanat: artisanatData?.length || 0,
+    evenements: evenementsData?.length || 0,
+    activitesNautiques: activitesNautiquesData?.length || 0,
+    randonnees: randonneesData?.length || 0
+  });
   const [currentZoom, setCurrentZoom] = useState(11);
   const [visibleCategories, setVisibleCategories] = useState(
     Object.keys(MARKER_TYPES).reduce((acc, key) => {
@@ -447,13 +456,61 @@ const InteractiveMap = ({
   // Préparer les marqueurs pour chaque catégorie
   const allMarkers = [];
 
+  // Fonction utilitaire pour extraire les coordonnées selon le type d'objet
+  const getCoordinates = (item, type) => {
+    let coords = null;
+    
+    switch (type) {
+      case 'sejourner':
+      case 'plages':
+      case 'artisanat':
+      case 'evenements':
+        coords = item.Coordonnees; // Majuscule
+        break;
+      
+      case 'activitesNautiques':
+        // Les activités nautiques utilisent soit coordinates directement, soit plage.Coordonnees
+        if (item.coordinates) {
+          coords = item.coordinates;
+        } else if (item.plage?.Coordonnees) {
+          coords = item.plage.Coordonnees;
+        }
+        break;
+      
+      case 'randonnees':
+        // Les randonnées utilisent depart ou coordonnees de la commune
+        if (item.depart) {
+          coords = item.depart;
+        } else if (item.coordonnees) {
+          coords = item.coordonnees;
+        } else if (item.commune?.coordonnees) {
+          coords = item.commune.coordonnees;
+        } else {
+          // Fallback: coordonnées approximatives basées sur la commune
+          coords = getCommuneCoordinates(item.commune?.Nom);
+        }
+        break;
+      
+      default:
+        break;
+    }
+    
+    // Debug: afficher les coordonnées trouvées ou non
+    if (!coords && item) {
+      console.log(`Aucune coordonnée trouvée pour ${type}:`, item);
+    }
+    
+    return coords;
+  };
+
   // Séjourner (Hébergements)
   if (visibleCategories.sejourner && sejournerData && Array.isArray(sejournerData)) {
     sejournerData.forEach(item => {
-      if (item.Coordonnees) {
+      const coords = getCoordinates(item, 'sejourner');
+      if (coords && coords.lat && coords.lng) {
         allMarkers.push({
           id: `sejourner-${item.id}`,
-          position: [item.Coordonnees.lat, item.Coordonnees.lng],
+          position: [coords.lat, coords.lng],
           type: 'sejourner',
           title: item.Titre,
           detailUrl: getDetailUrl('sejourner', item),
@@ -466,10 +523,11 @@ const InteractiveMap = ({
   // Plages
   if (visibleCategories.plages && plagesData && Array.isArray(plagesData)) {
     plagesData.forEach(item => {
-      if (item.Coordonnees) {
+      const coords = getCoordinates(item, 'plages');
+      if (coords && coords.lat && coords.lng) {
         allMarkers.push({
           id: `plage-${item.id}`,
-          position: [item.Coordonnees.lat, item.Coordonnees.lng],
+          position: [coords.lat, coords.lng],
           type: 'plages',
           title: item.Nom,
           detailUrl: getDetailUrl('plages', item),
@@ -482,10 +540,11 @@ const InteractiveMap = ({
   // Artisanat
   if (visibleCategories.artisanat && artisanatData && Array.isArray(artisanatData)) {
     artisanatData.forEach(item => {
-      if (item.Coordonnees) {
+      const coords = getCoordinates(item, 'artisanat');
+      if (coords && coords.lat && coords.lng) {
         allMarkers.push({
           id: `artisanat-${item.id}`,
-          position: [item.Coordonnees.lat, item.Coordonnees.lng],
+          position: [coords.lat, coords.lng],
           type: 'artisanat',
           title: item.Titre,
           detailUrl: getDetailUrl('artisanat', item),
@@ -498,10 +557,11 @@ const InteractiveMap = ({
   // Événements
   if (visibleCategories.evenements && evenementsData && Array.isArray(evenementsData)) {
     evenementsData.forEach(item => {
-      if (item.Coordonnees) {
+      const coords = getCoordinates(item, 'evenements');
+      if (coords && coords.lat && coords.lng) {
         allMarkers.push({
           id: `evenement-${item.id}`,
-          position: [item.Coordonnees.lat, item.Coordonnees.lng],
+          position: [coords.lat, coords.lng],
           type: 'evenements',
           title: item.Nom,
           detailUrl: getDetailUrl('evenements', item),
@@ -511,15 +571,16 @@ const InteractiveMap = ({
     });
   }
 
-  // Activités Nautiques (utiliser les coordonnées de la plage associée)
+  // Activités Nautiques
   if (visibleCategories.activitesNautiques && activitesNautiquesData && Array.isArray(activitesNautiquesData)) {
     activitesNautiquesData.forEach(item => {
-      if (item.plage?.Coordonnees) {
+      const coords = getCoordinates(item, 'activitesNautiques');
+      if (coords && coords.lat && coords.lng) {
         allMarkers.push({
           id: `activite-nautique-${item.id}`,
-          position: [item.plage.Coordonnees.lat, item.plage.Coordonnees.lng],
+          position: [coords.lat, coords.lng],
           type: 'activitesNautiques',
-          title: item.Nom,
+          title: item.Nom || item.title,
           detailUrl: getDetailUrl('activitesNautiques', item),
           originalItem: item
         });
@@ -527,31 +588,36 @@ const InteractiveMap = ({
     });
   }
 
-  // Randonnées (utiliser les coordonnées de la commune si disponibles)
+  // Randonnées
   if (visibleCategories.randonnees && randonneesData && Array.isArray(randonneesData)) {
     randonneesData.forEach(item => {
-      // Note: Les randonnées n'ont pas de coordonnées directes dans le type
-      // Il faudrait ajouter des coordonnées dans l'API ou utiliser celles de la commune
-      // Pour l'instant, on les ignore ou on peut utiliser des coordonnées par défaut de la commune
-      if (item.commune) {
-        // Coordonnées approximatives basées sur la commune (à ajuster selon vos besoins)
-        const communeCoords = getCommuneCoordinates(item.commune.Nom);
-        if (communeCoords) {
-          allMarkers.push({
-            id: `randonnee-${item.id}`,
-            position: communeCoords,
-            type: 'randonnees',
-            title: item.Nom,
-            detailUrl: getDetailUrl('randonnees', item),
-            originalItem: item
-          });
-        }
+      const coords = getCoordinates(item, 'randonnees');
+      if (coords && coords.lat && coords.lng) {
+        allMarkers.push({
+          id: `randonnee-${item.id}`,
+          position: [coords.lat, coords.lng],
+          type: 'randonnees',
+          title: item.Nom,
+          detailUrl: getDetailUrl('randonnees', item),
+          originalItem: item
+        });
       }
     });
   }
 
   // Grouper les marqueurs par position pour gérer les doublons
   const markerGroups = groupMarkersByPosition(allMarkers);
+
+  // Debug: afficher le nombre total de marqueurs
+  console.log(`Total de marqueurs créés: ${allMarkers.length}`);
+  console.log('Marqueurs par catégorie:', {
+    sejourner: allMarkers.filter(m => m.type === 'sejourner').length,
+    plages: allMarkers.filter(m => m.type === 'plages').length,
+    artisanat: allMarkers.filter(m => m.type === 'artisanat').length,
+    evenements: allMarkers.filter(m => m.type === 'evenements').length,
+    activitesNautiques: allMarkers.filter(m => m.type === 'activitesNautiques').length,
+    randonnees: allMarkers.filter(m => m.type === 'randonnees').length
+  });
 
   return (
     <div className="relative w-full h-[400px] md:h-[600px] rounded-lg overflow-hidden shadow-lg">

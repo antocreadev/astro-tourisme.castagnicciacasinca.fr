@@ -1,7 +1,14 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import InteractiveMapContainer from "../../components/InteractiveMapContainer.astro";
-import { PUBLIC_API_URL } from "astro:env/client";
+import {
+  fetchAllEvenements,
+  fetchAllSejourners,
+  fetchAllPlages,
+  fetchAllArtisanat,
+  fetchAllRandonnees,
+  fetchAllActivitesNautiques,
+} from "../../services/apiUtils.js";
 import type { RootEvenements } from "../../types/evenements";
 import type { RootSejourner } from "../../types/sejourner";
 import type { RootPlage } from "../../types/plages";
@@ -9,69 +16,39 @@ import type { RootartisanatEtProduit } from "../../types/artisanat-et-produit";
 import type { RootRandonnee } from "../../types/randonnee";
 import type { RootActiviteNautique } from "../../types/activite-nautique";
 
-// Récupération des données depuis l'API
+// Récupération de toutes les données depuis l'API (sans limite de pagination)
 
 // Événements
-const dataEvenements = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
+const dataEvenementsJson: RootEvenements = await fetchAllEvenements({
+  populate: "*",
 });
-const dataEvenementsJson: RootEvenements = await dataEvenements.json();
 
 // Séjourner (Hébergements)
-const dataSejourner = await fetch(`${PUBLIC_API_URL}/api/sejourners`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
+const dataSejournerJson: RootSejourner = await fetchAllSejourners({
+  populate: "*",
 });
-const dataSejournerJson: RootSejourner = await dataSejourner.json();
 
 // Plages
-const dataPlages = await fetch(`${PUBLIC_API_URL}/api/plages`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
+const dataPlagesJson: RootPlage = await fetchAllPlages({
+  populate: "*",
 });
-const dataPlagesJson: RootPlage = await dataPlages.json();
 
 // Artisanat et produits
-const dataArtisanatEtProduit = await fetch(
-  `${PUBLIC_API_URL}/api/artisanat-et-produits`,
-  {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }
-);
 const dataArtisanatEtProduitJson: RootartisanatEtProduit =
-  await dataArtisanatEtProduit.json();
+  await fetchAllArtisanat({
+    populate: "*",
+  });
 
 // Randonnées
-const dataRandonnees = await fetch(`${PUBLIC_API_URL}/api/randonnees`, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-  },
+const dataRandonneesJson: RootRandonnee = await fetchAllRandonnees({
+  populate: "*",
 });
-const dataRandonneesJson: RootRandonnee = await dataRandonnees.json();
 
 // Activités nautiques
-const dataActiviteNautique = await fetch(
-  `${PUBLIC_API_URL}/api/activites-nautiques`,
-  {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }
-);
 const dataActiviteNautiqueJson: RootActiviteNautique =
-  await dataActiviteNautique.json();
+  await fetchAllActivitesNautiques({
+    populate: "*",
+  });
 ---
 
 <Layout
