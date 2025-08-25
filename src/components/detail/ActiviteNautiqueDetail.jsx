@@ -126,58 +126,60 @@ const ActiviteNautiqueDetail = ({ activite }) => {
             </Card>
 
             {/* Informations détaillées */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Informations pratiques</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {activite.Duree && (
-                    <div className="flex items-center gap-3">
-                      <Clock className="h-5 w-5 text-blue-600" />
-                      <div>
-                        <p className="font-medium">Durée</p>
-                        <p className="text-gray-600">{activite.Duree}</p>
+            {(activite.Duree || activite.Prix || activite.Niveau || activite.Type) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Informations pratiques</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {activite.Duree && (
+                      <div className="flex items-center gap-3">
+                        <Clock className="h-5 w-5 text-blue-600" />
+                        <div>
+                          <p className="font-medium">Durée</p>
+                          <p className="text-gray-600">{activite.Duree}</p>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  
-                  {activite.Prix && (
-                    <div className="flex items-center gap-3">
-                      <Euro className="h-5 w-5 text-green-600" />
-                      <div>
-                        <p className="font-medium">Prix</p>
-                        <p className="text-gray-600">{activite.Prix}</p>
+                    )}
+                    
+                    {activite.Prix && (
+                      <div className="flex items-center gap-3">
+                        <Euro className="h-5 w-5 text-green-600" />
+                        <div>
+                          <p className="font-medium">Prix</p>
+                          <p className="text-gray-600">{activite.Prix}</p>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  
-                  {activite.Niveau && (
-                    <div className="flex items-center gap-3">
-                      <Star className="h-5 w-5 text-yellow-600" />
-                      <div>
-                        <p className="font-medium">Niveau requis</p>
-                        <Badge className={getNiveauColor(activite.Niveau)}>
-                          {activite.Niveau}
-                        </Badge>
+                    )}
+                    
+                    {activite.Niveau && (
+                      <div className="flex items-center gap-3">
+                        <Star className="h-5 w-5 text-yellow-600" />
+                        <div>
+                          <p className="font-medium">Niveau requis</p>
+                          <Badge className={getNiveauColor(activite.Niveau)}>
+                            {activite.Niveau}
+                          </Badge>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  
-                  {activite.Type && (
-                    <div className="flex items-center gap-3">
-                      <Waves className="h-5 w-5 text-purple-600" />
-                      <div>
-                        <p className="font-medium">Type d'activité</p>
-                        <Badge className={getTypeColor(activite.Type)}>
-                          {activite.Type}
-                        </Badge>
+                    )}
+                    
+                    {activite.Type && (
+                      <div className="flex items-center gap-3">
+                        <Waves className="h-5 w-5 text-purple-600" />
+                        <div>
+                          <p className="font-medium">Type d'activité</p>
+                          <Badge className={getTypeColor(activite.Type)}>
+                            {activite.Type}
+                          </Badge>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Équipement */}
             {activite.Equipement && (
@@ -231,65 +233,69 @@ const ActiviteNautiqueDetail = ({ activite }) => {
             )}
 
             {/* Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {activite.GPS && (
-                  <Button
-                    onClick={handleGPSClick}
-                    className="w-full flex items-center gap-2"
-                    variant="outline"
-                  >
-                    <MapPin className="h-4 w-4" />
-                    Voir sur la carte
-                  </Button>
-                )}
-                
-                {activite.Lien?.lien && (
-                  <Button
-                    onClick={handleLinkClick}
-                    className="w-full flex items-center gap-2"
-                    variant="outline"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    Réserver / Plus d'infos
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
+            {(activite.GPS || activite.Lien?.lien) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {activite.GPS && (
+                    <Button
+                      onClick={handleGPSClick}
+                      className="w-full flex items-center gap-2"
+                      variant="outline"
+                    >
+                      <MapPin className="h-4 w-4" />
+                      Voir sur la carte
+                    </Button>
+                  )}
+                  
+                  {activite.Lien?.lien && (
+                    <Button
+                      onClick={handleLinkClick}
+                      className="w-full flex items-center gap-2"
+                      variant="outline"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      Réserver / Plus d'infos
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            )}
 
             {/* Informations supplémentaires */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Informations</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {activite.Prix && (
-                  <div>
-                    <p className="text-sm font-medium">Prix</p>
-                    <p className="text-sm text-gray-600">{activite.Prix}</p>
-                  </div>
-                )}
-                
-                {activite.Duree && (
-                  <div>
-                    <p className="text-sm font-medium">Durée</p>
-                    <p className="text-sm text-gray-600">{activite.Duree}</p>
-                  </div>
-                )}
-                
-                {activite.GPS && (
-                  <div>
-                    <p className="text-sm font-medium">Coordonnées GPS</p>
-                    <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-                      {activite.GPS}
-                    </code>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            {(activite.Prix || activite.Duree || activite.GPS) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Informations</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {activite.Prix && (
+                    <div>
+                      <p className="text-sm font-medium">Prix</p>
+                      <p className="text-sm text-gray-600">{activite.Prix}</p>
+                    </div>
+                  )}
+                  
+                  {activite.Duree && (
+                    <div>
+                      <p className="text-sm font-medium">Durée</p>
+                      <p className="text-sm text-gray-600">{activite.Duree}</p>
+                    </div>
+                  )}
+                  
+                  {activite.GPS && (
+                    <div>
+                      <p className="text-sm font-medium">Coordonnées GPS</p>
+                      <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                        {activite.GPS}
+                      </code>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>
