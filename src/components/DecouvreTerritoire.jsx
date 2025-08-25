@@ -1,10 +1,15 @@
 
-export default function DecouvreTerritoire({ data }) {
+export default function DecouvreTerritoire({ data, colorData }) {
+  const sectionStyle = {
+    backgroundColor: colorData?.data?.fondDecouvrezLeTerritoire || '#ffffff',
+    color: colorData?.data?.texteDecouvrezLeTerritoire || '#000000'
+  };
+
   return (
-    <div className="bg-white min-h-[90vh]" id="decouvrez-le-territoire">
+    <div className="min-h-[90vh]" style={sectionStyle} id="decouvrez-le-territoire">
       
       <div className="max-w-7xl mx-auto px-4 py-16">
-                      <h1 className="text-4xl font-bold text-black mb-6 leading-tight text-center">
+                      <h1 className="text-4xl font-bold mb-6 leading-tight text-center" style={{ color: colorData?.data?.texteDecouvrezLeTerritoire || '#000000' }}>
                 {data?.Titre || 'Découvrez le territoire le patrimoine et la culture'}
               </h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">

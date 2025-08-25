@@ -1,7 +1,7 @@
 import { sites as fallbackSites } from '../data/sites.js';
 import { itineraires } from '../data/itineraires.js';
 
-export default function LesIncontournables({ data, sites = fallbackSites }) {
+export default function LesIncontournables({ data, sites = fallbackSites, colorData }) {
   // Mélanger les sites reçus (nouveau format RootSitePhare.data[].site ou normalisé)
   const normalized = (sites || []).map(s => {
     const siteObj = s.site || s; // support RootSitePhare
@@ -20,12 +20,17 @@ export default function LesIncontournables({ data, sites = fallbackSites }) {
 
   const itinerairesData = itineraires.slice(0, 3);
 
+  const sectionStyle = {
+    backgroundColor: colorData?.data?.fondIncontournables || '#ffffff',
+    color: colorData?.data?.texteIncontournables || '#000000'
+  };
+
   return (
-    <div className="bg-white py-8 px-4" id="incontournables">
+    <div className="py-8 px-4" style={sectionStyle} id="incontournables">
       <div className="max-w-7xl mx-auto">
         {/* Main Title */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-black">{data?.Titre || 'Les incontournables'}</h1>
+          <h1 className="text-5xl font-bold" style={{ color: colorData?.data?.texteIncontournables || '#000000' }}>{data?.Titre || 'Les incontournables'}</h1>
         </div>
 
         {/* Sites Phares Section */}

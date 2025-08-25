@@ -56,15 +56,27 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
   pageCategory="Carte"
   pageName="carte-interactive"
 >
-  <main class="min-h-screen bg-gray-50">
+  <main
+    class="min-h-screen"
+    style="background-color: var(--color-carte-bg, #f9fafb);"
+  >
     <!-- En-tête de la page -->
-    <div class="bg-white shadow-sm border-b">
+    <div
+      class="shadow-sm border-b"
+      style="background-color: var(--color-carte-bg, #ffffff);"
+    >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div class="text-center">
-          <h1 class="text-4xl font-bold text-gray-900 mb-2">
+          <h1
+            class="text-4xl font-bold mb-2"
+            style="color: var(--color-carte-text, #111827);"
+          >
             Carte Interactive
           </h1>
-          <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p
+            class="text-lg max-w-3xl mx-auto"
+            style="color: var(--color-carte-text, #4b5563);"
+          >
             Découvrez tous les points d'intérêt de la Castagniccia-Casinca :
             hébergements, plages, artisanat, événements, activités nautiques et
             randonnées.
@@ -75,7 +87,10 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
 
     <!-- Carte interactive -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div
+        class="rounded-xl shadow-lg overflow-hidden"
+        style="background-color: var(--color-carte-bg, #ffffff);"
+      >
         <InteractiveMapContainer
           sejournerData={dataSejournerJson.data}
           plagesData={dataPlagesJson.data}

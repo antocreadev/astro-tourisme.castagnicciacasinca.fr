@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react"
 
-export default function ArtisanatTerroirReal({ data, artisanat = [] }) {
+export default function ArtisanatTerroirReal({ data, artisanat = [], colorData }) {
   // Utilise les données dynamiques de l'API ou les données statiques en fallback
   const getArtisanatItems = () => {
     if (data?.type_artisanat_et_produits && data.type_artisanat_et_produits.length > 0) {
@@ -66,12 +66,17 @@ export default function ArtisanatTerroirReal({ data, artisanat = [] }) {
 
   const artisanatItems = getArtisanatItems();
 
+  const sectionStyle = {
+    backgroundColor: colorData?.data?.FondArtisanat || '#ffffff',
+    color: colorData?.data?.texteArtisanat || '#000000'
+  };
+
   return (
-    <div className="bg-white py-16 px-4">
+    <div className="py-16 px-4" style={sectionStyle}>
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-black">{data?.Titre || 'Artisanat et produits du terroir'}</h1>
+          <h1 className="text-5xl font-bold" style={{ color: colorData?.data?.texteArtisanat || '#000000' }}>{data?.Titre || 'Artisanat et produits du terroir'}</h1>
         </div>
 
         {/* Grid */}

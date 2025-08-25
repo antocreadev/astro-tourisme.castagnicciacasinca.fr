@@ -60,3 +60,51 @@ export const fetchAllRandonnees = (opts = {}) =>
   fetchAll("/api/randonnees", opts);
 export const fetchAllActivitesNautiques = (opts = {}) =>
   fetchAll("/api/activites-nautiques", opts);
+
+/**
+ * Récupère les couleurs et textes dynamiques
+ */
+export async function fetchColorTexte() {
+  const API_BASE_URL = getApiBaseUrl();
+  try {
+    const url = `${API_BASE_URL}/api/couleur-du-texte-et-du-fond`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status} on ${url}`);
+    return await res.json();
+  } catch (e) {
+    console.error("fetchColorTexte error:", e);
+    // Retourner des couleurs par défaut en cas d'erreur
+    return {
+      data: {
+        fondBarreNavigation: "#ffffff",
+        texteBarreNavigation: "#000000",
+        texteHeroSection: "#000000",
+        texteAgenda: "#000000",
+        FondAgenda: "#ffffff",
+        fondElementAgenda: "#ffffff",
+        fondCarteInteractive: "#ffffff",
+        texteCarteInteractive: "#000000",
+        fondIncontournables: "#ffffff",
+        texteIncontournables: "#000000",
+        fondDecouvrezLeTerritoire: "#ffffff",
+        texteDecouvrezLeTerritoire: "#000000",
+        fondSejourner: "#ffffff",
+        texteSejourner: "#000000",
+        fondElementSejourner: "#ffffff",
+        FondPlages: "#ffffff",
+        textePlages: "#000000",
+        FondArtisanat: "#ffffff",
+        texteArtisanat: "#000000",
+        fondActivites: "#ffffff",
+        texteActivites: "#000000",
+        fondElementActivites: "#ffffff",
+        fondGuidesNumeriques: "#ffffff",
+        texteGuidesNumeriques: "#000000",
+        fondElementGuidesNumeriques: "#ffffff",
+        texteInformationsPratiques: "#000000",
+        fondInformationsPratiques: "#ffffff",
+        fondElementInformationsPratiques: "#ffffff",
+      },
+    };
+  }
+}

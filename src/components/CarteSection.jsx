@@ -1,6 +1,6 @@
 import { events } from '../data/agenda.js';
 
-export default function CarteInteractive({ data }) {
+export default function CarteInteractive({ data, colorData }) {
   const features = [
     {
       title: "Localisez les points d'intérêt",
@@ -25,13 +25,18 @@ export default function CarteInteractive({ data }) {
     },
   ]
 
+  const sectionStyle = {
+    backgroundColor: colorData?.data?.fondCarteInteractive || '#ffffff',
+    color: colorData?.data?.texteCarteInteractive || '#000000'
+  };
+
   return (
-    <div className="bg-white min-h-screen">
+    <div className="min-h-screen" style={sectionStyle}>
       <div className="max-w-7xl mx-auto px-4 py-16">
         {/* Header Content */}
         <div className="text-center lg:text-left mb-12">
-          <h1 className="text-4xl font-bold text-black mb-6">{data?.Titre || 'Carte interactive'}</h1>
-          <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+          <h1 className="text-4xl font-bold mb-6" style={{ color: colorData?.data?.texteCarteInteractive || '#000000' }}>{data?.Titre || 'Carte interactive'}</h1>
+          <p className="text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0" style={{ color: colorData?.data?.texteCarteInteractive || '#374b58' }}>
             {data?.Description ? data.Description.split('\n\n')[0] : 'Naviguez facilement dans notre région grâce à des cartes interactives intuitives et riches en fonctionnalités.'}
           </p>
         </div>
@@ -54,10 +59,10 @@ export default function CarteInteractive({ data }) {
             <div className="space-y-6">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-black rounded-full mt-3 flex-shrink-0"></div>
+                  <div className="w-2 h-2 rounded-full mt-3 flex-shrink-0" style={{ backgroundColor: colorData?.data?.texteCarteInteractive || '#000000' }}></div>
                   <div>
-                    <h3 className="font-semibold text-black mb-1">{feature.title}</h3>
-                    <p className="text-gray-700 leading-relaxed">{feature.description}</p>
+                    <h3 className="font-semibold mb-1" style={{ color: colorData?.data?.texteCarteInteractive || '#000000' }}>{feature.title}</h3>
+                    <p className="leading-relaxed" style={{ color: colorData?.data?.texteCarteInteractive || '#374b58' }}>{feature.description}</p>
                   </div>
                 </div>
               ))}

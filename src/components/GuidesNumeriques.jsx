@@ -1,6 +1,6 @@
 import { BookOpen, Download, ExternalLink, FileText, MapPin } from "lucide-react"
 
-export default function GuidesNumeriques({ data }) {
+export default function GuidesNumeriques({ data, colorData }) {
   // Utilise les données dynamiques de l'API
   const getGuidesItems = () => {
     if (data?.PDF && data.PDF.length > 0) {
@@ -42,16 +42,25 @@ export default function GuidesNumeriques({ data }) {
 
   const guidesItems = getGuidesItems();
 
+  const sectionStyle = {
+    backgroundColor: colorData?.data?.fondGuidesNumeriques || '#f9fafb',
+    color: colorData?.data?.texteGuidesNumeriques || '#000000'
+  };
+
+  const elementStyle = {
+    backgroundColor: colorData?.data?.fondElementGuidesNumeriques || '#ffffff'
+  };
+
   return (
-    <div className="bg-gray-50 py-8 sm:py-16 px-4">
+    <div className="py-8 sm:py-16 px-4" style={sectionStyle}>
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <div className="mb-8 sm:mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-black">
+          <h1 className="text-4xl sm:text-5xl font-bold" style={{ color: colorData?.data?.texteGuidesNumeriques || '#000000' }}>
             {data?.Titre || 'Guides numériques'}
           </h1>
           {(data?.Description || data?.Subtitle) && (
-            <p className="text-gray-600 text-lg sm:text-xl mt-4 max-w-3xl">
+            <p className="text-lg sm:text-xl mt-4 max-w-3xl" style={{ color: colorData?.data?.texteGuidesNumeriques || '#4b5563' }}>
               {data.Description || data.Subtitle || 'Découvrez nos guides numériques interactifs pour explorer le territoire de la Castagniccia-Casinca.'}
             </p>
           )}
@@ -63,7 +72,8 @@ export default function GuidesNumeriques({ data }) {
             return (
               <div
                 key={index}
-                className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                className="group rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                style={elementStyle}
               >
                 {/* Image ou placeholder */}
                 <div className="h-48 sm:h-56 bg-gradient-to-br from-green-100 to-blue-100 relative overflow-hidden">

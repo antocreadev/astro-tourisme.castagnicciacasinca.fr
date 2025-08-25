@@ -17,7 +17,8 @@ console.log("Global Data:", globalData);
 
 <nav
   id="navbar"
-  class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 backdrop-blur-lg bg-white/20 border-b border-white/10"
+  class="fixed top-0 left-0 w-full z-50 transition-transform duration-300 backdrop-blur-lg border-b border-white/10"
+  style="background-color: var(--color-navbar-bg, rgba(255, 255, 255, 0.2)); color: var(--color-navbar-text, #000000);"
 >
   <div
     class="mx-auto lg:mx-0 flex items-center justify-between px-6 py-4 lg:justify-around lg:min-w-[100vw]"
@@ -35,7 +36,8 @@ console.log("Global Data:", globalData);
 
     <button
       id="burger-menu"
-      class="lg:hidden text-gray-800 hover:text-black focus:outline-none z-20"
+      class="lg:hidden focus:outline-none z-20"
+      style="color: var(--color-navbar-text, #808080);"
       aria-controls="nav-links"
       aria-expanded="false"
     >
@@ -70,15 +72,16 @@ console.log("Global Data:", globalData);
 
     <ul
       id="nav-links"
-      class="hidden flex-col space-y-4 absolute top-0 left-0 w-full h-screen pt-24 px-6 text-center text-lg lg:flex lg:relative lg:flex-row lg:space-y-0 lg:space-x-6 lg:h-auto lg:w-auto lg:bg-transparent lg:p-0 lg:top-auto lg:left-auto lg:pt-0 lg:text-sm font-medium text-gray-800
-      bg-white"
+      class="hidden flex-col space-y-4 absolute top-0 left-0 w-full h-screen pt-24 px-6 text-center text-lg lg:flex lg:relative lg:flex-row lg:space-y-0 lg:space-x-6 lg:h-auto lg:w-auto lg:bg-transparent lg:p-0 lg:top-auto lg:left-auto lg:pt-0 lg:text-sm font-medium bg-white"
+      style="color: var(--color-navbar-text, #808080); background-color: var(--color-navbar-bg, #ffffff);"
     >
       {
         globalData.data.BarreDeNavigation.page_de_sections.map((page) => (
           <li class="nav-item">
             <a
               href={page.LienVersLaPage}
-              class="block py-2 px-1 relative hover:text-black transition-colors"
+              class="block py-2 px-1 relative transition-colors"
+              style="color: var(--color-navbar-text, #808080);"
             >
               {page.Titre}
             </a>

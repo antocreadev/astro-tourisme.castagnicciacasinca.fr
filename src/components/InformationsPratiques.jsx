@@ -1,7 +1,7 @@
 import { Ambulance, Sun, Heart, User, Shield, ChevronRight } from "lucide-react"
 import { createSlug } from "../utils/slugUtils.js";
 
-export default function InformationsPratiques({ data }) {
+export default function InformationsPratiques({ data, colorData }) {
   // Utilise les données dynamiques de l'API ou les données statiques en fallback
   const getInformationItems = () => {
     if (data?.type_information_pratiques && data.type_information_pratiques.length > 0) {
@@ -57,12 +57,21 @@ export default function InformationsPratiques({ data }) {
 
   const informationItems = getInformationItems();
 
+  const sectionStyle = {
+    backgroundColor: colorData?.data?.fondInformationsPratiques || '#ffffff',
+    color: colorData?.data?.texteInformationsPratiques || '#000000'
+  };
+
+  const elementStyle = {
+    backgroundColor: colorData?.data?.fondElementInformationsPratiques || '#ffffff'
+  };
+
   return (
-    <div className="bg-white py-8 sm:py-16 px-4" id="informations-pratiques">
+    <div className="py-8 sm:py-16 px-4" style={sectionStyle} id="informations-pratiques">
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <div className="mb-8 sm:mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-black">{data?.Titre || 'Informations pratiques'}</h1>
+          <h1 className="text-4xl sm:text-5xl font-bold" style={{ color: colorData?.data?.texteInformationsPratiques || '#000000' }}>{data?.Titre || 'Informations pratiques'}</h1>
         </div>
 
         {/* Grid */}
@@ -72,7 +81,8 @@ export default function InformationsPratiques({ data }) {
             return (
               <div
                 key={index}
-                className="p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 bg-white space-y-4"
+                className="p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 space-y-4"
+                style={elementStyle}
               >
                 {/* Icon */}
                 <div className="inline-block p-3 rounded-lg bg-gray-50">

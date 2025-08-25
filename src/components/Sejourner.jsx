@@ -1,7 +1,7 @@
 import { Building2, Building, Home, Tent, ShoppingBasket, UtensilsCrossed, ChevronRight } from "lucide-react"
 import { hebergements } from '../data/hebergements.js';
 
-export default function Sejourner({ data, sejourners = [] }) {
+export default function Sejourner({ data, sejourners = [], colorData }) {
   // Construire un index dynamique par type (API) si disponible
   const normalize = (s = '') => s
     .toLowerCase()
@@ -64,12 +64,21 @@ export default function Sejourner({ data, sejourners = [] }) {
 
   const sejournerItems = buildItems();
 
+  const sectionStyle = {
+    backgroundColor: colorData?.data?.fondSejourner || '#ffffff',
+    color: colorData?.data?.texteSejourner || '#000000'
+  };
+
+  const elementStyle = {
+    backgroundColor: colorData?.data?.fondElementSejourner || '#ffffff'
+  };
+
   return (
-    <div className="bg-white pb-8 sm:pb-16 px-4">
+    <div className="pb-8 sm:pb-16 px-4" style={sectionStyle}>
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <div className="mb-8 sm:mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-black">{data?.Titre || 'Séjourner'}</h1>
+          <h1 className="text-4xl sm:text-5xl font-bold" style={{ color: colorData?.data?.texteSejourner || '#000000' }}>{data?.Titre || 'Séjourner'}</h1>
         </div>
 
         {/* Grid */}
@@ -79,7 +88,8 @@ export default function Sejourner({ data, sejourners = [] }) {
             return (
               <div 
                 key={index} 
-                className="p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 bg-white space-y-4"
+                className="p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 space-y-4"
+                style={elementStyle}
               >
                 {/* Icon */}
                 <div className="inline-block p-3 rounded-lg bg-gray-50">

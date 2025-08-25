@@ -1,4 +1,4 @@
-export default function LesPlages({ data, plages = [] }) {
+export default function LesPlages({ data, plages = [], colorData }) {
   const API_URL = import.meta.env.PUBLIC_STRAPI_URL || 'https://cms.castagnicciacasinca.fr';
   
   // Parser la description pour extraire les points de liste
@@ -18,8 +18,13 @@ export default function LesPlages({ data, plages = [] }) {
     return '/photos/Plage-de-Cap-Sud.jpg'; // Image par défaut
   };
 
+  const sectionStyle = {
+    backgroundColor: colorData?.data?.FondPlages || '#ffffff',
+    color: colorData?.data?.textePlages || '#000000'
+  };
+
   return (
-    <div className="bg-white">
+    <div style={sectionStyle}>
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
           {/* Image - Takes up 3/5 of the space on desktop, appears between text and button on mobile */}
@@ -34,11 +39,11 @@ export default function LesPlages({ data, plages = [] }) {
           {/* Text Content - Takes up 2/5 of the space on desktop */}
           <div className="lg:col-span-2 order-1 lg:order-2 flex flex-col justify-center">
             <div className="space-y-6">
-              <h2 className="text-4xl lg:text-5xl font-bold text-black leading-tight">
+              <h2 className="text-4xl lg:text-5xl font-bold leading-tight" style={{ color: colorData?.data?.textePlages || '#000000' }}>
                 {data?.Titre || 'Les plages'}
               </h2>
 
-              <p className="text-gray-600 text-lg leading-relaxed">
+              <p className="text-lg leading-relaxed" style={{ color: colorData?.data?.textePlages || '#4b5563' }}>
                 {data?.Description ? data.Description.split('\n\n')[0] : 'Découvrez les plus belles plages de la Castagniccia Casinca, des criques sauvages aux grandes étendues de sable fin. Un littoral préservé aux eaux cristallines vous attend.'}
               </p>
 
@@ -46,8 +51,8 @@ export default function LesPlages({ data, plages = [] }) {
                 {features.length > 0 ? (
                   features.map((feature, index) => (
                     <div key={index} className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-black rounded-full"></div>
-                      <span className="text-gray-700">{feature}</span>
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: colorData?.data?.textePlages || '#000000' }}></div>
+                      <span style={{ color: colorData?.data?.textePlages || '#374b58' }}>{feature}</span>
                     </div>
                   ))
                 ) : (

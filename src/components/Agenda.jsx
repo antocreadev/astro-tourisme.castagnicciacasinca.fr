@@ -1,7 +1,7 @@
 import { sortEventsByDate, getImageUrl } from '../utils/eventUtils.js';
 import { convertSimpleMarkdown } from '../utils/markdownUtils.js';
 
-export default function Agenda({ data, events }) {
+export default function Agenda({ data, events, colorData }) {
   // Fonction pour formater la date pour l'affichage en cards
   const formatEventDate = (dateString) => {
     const date = new Date(dateString);
@@ -13,13 +13,24 @@ export default function Agenda({ data, events }) {
 
   const sortedEvents = sortEventsByDate(events);
   const displayEvents = sortedEvents.slice(0, 4);
+  
+  // Couleurs dynamiques
+  const agendaStyle = {
+    backgroundColor: colorData?.data?.FondAgenda || '#ffffff',
+    color: colorData?.data?.texteAgenda || '#000000'
+  };
+  
+  const elementStyle = {
+    backgroundColor: colorData?.data?.fondElementAgenda || '#ffffff'
+  };
+  
   return (
-    <div className="py-16">
+    <div className="py-16" style={agendaStyle}>
       <div className="mx-auto">
         {/* Header Section */}
         <div className="text-center mb-16">
-          <h1 className="text-6xl font-bold text-black mb-8">{data?.Titre || 'Agenda'}</h1>
-          <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
+          <h1 className="text-6xl font-bold mb-8" style={{ color: colorData?.data?.texteAgenda || '#000000' }}>{data?.Titre || 'Agenda'}</h1>
+          <p className="text-lg max-w-4xl mx-auto leading-relaxed" style={{ color: colorData?.data?.texteAgenda || '#666666' }}>
             {data?.Description || 'Tout au long de l\'année, des multitudes de rendez-vous culturels, musicaux, cinématographiques, sportifs et gourmands avec des lieux de vie aux multiples facettes'}
           </p>
         </div>
@@ -32,7 +43,7 @@ export default function Agenda({ data, events }) {
             return (
               <div key={event.id || index} className="flex-shrink-0 w-full md:w-[25rem] px-4">
                 <a href={`/agenda/${event.documentId}`} className={`block group h-full ${event.isPast ? 'opacity-60' : ''}`}>
-                  <div className={`bg-white rounded-lg overflow-hidden shadow-sm group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-1 h-[360px] flex flex-col ${event.isPast ? 'grayscale' : ''}`}>
+                  <div className={`rounded-lg overflow-hidden shadow-sm group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-1 h-[360px] flex flex-col ${event.isPast ? 'grayscale' : ''}`} style={elementStyle}>
                     {/* Date Section */}
                     <div className="flex flex-shrink-0">
                       <div className={`${event.isPast ? 'bg-gray-300' : 'bg-gray-200'} w-24 flex flex-col items-center justify-center py-8`}>

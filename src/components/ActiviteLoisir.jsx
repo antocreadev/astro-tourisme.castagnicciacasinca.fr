@@ -1,6 +1,6 @@
 import { Ticket, Ship, Sparkles, Mountain, ChevronRight } from "lucide-react"
 
-export default function ActivitesLoisirs({ data, randonnees = [], activitesNautiques = [] }) {
+export default function ActivitesLoisirs({ data, randonnees = [], activitesNautiques = [], colorData }) {
   // S'assurer que les données sont des tableaux
   const randonneesArray = Array.isArray(randonnees) ? randonnees : [];
   const activitesNautiquesArray = Array.isArray(activitesNautiques) ? activitesNautiques : [];
@@ -62,12 +62,21 @@ export default function ActivitesLoisirs({ data, randonnees = [], activitesNauti
 
   const activiteItems = getActiviteItems();
 
+  const sectionStyle = {
+    backgroundColor: colorData?.data?.fondActivites || '#ffffff',
+    color: colorData?.data?.texteActivites || '#000000'
+  };
+
+  const elementStyle = {
+    backgroundColor: colorData?.data?.fondElementActivites || '#ffffff'
+  };
+
   return (
-    <div className="bg-white py-8 sm:py-8 px-4">
+    <div className="py-8 sm:py-8 px-4" style={sectionStyle}>
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <div className="mb-8 sm:mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-black">{data?.Titre || 'Activités et loisirs'}</h1>
+          <h1 className="text-4xl sm:text-5xl font-bold" style={{ color: colorData?.data?.texteActivites || '#000000' }}>{data?.Titre || 'Activités et loisirs'}</h1>
         </div>
 
         {/* Grid */}
@@ -77,7 +86,8 @@ export default function ActivitesLoisirs({ data, randonnees = [], activitesNauti
             return (
               <div
                 key={index}
-                className="p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 bg-white space-y-4"
+                className="p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 space-y-4"
+                style={elementStyle}
               >
                 {/* Icon */}
                 <div className="inline-block p-3 rounded-lg bg-gray-50">

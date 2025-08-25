@@ -2,7 +2,12 @@
 import Navbar from "../components/Navbar.astro";
 import PageTracker from "../components/PageTracker.jsx";
 import VisiteurButton from "../components/VisiteurButton.jsx";
+import { fetchColorTexte } from "../services/apiUtils.js";
+import { generateCSSVariables } from "../utils/colorUtils.js";
 import "../styles/global.css";
+
+// Récupérer les couleurs dynamiques
+const colorData = await fetchColorTexte();
 
 // Récupérer les props pour le titre et autres métadonnées
 export interface Props {
@@ -80,3 +85,5 @@ const {
     height: 100%;
   }
 </style>
+
+<style is:global set:html={generateCSSVariables(colorData)}></style>
