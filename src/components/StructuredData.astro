@@ -1,6 +1,6 @@
 ---
 export interface Props {
-  type: 'TouristDestination' | 'Organization' | 'LocalBusiness' | 'Event';
+  type: "TouristDestination" | "Organization" | "LocalBusiness" | "Event";
   data: any;
 }
 
@@ -10,85 +10,86 @@ const { type, data } = Astro.props;
 const baseSchema = {
   "@context": "https://schema.org",
   "@type": type,
-  ...data
+  ...data,
 };
 
 // Schémas spécifiques au tourisme
 const touristDestinationSchema = {
   "@context": "https://schema.org",
   "@type": "TouristDestination",
-  "name": "Castagniccia-Casinca",
-  "description": "Territoire authentique de la Haute-Corse alliant patrimoine, nature et traditions",
-  "url": "https://tourisme.castagnicciacasinca.fr",
-  "image": [
+  name: "Castagniccia-Casinca",
+  description:
+    "Territoire authentique de la Haute-Corse alliant patrimoine, nature et traditions",
+  url: "https://tourisme.castagnicciacasinca.fr",
+  image: [
     "https://tourisme.castagnicciacasinca.fr/photos/Mont-San-Petrone.jpg",
     "https://tourisme.castagnicciacasinca.fr/photos/LoretodiCasinca.jpg",
-    "https://tourisme.castagnicciacasinca.fr/photos/Plage-de-Cap-Sud.jpg"
+    "https://tourisme.castagnicciacasinca.fr/photos/Plage-de-Cap-Sud.jpg",
   ],
-  "geo": {
+  geo: {
     "@type": "GeoCoordinates",
-    "latitude": 42.3798,
-    "longitude": 9.3017
+    latitude: 42.3798,
+    longitude: 9.3017,
   },
-  "address": {
+  address: {
     "@type": "PostalAddress",
-    "addressCountry": "FR",
-    "addressRegion": "Corse",
-    "addressLocality": "Castagniccia-Casinca"
+    addressCountry: "FR",
+    addressRegion: "Corse",
+    addressLocality: "Castagniccia-Casinca",
   },
-  "containsPlace": [
+  containsPlace: [
     {
       "@type": "City",
-      "name": "Vescovato"
-    },
-    {
-      "@type": "City", 
-      "name": "Loreto-di-Casinca"
+      name: "Vescovato",
     },
     {
       "@type": "City",
-      "name": "Penta-di-Casinca"
-    }
+      name: "Loreto-di-Casinca",
+    },
+    {
+      "@type": "City",
+      name: "Penta-di-Casinca",
+    },
   ],
-  "touristType": [
+  touristType: [
     "Nature lovers",
-    "Cultural tourists", 
+    "Cultural tourists",
     "Adventure seekers",
-    "Family travelers"
+    "Family travelers",
   ],
-  "hasMap": "https://tourisme.castagnicciacasinca.fr/carte-interactive"
+  hasMap: "https://tourisme.castagnicciacasinca.fr/carte-interactive",
 };
 
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Communauté de communes de la Castagniccia-Casinca",
-  "url": "https://tourisme.castagnicciacasinca.fr",
-  "logo": "https://tourisme.castagnicciacasinca.fr/logo.jpg",
-  "contactPoint": {
+  name: "Communauté de communes de la Castagniccia-Casinca",
+  url: "https://tourisme.castagnicciacasinca.fr",
+  logo: "https://tourisme.castagnicciacasinca.fr/logo.jpg",
+  contactPoint: {
     "@type": "ContactPoint",
-    "contactType": "tourist information",
-    "areaServed": "Castagniccia-Casinca",
-    "availableLanguage": ["French", "Corsican"]
+    contactType: "tourist information",
+    areaServed: "Castagniccia-Casinca",
+    availableLanguage: ["French", "Corsican"],
   },
-  "address": {
+  address: {
     "@type": "PostalAddress",
-    "addressCountry": "FR",
-    "addressRegion": "Corse"
+    addressCountry: "FR",
+    addressRegion: "Corse",
   },
-  "sameAs": [
+  sameAs: [
     "https://www.facebook.com/castagnicciacasinca",
-    "https://www.instagram.com/castagnicciacasinca"
-  ]
+    "https://www.instagram.com/castagnicciacasinca",
+  ],
 };
 
 // Sélection du schéma approprié
 let schema;
 switch (type) {
-  case 'TouristDestination':
+  case "TouristDestination":
     schema = { ...touristDestinationSchema, ...data };
     break;
-  case 'Organization':
+  case "Organization":
     schema = { ...organizationSchema, ...data };
     break;
   default:

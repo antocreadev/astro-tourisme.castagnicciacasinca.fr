@@ -1,13 +1,16 @@
 export async function GET() {
-  const siteURL = 'https://tourisme.castagnicciacasinca.fr';
-  
+  const siteURL = "https://tourisme.castagnicciacasinca.fr";
+
   // Import dynamique des données d'agenda
-  const { fetchAllEvenements } = await import('../services/apiUtils.js');
-  
+  const { fetchAllEvenements } = await import("../services/apiUtils.js");
+
   try {
     const events = await fetchAllEvenements();
     const sortedEvents = events.data
-      .sort((a, b) => new Date(b.attributes.date_debut) - new Date(a.attributes.date_debut))
+      .sort(
+        (a, b) =>
+          new Date(b.attributes.date_debut) - new Date(a.attributes.date_debut)
+      )
       .slice(0, 20); // Limiter à 20 événements
 
     const rss = `<?xml version="1.0" encoding="UTF-8" ?>
@@ -27,13 +30,16 @@ export async function GET() {
       <link>${siteURL}</link>
     </image>
     
-${sortedEvents.map(event => {
-  const title = event.attributes.titre || 'Événement';
-  const description = event.attributes.description || 'Découvrez cet événement en Castagniccia-Casinca';
-  const date = new Date(event.attributes.date_debut).toUTCString();
-  const guid = `${siteURL}/agenda/event-${event.id}`;
-  
-  return `    <item>
+${sortedEvents
+  .map((event) => {
+    const title = event.attributes.titre || "Événement";
+    const description =
+      event.attributes.description ||
+      "Découvrez cet événement en Castagniccia-Casinca";
+    const date = new Date(event.attributes.date_debut).toUTCString();
+    const guid = `${siteURL}/agenda/event-${event.id}`;
+
+    return `    <item>
       <title><![CDATA[${title}]]></title>
       <description><![CDATA[${description}]]></description>
       <link>${siteURL}/agenda</link>
@@ -41,19 +47,20 @@ ${sortedEvents.map(event => {
       <pubDate>${date}</pubDate>
       <category>Événements</category>
     </item>`;
-}).join('\n')}
+  })
+  .join("\n")}
   </channel>
 </rss>`;
 
     return new Response(rss, {
       headers: {
-        'Content-Type': 'application/xml',
-        'Cache-Control': 'public, max-age=1800' // 30 minutes
-      }
+        "Content-Type": "application/xml",
+        "Cache-Control": "public, max-age=1800", // 30 minutes
+      },
     });
   } catch (error) {
-    console.error('Erreur lors de la génération du RSS:', error);
-    
+    console.error("Erreur lors de la génération du RSS:", error);
+
     // RSS de fallback en cas d'erreur
     const fallbackRss = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
@@ -68,8 +75,8 @@ ${sortedEvents.map(event => {
 
     return new Response(fallbackRss, {
       headers: {
-        'Content-Type': 'application/xml'
-      }
+        "Content-Type": "application/xml",
+      },
     });
   }
 }

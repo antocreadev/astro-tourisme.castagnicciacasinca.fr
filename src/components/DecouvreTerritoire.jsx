@@ -1,7 +1,9 @@
 
+import React from 'react';
+import { convertMarkdownToHtml } from '../utils/markdownUtils.js';
+
 export default function DecouvreTerritoire({ data, colorData }) {
   const sectionStyle = {
-    backgroundColor: colorData?.data?.fondDecouvrezLeTerritoire || '#ffffff',
     color: colorData?.data?.texteDecouvrezLeTerritoire || '#000000'
   };
 
@@ -35,24 +37,33 @@ export default function DecouvreTerritoire({ data, colorData }) {
                   className="w-3/4 lg:w-full h-auto rounded-lg shadow-lg"
                 />
               </div>
-              <p className="text-gray-700 text-lg leading-relaxed">
-                {data?.Description || 'La Casinca est un territoire caractérisé par un secteur montagneux recouvert de forêts, de châtaigniers et d\'oliviers, un piémont avec ses terrasses où sont situées les villages anciens et la plaine avec son littoral. La Casinca est naturellement délimitée par deux fleuves : au nord par la partie terminale du Golu, au sud, par le Fium\'Altu qui prend sa source au pied du San Petrone. L\'ouest est quant à lui délimité par la chaîne montagneuse d\'I Sant\'Anghjuli et l\'est par la mer tyrrhénienne. Ses villages perchés offrent de magnifiques panoramas sur le nord de la côte orientale ainsi que sur l\'archipel toscan voire la péninsule italique.'}
-              </p>
+              <div 
+                className="text-gray-700 text-lg leading-relaxed"
+                dangerouslySetInnerHTML={{ 
+                  __html: convertMarkdownToHtml(data?.Description || 'La Casinca est un territoire caractérisé par un secteur montagneux recouvert de forêts, de châtaigniers et d\'oliviers, un piémont avec ses terrasses où sont situées les villages anciens et la plaine avec son littoral. La Casinca est naturellement délimitée par deux fleuves : au nord par la partie terminale du Golu, au sud, par le Fium\'Altu qui prend sa source au pied du San Petrone. L\'ouest est quant à lui délimité par la chaîne montagneuse d\'I Sant\'Anghjuli et l\'est par la mer tyrrhénienne. Ses villages perchés offrent de magnifiques panoramas sur le nord de la côte orientale ainsi que sur l\'archipel toscan voire la péninsule italique.')
+                }}
+              />
             </div>
 
             {/* Statistics */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <div className="text-5xl font-bold text-black mb-2">{data?.Stat1 || '70'}</div>
-                <p className="text-gray-700 leading-relaxed">
-                  {data?.DescriptionStat1 || 'Lieux culturels à découvrir (églises, chapelles, moulins, etc.)'}
-                </p>
+                <div 
+                  className="text-gray-700 leading-relaxed"
+                  dangerouslySetInnerHTML={{ 
+                    __html: convertMarkdownToHtml(data?.DescriptionStat1 || 'Lieux culturels à découvrir (églises, chapelles, moulins, etc.)')
+                  }}
+                />
               </div>
               <div>
                 <div className="text-5xl font-bold text-black mb-2">{data?.Stat2 || '800 ans'}</div>
-                <p className="text-gray-700 leading-relaxed">
-                  {data?.DescriptionStat2 || 'De nombreuses églises et constructions datent du Moyen Âge'}
-                </p>
+                <div 
+                  className="text-gray-700 leading-relaxed"
+                  dangerouslySetInnerHTML={{ 
+                    __html: convertMarkdownToHtml(data?.DescriptionStat2 || 'De nombreuses églises et constructions datent du Moyen Âge')
+                  }}
+                />
               </div>
             </div>
 

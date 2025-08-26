@@ -1,5 +1,6 @@
 ---
 import HeroGallery from "./HeroGallery.jsx";
+import { convertHeroMarkdownToHtml } from "../utils/markdownUtils.js";
 
 export interface Props {
   data?: any;
@@ -19,40 +20,29 @@ const parseHeroText = (text) => {
         "Explorez l'une des régions les plus authentiques de Corse...",
     };
 
-  const lines = text.split("\n").filter((line) => line.trim());
-
-  // Fonction pour convertir **texte** en <strong>texte</strong> et ajouter le compteur
-  const convertMarkdownToHtml = (text) => {
-    // Convertir les ** en <strong>
-    let html = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-
-    // Chercher et remplacer {conteur} par un span avec id="counter"
-    html = html.replace(
-      /\{conteur\}/g,
-      '<span id="counter" class="font-bold inline-block text-center relative overflow-hidden" style="top: 8px;">0</span>'
-    );
-
-    return html;
-  };
+  const lines = text.split("\n");
 
   // Extraire le titre (première ligne avec #)
-  const titleLine = lines.find((line) => line.startsWith("# "));
+  const titleLine = lines.find((line) => line.trim().startsWith("# "));
   let title = titleLine
-    ? convertMarkdownToHtml(titleLine.replace("# ", ""))
+    ? convertHeroMarkdownToHtml(titleLine.replace("# ", "").trim())
     : "Destination Castagniccia Casinca,";
 
   // Extraire le sous-titre (première ligne avec ##)
-  const subtitleLine = lines.find((line) => line.startsWith("## "));
+  const subtitleLine = lines.find((line) => line.trim().startsWith("## "));
   let subtitle = subtitleLine
-    ? convertMarkdownToHtml(subtitleLine.replace("## ", ""))
+    ? convertHeroMarkdownToHtml(subtitleLine.replace("## ", "").trim())
     : "à la découverte d'une Corse authentique, entre villages perchés, plages et saveurs du terroir";
 
   // Extraire la description (tout le reste sans les # et ##)
-  const descriptionLines = lines.filter((line) => !line.startsWith("#"));
-  let description =
-    descriptionLines.length > 0
-      ? convertMarkdownToHtml(descriptionLines.join(" "))
-      : "Explorez l'une des régions les plus authentiques de Corse...";
+  const descriptionLines = lines.filter((line) => {
+    const trimmed = line.trim();
+    return trimmed && !trimmed.startsWith("#");
+  });
+  
+  let description = descriptionLines.length > 0
+    ? convertHeroMarkdownToHtml(descriptionLines.join("\n"))
+    : "Explorez l'une des régions les plus authentiques de Corse...";
 
   return { title, subtitle, description };
 };

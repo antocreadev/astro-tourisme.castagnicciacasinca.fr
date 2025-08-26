@@ -1,5 +1,6 @@
 import React from 'react';
 import { getImageUrl } from '../../utils/eventUtils';
+import { convertMarkdownToHtml } from '../../utils/markdownUtils.js';
 import { Phone, Mail, MapPin, ExternalLink, Clock, User, Tag } from 'lucide-react';
 
 const ArtisanatDetail = ({ artisan }) => {
@@ -88,9 +89,12 @@ const ArtisanatDetail = ({ artisan }) => {
               </div>
 
               <div className="prose max-w-none">
-                <p className="text-gray-700 leading-relaxed mb-6">
-                  {artisan.Description}
-                </p>
+                <div 
+                  className="text-gray-700 leading-relaxed mb-6"
+                  dangerouslySetInnerHTML={{ 
+                    __html: convertMarkdownToHtml(artisan.Description) 
+                  }}
+                />
               </div>
 
               {/* Liens sociaux */}

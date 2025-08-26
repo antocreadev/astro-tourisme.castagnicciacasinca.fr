@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { convertMarkdownToHtml } from '../../utils/markdownUtils.js';
 
 const HebergementDetail = ({ hebergement }) => {
   if (!hebergement) {
@@ -112,9 +113,12 @@ const HebergementDetail = ({ hebergement }) => {
                 </div>
               </div>
 
-              <p className="text-gray-700 leading-relaxed mb-6">
-                {hebergement.descriptionLongue}
-              </p>
+              <div 
+                className="text-gray-700 leading-relaxed mb-6"
+                dangerouslySetInnerHTML={{ 
+                  __html: convertMarkdownToHtml(hebergement.descriptionLongue) 
+                }}
+              />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { convertSimpleMarkdown } from '../../utils/markdownUtils.js';
 
 const HebergementCard = ({ hebergement }) => {
   // const getTypeIcon = (type) => {
@@ -80,9 +81,12 @@ const HebergementCard = ({ hebergement }) => {
           <span>{hebergement.commune}</span>
         </div>
         
-        <p className="text-gray-600 text-sm line-clamp-2 mb-3">
-          {hebergement.description}
-        </p>
+        <div 
+          className="text-gray-600 text-sm line-clamp-2 mb-3"
+          dangerouslySetInnerHTML={{ 
+            __html: convertSimpleMarkdown(hebergement.description) 
+          }}
+        />
         
         {/* Services principaux */}
         <div className="flex flex-wrap gap-1 mb-3">

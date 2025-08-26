@@ -1,4 +1,5 @@
 import React from 'react';
+import { convertSimpleMarkdown } from '../../utils/markdownUtils.js';
 
 const ActiviteCard = ({ activite }) => {
   const getNiveauColor = (niveau) => {
@@ -49,9 +50,12 @@ const ActiviteCard = ({ activite }) => {
           </div>
         </div>
 
-        <p className="text-gray-600 mb-3 line-clamp-3">
-          {activite.description}
-        </p>
+        <div 
+          className="text-gray-600 mb-3 line-clamp-3"
+          dangerouslySetInnerHTML={{ 
+            __html: convertSimpleMarkdown(activite.description) 
+          }}
+        />
 
         <div className="space-y-2 mb-4">
           <div className="flex items-center text-sm text-gray-500">

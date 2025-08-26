@@ -1,5 +1,6 @@
 import { MapPin } from 'lucide-react';
 import { useState } from 'react';
+import { convertSimpleMarkdown } from '../../utils/markdownUtils.js';
 
 export default function SiteCard({ site, href, onClick }) {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -52,9 +53,12 @@ export default function SiteCard({ site, href, onClick }) {
           </p>
         </div>
 
-        <p className="text-gray-700 text-sm mb-4 line-clamp-2">
-          {site.description}
-        </p>
+        <div 
+          className="text-gray-700 text-sm mb-4 line-clamp-2"
+          dangerouslySetInnerHTML={{ 
+            __html: convertSimpleMarkdown(site.description) 
+          }}
+        />
 
         <div className="space-y-2 mb-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">

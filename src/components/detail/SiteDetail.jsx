@@ -7,6 +7,7 @@ import {
   Camera
 } from 'lucide-react';
 import { useState } from 'react';
+import { convertMarkdownToHtml } from '../../utils/markdownUtils.js';
 import { openMaps, getGoogleMapsUrl } from '../../utils/mapsUtils.js';
 
 export default function SiteDetail({ site }) {
@@ -156,9 +157,12 @@ export default function SiteDetail({ site }) {
 
               {/* Description */}
               <div className="prose prose-lg max-w-none">
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                  {site.description}
-                </p>
+                <div 
+                  className="text-gray-700 leading-relaxed whitespace-pre-line"
+                  dangerouslySetInnerHTML={{ 
+                    __html: convertMarkdownToHtml(site.description) 
+                  }}
+                />
               </div>
 
               {/* Links */}

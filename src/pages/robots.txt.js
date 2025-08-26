@@ -34,7 +34,7 @@ Host: https://tourisme.castagnicciacasinca.fr`;
 
   return new Response(robotsTxt, {
     headers: {
-      'Content-Type': 'text/plain',
-    }
+      "Content-Type": "text/plain",
+    },
   });
 }
