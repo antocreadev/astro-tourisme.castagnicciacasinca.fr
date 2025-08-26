@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, ImageOverlay } from 'react-leaflet';
-import { Hotel, Waves, Palette, Calendar, Sailboat, Mountain } from 'lucide-react';
+import { Hotel, Waves, Palette, Calendar, Sailboat, Mountain, UtensilsCrossed } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 // Fonction pour générer l'URL de la page de détail
 const getDetailUrl = (type, item) => {
   const baseUrls = {
-    sejourner: '/sejourner',
+    hebergements: '/sejourner',
+    restaurants: '/sejourner',
     plages: '/plages',
     artisanat: '/artisanat',
     evenements: '/agenda',
@@ -22,7 +23,8 @@ const getDetailUrl = (type, item) => {
   
   // Logique différente selon le type
   switch (type) {
-    case 'sejourner':
+    case 'hebergements':
+    case 'restaurants':
     case 'evenements':
       // Ces catégories utilisent documentId
       slug = item.documentId;
@@ -99,41 +101,69 @@ const getCommuneCoordinates = (communeName) => {
   return communeCoords[communeName] || null;
 };
 
+// Fonction pour déterminer si un séjourner est un restaurant ou un hébergement
+const getSejournerType = (item) => {
+  if (!item.type_sejourner || !item.type_sejourner.Denomination) {
+    return 'hebergements'; // Par défaut, considérer comme hébergement
+  }
+  
+  const denomination = item.type_sejourner.Denomination.toLowerCase();
+  
+  // Mots clés pour identifier les restaurants
+  const restaurantKeywords = [
+    'restaurant', 'resto', 'bistrot', 'brasserie', 'pizzeria', 
+    'auberge', 'taverne', 'trattoria', 'osteria', 'café', 
+    'bar', 'snack', 'glacier'
+  ];
+  
+  const isRestaurant = restaurantKeywords.some(keyword => 
+    denomination.includes(keyword)
+  );
+  
+  return isRestaurant ? 'restaurants' : 'hebergements';
+};
+
 // Types de marqueurs avec leurs couleurs et icônes
 const MARKER_TYPES = {
-  sejourner: {
+  hebergements: {
     color: '#e74c3c',
-    iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 17h20v2H2zm1.15-4.05L4 11.47l.85 1.48L3 17h18l-1.85-3.05L20 11.47l.85 1.48L19 17H5l-1.85-4.05z"/><path d="M5 5v6h14V5H5zm2 2h10v2H7V7z"/></svg>',
+    iconSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hotel-icon lucide-hotel"><path d="M10 22v-6.57"/><path d="M12 11h.01"/><path d="M12 7h.01"/><path d="M14 15.43V22"/><path d="M15 16a5 5 0 0 0-6 0"/><path d="M16 11h.01"/><path d="M16 7h.01"/><path d="M8 11h.01"/><path d="M8 7h.01"/><rect x="4" y="2" width="16" height="20" rx="2"/></svg>',
     icon: Hotel,
     label: 'Hébergements'
   },
+  restaurants: {
+    color: '#ff6b35',
+    iconSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-utensils-crossed-icon lucide-utensils-crossed"><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"/><path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"/><path d="m2.1 21.8 6.4-6.3"/><path d="m19 5-7 7"/></svg>',
+    icon: UtensilsCrossed,
+    label: 'Restaurants'
+  },
   plages: {
     color: '#3498db',
-    iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>',
+    iconSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-waves-icon lucide-waves"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>',
     icon: Waves,
     label: 'Plages'
   },
   artisanat: {
     color: '#f39c12',
-    iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="7" r="3"/><circle cx="6" cy="7" r="3"/><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 7h12"/><path d="M6 17h12"/><path d="M18 7v10"/><path d="M6 7v10"/></svg>',
+    iconSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette-icon lucide-palette"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/></svg>',
     icon: Palette,
     label: 'Artisanat'
   },
   evenements: {
     color: '#9b59b6',
-    iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    iconSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>',
     icon: Calendar,
     label: 'Événements'
   },
   activitesNautiques: {
     color: '#1abc9c',
-    iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 18H2a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4Z"/><path d="M21 14 10 2 3 14h18Z"/><path d="M10 2v16"/></svg>',
+    iconSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sailboat-icon lucide-sailboat"><path d="M10 2v15"/><path d="M7 22a4 4 0 0 1-4-4 1 1 0 0 1 1-1h16a1 1 0 0 1 1 1 4 4 0 0 1-4 4z"/><path d="M9.159 2.46a1 1 0 0 1 1.521-.193l9.977 8.98A1 1 0 0 1 20 13H4a1 1 0 0 1-.824-1.567z"/></svg>',
     icon: Sailboat,
     label: 'Activités Nautiques'
   },
   randonnees: {
     color: '#27ae60',
-    iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5v20H4L8 3z"/></svg>',
+    iconSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mountain-icon lucide-mountain"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>',
     icon: Mountain,
     label: 'Randonnées'
   }
@@ -435,6 +465,17 @@ const InteractiveMap = ({
     activitesNautiques: activitesNautiquesData?.length || 0,
     randonnees: randonneesData?.length || 0
   });
+  
+  // Séparer les séjourners en hébergements et restaurants
+  const hebergementsData = sejournerData?.filter(item => getSejournerType(item) === 'hebergements') || [];
+  const restaurantsData = sejournerData?.filter(item => getSejournerType(item) === 'restaurants') || [];
+  
+  console.log('Séparation séjourners:', {
+    hebergements: hebergementsData.length,
+    restaurants: restaurantsData.length,
+    total: sejournerData?.length || 0
+  });
+  
   const [currentZoom, setCurrentZoom] = useState(11);
   const [visibleCategories, setVisibleCategories] = useState(
     Object.keys(MARKER_TYPES).reduce((acc, key) => {
@@ -461,7 +502,8 @@ const InteractiveMap = ({
     let coords = null;
     
     switch (type) {
-      case 'sejourner':
+      case 'hebergements':
+      case 'restaurants':
       case 'plages':
       case 'artisanat':
       case 'evenements':
@@ -503,17 +545,34 @@ const InteractiveMap = ({
     return coords;
   };
 
-  // Séjourner (Hébergements)
-  if (visibleCategories.sejourner && sejournerData && Array.isArray(sejournerData)) {
-    sejournerData.forEach(item => {
-      const coords = getCoordinates(item, 'sejourner');
+  // Hébergements
+  if (visibleCategories.hebergements && hebergementsData && Array.isArray(hebergementsData)) {
+    hebergementsData.forEach(item => {
+      const coords = getCoordinates(item, 'hebergements');
       if (coords && coords.lat && coords.lng) {
         allMarkers.push({
-          id: `sejourner-${item.id}`,
+          id: `hebergement-${item.id}`,
           position: [coords.lat, coords.lng],
-          type: 'sejourner',
+          type: 'hebergements',
           title: item.Titre,
-          detailUrl: getDetailUrl('sejourner', item),
+          detailUrl: getDetailUrl('hebergements', item),
+          originalItem: item
+        });
+      }
+    });
+  }
+
+  // Restaurants
+  if (visibleCategories.restaurants && restaurantsData && Array.isArray(restaurantsData)) {
+    restaurantsData.forEach(item => {
+      const coords = getCoordinates(item, 'restaurants');
+      if (coords && coords.lat && coords.lng) {
+        allMarkers.push({
+          id: `restaurant-${item.id}`,
+          position: [coords.lat, coords.lng],
+          type: 'restaurants',
+          title: item.Titre,
+          detailUrl: getDetailUrl('restaurants', item),
           originalItem: item
         });
       }
@@ -611,7 +670,8 @@ const InteractiveMap = ({
   // Debug: afficher le nombre total de marqueurs
   console.log(`Total de marqueurs créés: ${allMarkers.length}`);
   console.log('Marqueurs par catégorie:', {
-    sejourner: allMarkers.filter(m => m.type === 'sejourner').length,
+    hebergements: allMarkers.filter(m => m.type === 'hebergements').length,
+    restaurants: allMarkers.filter(m => m.type === 'restaurants').length,
     plages: allMarkers.filter(m => m.type === 'plages').length,
     artisanat: allMarkers.filter(m => m.type === 'artisanat').length,
     evenements: allMarkers.filter(m => m.type === 'evenements').length,
