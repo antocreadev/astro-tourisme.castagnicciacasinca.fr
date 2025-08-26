@@ -32,7 +32,7 @@ export default function CarteInteractive({ data, colorData }) {
 
   return (
     <div className="min-h-screen" style={sectionStyle}>
-      <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Header Content */}
         <div className="text-center lg:text-left mb-12">
           <h1 className="text-4xl font-bold mb-6" style={{ color: colorData?.data?.texteCarteInteractive || '#000000' }}>{data?.Titre || 'Carte interactive'}</h1>
@@ -98,7 +98,7 @@ export default function CarteInteractive({ data, colorData }) {
 
           {/* Right Map - Hidden on mobile, visible on desktop */}
           <div className="hidden lg:block">
-            <div className="relative">
+            <div className="relative bottom-20">
               <img
                 src={data?.image?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${data.image.url}` : "https://placehold.co/800x600?text=map"}
                 alt="Carte interactive de la région"

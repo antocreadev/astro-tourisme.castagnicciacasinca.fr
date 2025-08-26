@@ -77,7 +77,7 @@ export default function Sejourner({ data, sejourners = [], colorData }) {
     <div className="pb-8 sm:pb-16 px-4" style={sectionStyle}>
       <div className="max-w-7xl mx-auto">
         {/* Title */}
-        <div className="mb-8 sm:mb-16">
+        <div className="mb-8 sm:mb-16 pt-4">
           <h1 className="text-4xl sm:text-5xl font-bold" style={{ color: colorData?.data?.texteSejourner || '#000000' }}>{data?.Titre || 'Séjourner'}</h1>
         </div>
 
