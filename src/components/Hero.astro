@@ -39,10 +39,11 @@ const parseHeroText = (text) => {
     const trimmed = line.trim();
     return trimmed && !trimmed.startsWith("#");
   });
-  
-  let description = descriptionLines.length > 0
-    ? convertHeroMarkdownToHtml(descriptionLines.join("\n"))
-    : "Explorez l'une des régions les plus authentiques de Corse...";
+
+  let description =
+    descriptionLines.length > 0
+      ? convertHeroMarkdownToHtml(descriptionLines.join("\n"))
+      : "Explorez l'une des régions les plus authentiques de Corse...";
 
   return { title, subtitle, description };
 };
@@ -91,11 +92,11 @@ const heroContent = parseHeroText(data?.texte);
       </div>
 
       <div
-        class="mt-6 max-w-3xl mx-auto text-center opacity-0"
+        class="mt-6 max-w-4xl mx-auto text-center opacity-0"
         id="description"
       >
         <p
-          class="text-lg"
+          class="text-lg w-full"
           style={`color: ${colorData?.data?.texteHeroSection || "#4B5563"};`}
           set:html={heroContent.description}
         />
