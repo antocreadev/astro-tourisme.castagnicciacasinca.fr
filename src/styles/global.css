@@ -474,7 +474,7 @@ html {
   padding: 0.125rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .markdown-content pre {
@@ -487,7 +487,7 @@ html {
 }
 
 .markdown-content pre code {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 0.875rem;
   background: transparent;
   padding: 0;

@@ -1,0 +1,175 @@
+---
+import { convertHeroMarkdownToHtml } from "../utils/markdownUtils.js";
+
+// Simuler exactement votre texte Strapi
+const strapiText = `# **Destination** Castagniccia Casinca,
+## à la **découverte** d'une **Corse authentique**, 
+## entre **villages perchés**, **plages** et **saveurs du terroir**.
+
+
+
+_Explorez l'une des régions les plus authentiques de Corse grâce à notre application interactive. 
+Déjà {conteur} visiteurs ont exploré notre site pour découvrir les trésors uniques de la Castagniccia Casinca. 
+Que vous soyez à la recherche de paysages préservés, d'expériences culturelles uniques ou d'adresses incontournables, nous avons tout prévu pour que votre séjour soit inoubliable_.`;
+
+// Parser le texte markdown pour extraire les parties
+const parseHeroText = (text) => {
+  if (!text)
+    return {
+      title: "Destination Castagniccia Casinca,",
+      subtitle:
+        "à la découverte d'une Corse authentique, entre villages perchés, plages et saveurs du terroir",
+      description:
+        "Explorez l'une des régions les plus authentiques de Corse...",
+    };
+
+  console.log("=== SERVEUR DEBUG ===");
+  console.log("Texte original:", text);
+
+  // Normaliser les sauts de ligne et nettoyer le texte
+  const cleanText = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  const lines = cleanText
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+
+  console.log("Lignes après nettoyage:", lines);
+
+  // Extraire le titre (première ligne avec # mais pas ##)
+  const titleLine = lines.find(
+    (line) => line.startsWith("# ") && !line.startsWith("## ")
+  );
+  let title = titleLine
+    ? convertHeroMarkdownToHtml(titleLine.replace("# ", "").trim(), false)
+    : "Destination Castagniccia Casinca,";
+
+  console.log("Titre extrait:", title);
+
+  // Extraire TOUTES les lignes de sous-titre (lignes avec ##)
+  const subtitleLines = lines.filter((line) => line.startsWith("## "));
+  console.log("Lignes de sous-titre trouvées:", subtitleLines);
+
+  let subtitle = "";
+
+  if (subtitleLines.length > 0) {
+    // Traiter chaque ligne de sous-titre et les joindre avec <br>
+    const processedSubtitles = subtitleLines.map((line) => {
+      const cleanLine = line.replace("## ", "").trim();
+      const processed = convertHeroMarkdownToHtml(cleanLine, false);
+      console.log("Ligne sous-titre traitée:", cleanLine, "->", processed);
+      return processed;
+    });
+
+    // Joindre les sous-titres avec un saut de ligne visuel
+    subtitle = processedSubtitles.join("<br>");
+    console.log("Sous-titre final:", subtitle);
+  } else {
+    subtitle =
+      "à la découverte d'une Corse authentique, entre villages perchés, plages et saveurs du terroir";
+  }
+
+  // Extraire la description (tout le reste sans les # et ##)
+  const descriptionLines = lines.filter((line) => {
+    return !line.startsWith("#");
+  });
+
+  console.log("Lignes de description:", descriptionLines);
+
+  let description = "";
+  if (descriptionLines.length > 0) {
+    // Joindre toutes les lignes de description avec des sauts de ligne
+    const fullDescription = descriptionLines.join("\n");
+    description = convertHeroMarkdownToHtml(fullDescription);
+    console.log("Description finale:", description);
+  } else {
+    description =
+      "Explorez l'une des régions les plus authentiques de Corse...";
+  }
+
+  const result = { title, subtitle, description };
+  console.log("=== RÉSULTAT FINAL ===", result);
+
+  return result;
+};
+
+const result = parseHeroText(strapiText);
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Hero Parser</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+      }
+      .section {
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+      }
+      .title {
+        background: #ffeb3b;
+      }
+      .subtitle {
+        background: #e3f2fd;
+      }
+      .description {
+        background: #e8f5e8;
+      }
+      h2 {
+        margin-top: 0;
+        color: #333;
+      }
+      .raw {
+        background: #f0f0f0;
+        padding: 10px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 12px;
+        margin-top: 10px;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Test du Parser Hero</h1>
+
+      <div class="section title">
+        <h2>TITRE</h2>
+        <div set:html={result.title} />
+        <div class="raw">{result.title}</div>
+      </div>
+
+      <div class="section subtitle">
+        <h2>SOUS-TITRE</h2>
+        <div set:html={result.subtitle} />
+        <div class="raw">{result.subtitle}</div>
+      </div>
+
+      <div class="section description">
+        <h2>DESCRIPTION</h2>
+        <div set:html={result.description} />
+        <div class="raw">{result.description}</div>
+      </div>
+
+      <div class="section">
+        <h2>TEXTE ORIGINAL</h2>
+        <div class="raw">{strapiText}</div>
+      </div>
+    </div>
+  </body>
+</html>

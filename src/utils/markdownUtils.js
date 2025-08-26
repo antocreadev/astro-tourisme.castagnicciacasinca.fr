@@ -8,6 +8,9 @@ export const convertMarkdownToHtml = (text) => {
 
   let html = text;
 
+  // Normaliser les sauts de ligne
+  html = html.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
   // Échapper les balises HTML existantes temporairement pour éviter les conflits
   const htmlEntities = [];
   html = html.replace(/<([^>]+)>/g, (match) => {
@@ -16,22 +19,30 @@ export const convertMarkdownToHtml = (text) => {
     return `__HTML_ENTITY_${index}__`;
   });
 
-  // Convertir les titres (H1 à H4)
+  // Convertir les titres (H1 à H6) - ordre important du plus spécifique au moins spécifique
   html = html.replace(
-    /^# (.*$)/gim,
-    '<h1 class="text-3xl font-bold text-black mb-6">$1</h1>'
+    /^###### (.*$)/gim,
+    '<h6 class="text-sm font-bold text-black mb-2 mt-3">$1</h6>'
   );
   html = html.replace(
-    /^## (.*$)/gim,
-    '<h2 class="text-2xl font-bold text-black mb-4 mt-8">$1</h2>'
+    /^##### (.*$)/gim,
+    '<h5 class="text-base font-bold text-black mb-2 mt-3">$1</h5>'
+  );
+  html = html.replace(
+    /^#### (.*$)/gim,
+    '<h4 class="text-lg font-bold text-black mb-2 mt-4">$1</h4>'
   );
   html = html.replace(
     /^### (.*$)/gim,
     '<h3 class="text-xl font-bold text-black mb-3 mt-6">$1</h3>'
   );
   html = html.replace(
-    /^#### (.*$)/gim,
-    '<h4 class="text-lg font-bold text-black mb-2 mt-4">$1</h4>'
+    /^## (.*$)/gim,
+    '<h2 class="text-2xl font-bold text-black mb-4 mt-8">$1</h2>'
+  );
+  html = html.replace(
+    /^# (.*$)/gim,
+    '<h1 class="text-3xl font-bold text-black mb-6">$1</h1>'
   );
 
   // Convertir les images ![alt](src)
@@ -71,10 +82,7 @@ export const convertMarkdownToHtml = (text) => {
   );
 
   // Convertir le souligné (utilisation de <u> avec __text__)
-  html = html.replace(
-    /__(.*?)__/g,
-    '<u class="underline">$1</u>'
-  );
+  html = html.replace(/__(.*?)__/g, '<u class="underline">$1</u>');
 
   // Convertir le gras et l'italique (après le souligné pour éviter les conflits)
   html = html.replace(
@@ -84,7 +92,7 @@ export const convertMarkdownToHtml = (text) => {
   html = html.replace(/\*(.*?)\*/g, '<em class="italic">$1</em>');
   html = html.replace(/_(.*?)_/g, '<em class="italic">$1</em>');
 
-  // Gérer les listes (trouver les blocs de listes)
+  // Gérer les listes et paragraphes (trouver les blocs de listes)
   const lines = html.split("\n");
   let result = [];
   let inUnorderedList = false;
@@ -104,7 +112,9 @@ export const convertMarkdownToHtml = (text) => {
         inUnorderedList = true;
       }
       result.push(
-        `<li class="text-gray-700 text-lg leading-relaxed">${line.substring(2)}</li>`
+        `<li class="text-gray-700 text-lg leading-relaxed">${line.substring(
+          2
+        )}</li>`
       );
     }
     // Listes ordonnées (1. item, 2. item, etc.)
@@ -133,14 +143,27 @@ export const convertMarkdownToHtml = (text) => {
         inOrderedList = false;
       }
 
-      // Gérer les sauts de ligne multiples comme des paragraphes séparés
+      // Gérer les lignes vides et les paragraphes
       if (line === "") {
-        // Ligne vide - ne rien faire, sera géré par le paragraphe suivant
-      } else if (line && !line.startsWith("<h") && !line.startsWith("<blockquote") && !line.startsWith("<pre") && !line.startsWith("<img")) {
+        // Ligne vide - ignorer, sera géré par la logique de paragraphe
+      } else if (
+        line &&
+        !line.startsWith("<h") &&
+        !line.startsWith("<blockquote") &&
+        !line.startsWith("<pre") &&
+        !line.startsWith("<img")
+      ) {
+        // Ligne de texte normal -> paragraphe
         result.push(
           `<p class="text-gray-700 text-lg leading-relaxed mb-4">${line}</p>`
         );
-      } else if (line.startsWith("<h") || line.startsWith("<blockquote") || line.startsWith("<pre") || line.startsWith("<img")) {
+      } else if (
+        line.startsWith("<h") ||
+        line.startsWith("<blockquote") ||
+        line.startsWith("<pre") ||
+        line.startsWith("<img")
+      ) {
+        // Éléments HTML déjà formatés
         result.push(line);
       }
     }
@@ -198,50 +221,80 @@ export const convertSimpleMarkdown = (text) => {
 /**
  * Convertit du texte Markdown en HTML pour le composant Hero avec gestion du compteur
  * @param {string} text - Le texte Markdown à convertir
+ * @param {boolean} wrapInParagraph - Si true, enveloppe le résultat dans un paragraphe
  * @returns {string} - Le HTML généré avec les classes CSS
  */
-export const convertHeroMarkdownToHtml = (text) => {
+export const convertHeroMarkdownToHtml = (text, wrapInParagraph = true) => {
   if (!text) return "";
 
   let html = text;
 
-  // Convertir le gras et l'italique (ordre important pour éviter les conflits)
-  html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>');
+  // ÉTAPE 1: Nettoyer et normaliser les sauts de ligne
+  html = html.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  // Supprimer tous les titres markdown (# ## ### ####) car ils sont gérés séparément
+  html = html.replace(/^#{1,6}\s+/gm, "");
+
+  // ÉTAPE 2: Gérer le compteur spécial {conteur}
+  html = html.replace(
+    /\{conteur\}/g,
+    '<span id="counter" class="font-bold inline-block text-center relative overflow-hidden" style="top: 8px; position: relative; overflow: hidden; padding: 0px 0.25rem; min-width: 1.8em; text-align: center;">0</span>'
+  );
+
+  // ÉTAPE 3: Convertir le gras et l'italique (ordre important)
+  html = html.replace(
+    /\*\*(.*?)\*\*/g,
+    '<strong class="font-bold">$1</strong>'
+  );
   html = html.replace(/\*(.*?)\*/g, '<em class="italic">$1</em>');
-  
-  // Convertir l'italique avec underscore pour les blocs plus longs
-  html = html.replace(/_([^_\n]+(?:\n[^_\n]+)*?)_/g, '<em class="italic">$1</em>');
 
-  // Convertir le souligné (__text__)
+  // ÉTAPE 4: Convertir l'italique avec underscore pour les blocs multi-lignes
+  html = html.replace(/_([^_]+(?:\n[^_]*?)*)_/g, '<em class="italic">$1</em>');
+
+  // ÉTAPE 5: Convertir les autres formatages
   html = html.replace(/__(.*?)__/g, '<u class="underline">$1</u>');
+  html = html.replace(
+    /~~(.*?)~~/g,
+    '<del class="line-through text-gray-500">$1</del>'
+  );
 
-  // Convertir le texte barré (~~text~~)
-  html = html.replace(/~~(.*?)~~/g, '<del class="line-through text-gray-500">$1</del>');
-
-  // Convertir les liens [text](url)
+  // ÉTAPE 6: Convertir les liens et le code
   html = html.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
     '<a href="$2" class="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">$1</a>'
   );
-
-  // Convertir le code inline `code`
   html = html.replace(
     /`([^`]+)`/g,
     '<code class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">$1</code>'
   );
 
-  // Gérer le compteur spécial {conteur}
-  html = html.replace(
-    /\{conteur\}/g,
-    '<span id="counter" class="font-bold inline-block text-center relative overflow-hidden" style="top: 8px;">0</span>'
-  );
+  // ÉTAPE 7: Gérer les sauts de ligne multiples et les paragraphes
+  // Nettoyer les multiples sauts de ligne vides consécutifs
+  html = html.replace(/\n\s*\n\s*\n+/g, "\n\n");
 
-  // Convertir les sauts de ligne simples en <br> pour maintenir les retours à la ligne
-  html = html.replace(/\n\n/g, '<br><br>');
-  html = html.replace(/\n/g, '<br>');
-  
-  // Nettoyer les espaces multiples mais conserver les <br>
-  html = html.replace(/[ \t]+/g, ' ').trim();
+  // Séparer en paragraphes basés sur les doubles sauts de ligne
+  const paragraphs = html.split(/\n\s*\n/).filter((p) => p.trim().length > 0);
+
+  if (paragraphs.length > 1 && wrapInParagraph) {
+    // Plusieurs paragraphes : wrapper chacun dans une balise <p>
+    html = paragraphs
+      .map((p) => {
+        const cleanParagraph = p.replace(/\n/g, "<br>");
+        return `<p>${cleanParagraph.trim()}</p>`;
+      })
+      .join("");
+  } else if (wrapInParagraph && paragraphs.length === 1) {
+    // Un seul paragraphe : convertir les sauts de ligne simples en <br>
+    html = html.replace(/\n/g, "<br>");
+    html = `<p>${html.trim()}</p>`;
+  } else {
+    // Pas de wrapper paragraphe : juste convertir les sauts de ligne
+    html = html.replace(/\n/g, "<br>");
+    html = html.trim();
+  }
+
+  // ÉTAPE 8: Nettoyer les espaces en trop
+  html = html.replace(/[ \t]+/g, " ").trim();
 
   return html;
 };

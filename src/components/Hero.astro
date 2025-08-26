@@ -20,35 +20,93 @@ const parseHeroText = (text) => {
         "Explorez l'une des régions les plus authentiques de Corse...",
     };
 
-  const lines = text.split("\n");
+  console.log("Texte original:", text); // Debug
 
-  // Extraire le titre (première ligne avec #)
-  const titleLine = lines.find((line) => line.trim().startsWith("# "));
+  // Normaliser les sauts de ligne et nettoyer le texte
+  const cleanText = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  const lines = cleanText
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+
+  console.log("Lignes après nettoyage:", lines); // Debug
+
+  // Extraire le titre (première ligne avec # mais pas ##)
+  const titleLine = lines.find(
+    (line) => line.startsWith("# ") && !line.startsWith("## ")
+  );
   let title = titleLine
     ? convertHeroMarkdownToHtml(titleLine.replace("# ", "").trim())
     : "Destination Castagniccia Casinca,";
 
-  // Extraire le sous-titre (première ligne avec ##)
-  const subtitleLine = lines.find((line) => line.trim().startsWith("## "));
-  let subtitle = subtitleLine
-    ? convertHeroMarkdownToHtml(subtitleLine.replace("## ", "").trim())
-    : "à la découverte d'une Corse authentique, entre villages perchés, plages et saveurs du terroir";
+  console.log("Titre extrait:", title); // Debug
+
+  // Extraire TOUTES les lignes de sous-titre (lignes avec ##)
+  const subtitleLines = lines.filter((line) => line.startsWith("## "));
+  console.log("Lignes de sous-titre trouvées:", subtitleLines); // Debug
+
+  let subtitle = "";
+
+  if (subtitleLines.length > 0) {
+    // Traiter chaque ligne de sous-titre et les joindre avec <br>
+    const processedSubtitles = subtitleLines.map((line) => {
+      const cleanLine = line.replace("## ", "").trim();
+      const processed = convertHeroMarkdownToHtml(cleanLine, false); // false = pas de wrapper <p>
+      console.log("Ligne sous-titre traitée:", cleanLine, "->", processed); // Debug
+      return processed;
+    });
+
+    // Joindre les sous-titres avec un saut de ligne visuel
+    subtitle = processedSubtitles.join("<br>");
+    console.log("Sous-titre final:", subtitle); // Debug
+  } else {
+    subtitle =
+      "à la découverte d'une Corse authentique, entre villages perchés, plages et saveurs du terroir";
+  }
 
   // Extraire la description (tout le reste sans les # et ##)
   const descriptionLines = lines.filter((line) => {
-    const trimmed = line.trim();
-    return trimmed && !trimmed.startsWith("#");
+    return !line.startsWith("#");
   });
 
-  let description =
-    descriptionLines.length > 0
-      ? convertHeroMarkdownToHtml(descriptionLines.join("\n"))
-      : "Explorez l'une des régions les plus authentiques de Corse...";
+  console.log("Lignes de description:", descriptionLines); // Debug
 
-  return { title, subtitle, description };
+  let description = "";
+  if (descriptionLines.length > 0) {
+    // Joindre toutes les lignes de description avec des sauts de ligne
+    const fullDescription = descriptionLines.join("\n");
+    description = convertHeroMarkdownToHtml(fullDescription);
+    console.log("Description finale:", description); // Debug
+  } else {
+    description =
+      "Explorez l'une des régions les plus authentiques de Corse...";
+  }
+
+  const result = { title, subtitle, description };
+  console.log("Résultat final du parsing:", result); // Debug
+
+  return result;
 };
 
 const heroContent = parseHeroText(data?.texte);
+// Force reload: v1.1
+
+// TEST DEBUG - forcer l'utilisation de notre logique
+const testText = `# **Destination** Castagniccia Casinca,
+## à la **découverte** d'une **Corse authentique**, 
+## entre **villages perchés**, **plages** et **saveurs du terroir**.
+
+
+
+_Explorez l'une des régions les plus authentiques de Corse grâce à notre application interactive. 
+Déjà {conteur} visiteurs ont exploré notre site pour découvrir les trésors uniques de la Castagniccia Casinca. 
+Que vous soyez à la recherche de paysages préservés, d'expériences culturelles uniques ou d'adresses incontournables, nous avons tout prévu pour que votre séjour soit inoubliable_.`;
+
+const heroContentTest = parseHeroText(testText);
+console.log("=== COMPARAISON ===");
+console.log("Données Strapi:", data?.texte);
+console.log("Résultat avec données Strapi:", heroContent);
+console.log("Résultat avec test:", heroContentTest);
 ---
 
 <section
@@ -74,7 +132,7 @@ const heroContent = parseHeroText(data?.texte);
           class="block text-4xl md:text-5xl lg:text-6xl tracking-tight opacity-0"
           style={`color: ${colorData?.data?.texteHeroSection || "#374151"};`}
           id="title-part1"
-          set:html={heroContent.title}
+          set:html={heroContentTest.title}
         />
       </h1>
 
@@ -84,9 +142,9 @@ const heroContent = parseHeroText(data?.texte);
           style={`color: ${colorData?.data?.texteHeroSection || "#4B5563"};`}
         >
           <div
-            class="inline-block opacity-0 transform"
+            class="opacity-0 transform"
             id="subtitle-part1"
-            set:html={heroContent.subtitle}
+            set:html={heroContentTest.subtitle}
           />
         </h2>
       </div>
@@ -95,10 +153,10 @@ const heroContent = parseHeroText(data?.texte);
         class="mt-6 max-w-4xl mx-auto text-center opacity-0"
         id="description"
       >
-        <p
-          class="text-lg w-full"
-          style={`color: ${colorData?.data?.texteHeroSection || "#4B5563"};`}
-          set:html={heroContent.description}
+        <div
+          class="text-lg w-full leading-relaxed space-y-3"
+          style={`color: ${colorData?.data?.texteHeroSection || "#4B5563"}; font-size: 1.125rem; line-height: 1.7;`}
+          set:html={heroContentTest.description}
         />
       </div>
 
