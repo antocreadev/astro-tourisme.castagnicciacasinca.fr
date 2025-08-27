@@ -30,7 +30,7 @@ export default function CarteInteractive({ data, colorData }) {
           <div className="space-y-8">
             {/* Description with markdown features */}
             <div 
-              className="text-lg leading-relaxed" 
+              className="text-lg leading-relaxed text-justify max-w-[500px] pl-4" 
               style={{ color: colorData?.data?.texteCarteInteractive || '#374b58' }}
               dangerouslySetInnerHTML={{
                 __html: data?.Description ? convertMarkdownWithLists(data.Description) : convertMarkdownWithLists('Naviguez facilement dans notre région grâce à des cartes interactives intuitives et riches en fonctionnalités.')

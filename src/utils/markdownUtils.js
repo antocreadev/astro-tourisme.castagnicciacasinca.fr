@@ -231,9 +231,9 @@ export const convertMarkdownWithLists = (text) => {
 
   // Normaliser les sauts de ligne et CONVERTIR TOUS LES \n EN <br>
   html = html.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-  
+
   // CONVERTIR TOUS LES \n EN <br> DÈS LE DÉBUT
-  html = html.replace(/\n/g, '<br>');
+  html = html.replace(/\n/g, "<br>");
 
   // D'abord, appliquer les transformations de formatage (gras, italique, etc.)
   // Convertir le gras et l'italique
@@ -263,7 +263,7 @@ export const convertMarkdownWithLists = (text) => {
 
   // Maintenant traiter les listes en utilisant les <br> comme séparateurs
   const lines = html.split("<br>");
-  
+
   let result = [];
   let inUnorderedList = false;
 
@@ -278,22 +278,26 @@ export const convertMarkdownWithLists = (text) => {
         );
         inUnorderedList = true;
       }
-      
+
       // Extraire le contenu et vérifier s'il y a une ligne suivante qui fait partie de cet item
       let content = line.substring(2).trim();
-      
+
       // Regarder les lignes suivantes pour voir si elles font partie de cet item
       let j = i + 1;
-      while (j < lines.length && lines[j].trim() && !lines[j].trim().startsWith("- ")) {
+      while (
+        j < lines.length &&
+        lines[j].trim() &&
+        !lines[j].trim().startsWith("- ")
+      ) {
         const nextLine = lines[j].trim();
         // Ajouter la ligne avec <br>
-        content += '<br>' + nextLine;
+        content += "<br>" + nextLine;
         j++;
       }
-      
+
       // Avancer l'index pour les lignes traitées
       i = j - 1;
-      
+
       result.push(
         `<li class="text-gray-700 text-base leading-snug">${content}</li>`
       );
@@ -304,7 +308,7 @@ export const convertMarkdownWithLists = (text) => {
         result.push("</ul>");
         inUnorderedList = false;
       }
-      result.push('<br>');
+      result.push("<br>");
     }
     // Lignes normales (pas de liste)
     else if (line && line.trim()) {

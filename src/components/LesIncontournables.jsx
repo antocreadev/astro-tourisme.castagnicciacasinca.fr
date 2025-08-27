@@ -25,7 +25,7 @@ export default function LesIncontournables({ data, sites = fallbackSites, colorD
   };
 
   return (
-    <div className="py-8 px-4" style={sectionStyle} id="incontournables">
+    <div className="py-8 px-4 pb-4" style={sectionStyle} id="incontournables">
       <div className="max-w-7xl mx-auto">
         {/* Main Title */}
         <div className="text-center mb-16">

@@ -9,9 +9,9 @@ export default function DecouvreTerritoire({ data, colorData }) {
   };
 
   return (
-    <div className="min-h-[90vh]" style={sectionStyle} id="decouvrez-le-territoire">
+    <div  style={sectionStyle} id="decouvrez-le-territoire">
       
-      <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="max-w-7xl mx-auto px-4 pb-16">
                       <h1 className="text-4xl font-bold mb-6 leading-tight text-center" style={{ color: colorData?.data?.texteDecouvrezLeTerritoire || '#000000' }}>
                 {data?.Titre || 'Découvrez le territoire le patrimoine et la culture'}
               </h1>
@@ -39,7 +39,7 @@ export default function DecouvreTerritoire({ data, colorData }) {
                 />
               </div>
               <div 
-                className="text-gray-700 text-lg leading-relaxed"
+                className="text-gray-700 text-lg leading-relaxed text-justify"
                 dangerouslySetInnerHTML={{ 
                   __html: convertMarkdownToHtml(data?.Description || '')
                 }}
@@ -47,7 +47,7 @@ export default function DecouvreTerritoire({ data, colorData }) {
             </div>
 
             {/* Statistics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <div className="text-5xl font-bold text-black mb-2">{data?.Stat1 || '70'}</div>
                 <div 
@@ -66,7 +66,7 @@ export default function DecouvreTerritoire({ data, colorData }) {
                   }}
                 />
               </div>
-            </div>
+            </div> */}
 
             {/* Button */}
             {/* <div className="pt-4">

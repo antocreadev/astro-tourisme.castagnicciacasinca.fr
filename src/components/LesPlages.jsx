@@ -37,7 +37,7 @@ export default function LesPlages({ data, plages = [], colorData }) {
               </h2>
 
               <div 
-                className="text-lg leading-relaxed" 
+                className="text-lg leading-relaxed text-justify" 
                 style={{ color: colorData?.data?.textePlages || '#4b5563' }}
                 dangerouslySetInnerHTML={{
                   __html: data?.Description ? convertMarkdownWithLists(data.Description) : convertMarkdownWithLists('Découvrez les plus belles plages de la Castagniccia Casinca, des criques sauvages aux grandes étendues de sable fin. Un littoral préservé aux eaux cristallines vous attend.')
