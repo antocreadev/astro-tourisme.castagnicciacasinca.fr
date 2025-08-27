@@ -1,3 +1,6 @@
-texte sur le heo markdown
-carte restaurant
-page des communes
+texte à justifier :
+decouvrer le territoire
+les plages
+carte interactive
+
+modifer le texte des sous pages

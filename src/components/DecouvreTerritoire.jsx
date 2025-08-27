@@ -4,7 +4,8 @@ import { convertMarkdownToHtml } from '../utils/markdownUtils.js';
 
 export default function DecouvreTerritoire({ data, colorData }) {
   const sectionStyle = {
-    color: colorData?.data?.texteDecouvrezLeTerritoire || '#000000'
+    color: colorData?.data?.texteDecouvrezLeTerritoire || '#000000',
+    backgroundColor: colorData?.data?.fondDecouvrezLeTerritoire || '#ffffff'
   };
 
   return (

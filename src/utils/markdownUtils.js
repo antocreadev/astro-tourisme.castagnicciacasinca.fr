@@ -108,11 +108,11 @@ export const convertMarkdownToHtml = (text) => {
         inOrderedList = false;
       }
       if (!inUnorderedList) {
-        result.push('<ul class="list-disc ml-6 mb-4 space-y-2">');
+        result.push('<ul class="list-disc ml-4 space-y-1 m-0">');
         inUnorderedList = true;
       }
       result.push(
-        `<li class="text-gray-700 text-lg leading-relaxed">${line.substring(
+        `<li class="text-gray-700 text-base leading-snug">${line.substring(
           2
         )}</li>`
       );
@@ -124,12 +124,12 @@ export const convertMarkdownToHtml = (text) => {
         inUnorderedList = false;
       }
       if (!inOrderedList) {
-        result.push('<ol class="list-decimal ml-6 mb-4 space-y-2">');
+        result.push('<ol class="list-decimal ml-4 space-y-1 m-0">');
         inOrderedList = true;
       }
       const content = line.replace(/^\d+\.\s/, "");
       result.push(
-        `<li class="text-gray-700 text-lg leading-relaxed">${content}</li>`
+        `<li class="text-gray-700 text-base leading-snug">${content}</li>`
       );
     }
     // Lignes normales
@@ -153,9 +153,10 @@ export const convertMarkdownToHtml = (text) => {
         !line.startsWith("<pre") &&
         !line.startsWith("<img")
       ) {
-        // Ligne de texte normal -> paragraphe
+        // Ligne de texte normal -> paragraphe, gestion des \n comme <br>
+        const lineWithBreaks = line.replace(/\\n/g, "<br>");
         result.push(
-          `<p class="text-gray-700 text-lg leading-relaxed mb-4">${line}</p>`
+          `<p class="text-gray-700 text-base leading-snug mb-2">${lineWithBreaks}</p>`
         );
       } else if (
         line.startsWith("<h") ||
@@ -228,8 +229,11 @@ export const convertMarkdownWithLists = (text) => {
 
   let html = text;
 
-  // Normaliser les sauts de ligne
+  // Normaliser les sauts de ligne et CONVERTIR TOUS LES \n EN <br>
   html = html.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  
+  // CONVERTIR TOUS LES \n EN <br> DÈS LE DÉBUT
+  html = html.replace(/\n/g, '<br>');
 
   // D'abord, appliquer les transformations de formatage (gras, italique, etc.)
   // Convertir le gras et l'italique
@@ -257,44 +261,62 @@ export const convertMarkdownWithLists = (text) => {
     '<code class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">$1</code>'
   );
 
-  // Maintenant traiter les listes et paragraphes
-  const lines = html
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
+  // Maintenant traiter les listes en utilisant les <br> comme séparateurs
+  const lines = html.split("<br>");
+  
   let result = [];
   let inUnorderedList = false;
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
+    let line = lines[i].trim();
 
     // Listes non ordonnées (- item)
     if (line.startsWith("- ")) {
       if (!inUnorderedList) {
-        result.push('<ul class="list-disc ml-6 mb-4 space-y-2">');
+        result.push(
+          '<ul class="list-disc ml-4 space-y-1" style="margin: 0px">'
+        );
         inUnorderedList = true;
       }
-      const content = line.substring(2).trim();
+      
+      // Extraire le contenu et vérifier s'il y a une ligne suivante qui fait partie de cet item
+      let content = line.substring(2).trim();
+      
+      // Regarder les lignes suivantes pour voir si elles font partie de cet item
+      let j = i + 1;
+      while (j < lines.length && lines[j].trim() && !lines[j].trim().startsWith("- ")) {
+        const nextLine = lines[j].trim();
+        // Ajouter la ligne avec <br>
+        content += '<br>' + nextLine;
+        j++;
+      }
+      
+      // Avancer l'index pour les lignes traitées
+      i = j - 1;
+      
       result.push(
-        `<li class="text-gray-700 text-lg leading-relaxed">${content}</li>`
+        `<li class="text-gray-700 text-base leading-snug">${content}</li>`
       );
     }
-    // Lignes normales
-    else {
+    // Lignes vides -> ajouter des <br>
+    else if (!line || line === "") {
+      if (inUnorderedList) {
+        result.push("</ul>");
+        inUnorderedList = false;
+      }
+      result.push('<br>');
+    }
+    // Lignes normales (pas de liste)
+    else if (line && line.trim()) {
       if (inUnorderedList) {
         result.push("</ul>");
         inUnorderedList = false;
       }
 
       // Ligne de texte normal -> paragraphe
-      if (line && !line.startsWith("<")) {
-        result.push(
-          `<p class="text-gray-700 text-lg leading-relaxed mb-4">${line}</p>`
-        );
-      } else if (line.startsWith("<")) {
-        // Éléments HTML déjà formatés
-        result.push(line);
-      }
+      result.push(
+        `<p class="text-gray-700 text-base leading-snug mb-2">${line}</p>`
+      );
     }
   }
 

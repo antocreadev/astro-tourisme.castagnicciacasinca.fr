@@ -15,8 +15,7 @@ export default function LesIncontournables({ data, sites = fallbackSites, colorD
   // Pour éviter les mismatches d'hydratation, on ne randomize plus côté serveur.
   // Option: tri alphabétique stable
   const sitesPhares = [...normalized]
-    .sort((a,b)=> (a.title||'').localeCompare(b.title||''))
-    .slice(0,4);
+    .sort((a,b)=> (a.title||'').localeCompare(b.title||''));
 
   const itinerairesData = itineraires.slice(0, 3);
 
@@ -73,7 +72,7 @@ export default function LesIncontournables({ data, sites = fallbackSites, colorD
                       <h3 className="text-lg font-semibold text-black text-center leading-tight group-hover:text-blue-600 transition-colors duration-300 line-clamp-2 mb-2">
                         {site.title}
                       </h3>
-                      <p className="text-sm text-gray-600 text-center flex-1">
+                      <p className="text-sm text-gray-600 text-center flex-1 line-clamp-2">
                         {truncate(site.subtitle)}
                       </p>
                     </div>
