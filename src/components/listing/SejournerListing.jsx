@@ -21,8 +21,9 @@ export default function SejournerListing({ sejourners = [], colorData }) {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const type = urlParams.get('type');
+      const commune = urlParams.get('commune');
       return {
-        commune: 'toutes',
+        commune: commune || 'toutes',
         type: type || 'tous',
         search: ''
       };

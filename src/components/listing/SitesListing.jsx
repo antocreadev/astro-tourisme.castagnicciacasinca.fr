@@ -4,11 +4,28 @@ import SiteCard from '../ui/SiteCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Search, Mountain } from 'lucide-react';
 
 export default function SitesListing({ sites = fallbackSites }) {
+  // Récupérer les paramètres URL pour initialiser les filtres
+  const getInitialFilters = () => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const commune = urlParams.get('commune');
+      return {
+        commune: commune || 'toutes',
+        search: ''
+      };
+    }
+    return {
+      commune: 'toutes',
+      search: ''
+    };
+  };
+
+  const initialFilters = getInitialFilters();
   const [filteredSites, setFilteredSites] = useState(sites);
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCommune, setSelectedCommune] = useState('toutes');
+  const [searchTerm, setSearchTerm] = useState(initialFilters.search);
+  const [selectedCommune, setSelectedCommune] = useState(initialFilters.commune);
   const sitesPerPage = 12;
 
   // Obtenir les communes uniques depuis les données de l'API

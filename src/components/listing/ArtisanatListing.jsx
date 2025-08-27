@@ -12,20 +12,27 @@ const ArtisanatListing = ({ artisanat = [], colorData }) => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const type = urlParams.get('type');
+      const commune = urlParams.get('commune');
       return {
-        type: type || 'tous'
+        type: type || 'tous',
+        commune: commune || 'toutes',
+        search: ''
       };
     }
     return {
-      type: 'tous'
+      type: 'tous',
+      commune: 'toutes',
+      search: ''
     };
   };
 
+  const initialFilters = getInitialFilters();
   const [filteredArtisanat, setFilteredArtisanat] = useState(artisanat);
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedType, setSelectedType] = useState(getInitialFilters().type);
+  const [searchTerm, setSearchTerm] = useState(initialFilters.search);
+  const [selectedType, setSelectedType] = useState(initialFilters.type);
+  const [selectedCommune, setSelectedCommune] = useState(initialFilters.commune);
   const [showFilters, setShowFilters] = useState(false);
   const itemsPerPage = 9;
 
@@ -35,9 +42,15 @@ const ArtisanatListing = ({ artisanat = [], colorData }) => {
     return [...new Set(types)].sort();
   };
 
+  // Obtenir les communes uniques
+  const getUniqueCommunes = () => {
+    const communes = artisanat.map(item => item.commune?.Nom).filter(Boolean);
+    return [...new Set(communes)].sort();
+  };
+
   useEffect(() => {
     applyFilters();
-  }, [artisanat, searchTerm, selectedType]);
+  }, [artisanat, searchTerm, selectedType, selectedCommune]);
 
   const applyFilters = () => {
     let filtered = [...artisanat];
@@ -55,6 +68,11 @@ const ArtisanatListing = ({ artisanat = [], colorData }) => {
     // Filtre par type
     if (selectedType !== 'tous') {
       filtered = filtered.filter(item => item.type_artisanat_et_produit?.Titre === selectedType);
+    }
+
+    // Filtre par commune
+    if (selectedCommune !== 'toutes') {
+      filtered = filtered.filter(item => item.commune?.Nom === selectedCommune);
     }
 
     setFilteredArtisanat(filtered);

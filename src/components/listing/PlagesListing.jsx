@@ -7,12 +7,31 @@ const PlagesListing = ({ plages = [], colorData }) => {
   // Utiliser les styles CSS globaux ou inline basés sur colorData
   const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
 
+  // Récupérer les paramètres URL pour initialiser les filtres
+  const getInitialFilters = () => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const commune = urlParams.get('commune');
+      return {
+        commune: commune || 'toutes',
+        search: '',
+        pmr: 'tous'
+      };
+    }
+    return {
+      commune: 'toutes',
+      search: '',
+      pmr: 'tous'
+    };
+  };
+
+  const initialFilters = getInitialFilters();
   const [filteredPlages, setFilteredPlages] = useState(plages);
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCommune, setSelectedCommune] = useState('toutes');
-  const [selectedPMR, setSelectedPMR] = useState('tous');
+  const [searchTerm, setSearchTerm] = useState(initialFilters.search);
+  const [selectedCommune, setSelectedCommune] = useState(initialFilters.commune);
+  const [selectedPMR, setSelectedPMR] = useState(initialFilters.pmr);
   const itemsPerPage = 9;
 
   // Obtenir les communes uniques
