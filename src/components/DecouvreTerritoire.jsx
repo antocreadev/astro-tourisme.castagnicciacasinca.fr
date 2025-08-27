@@ -40,7 +40,7 @@ export default function DecouvreTerritoire({ data, colorData }) {
               <div 
                 className="text-gray-700 text-lg leading-relaxed"
                 dangerouslySetInnerHTML={{ 
-                  __html: convertMarkdownToHtml(data?.Description || 'La Casinca est un territoire caractérisé par un secteur montagneux recouvert de forêts, de châtaigniers et d\'oliviers, un piémont avec ses terrasses où sont situées les villages anciens et la plaine avec son littoral. La Casinca est naturellement délimitée par deux fleuves : au nord par la partie terminale du Golu, au sud, par le Fium\'Altu qui prend sa source au pied du San Petrone. L\'ouest est quant à lui délimité par la chaîne montagneuse d\'I Sant\'Anghjuli et l\'est par la mer tyrrhénienne. Ses villages perchés offrent de magnifiques panoramas sur le nord de la côte orientale ainsi que sur l\'archipel toscan voire la péninsule italique.')
+                  __html: convertMarkdownToHtml(data?.Description || '')
                 }}
               />
             </div>
