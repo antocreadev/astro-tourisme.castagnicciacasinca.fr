@@ -18,6 +18,13 @@ const CommuneDetail = ({ commune }) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [showGallery, setShowGallery] = useState(false);
 
+  // Fonction pour gérer l'article "de" ou "d'" selon la première lettre
+  const getPreposition = (nom) => {
+    if (!nom) return 'de';
+    const firstLetter = nom.charAt(0).toLowerCase();
+    return ['a', 'e', 'i', 'o', 'u', 'h'].includes(firstLetter) ? "d'" : 'de ';
+  };
+
   if (!commune) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -95,7 +102,7 @@ const CommuneDetail = ({ commune }) => {
               </h1>
               <div className="flex items-center text-white/90 text-base">
                 <Building2 className="w-4 h-4 mr-2" />
-                <span>Pieve de {commune.pieve?.Nom}</span>
+                <span>Pieve {getPreposition(commune.pieve?.Nom)}{commune.pieve?.Nom}</span>
               </div>
             </div>
           </div>
@@ -109,7 +116,7 @@ const CommuneDetail = ({ commune }) => {
             </h1>
             <div className="flex items-center text-gray-600 text-base">
               <Building2 className="w-4 h-4 mr-2" />
-              <span>Pieve de {commune.pieve?.Nom}</span>
+              <span>Pieve {getPreposition(commune.pieve?.Nom)}{commune.pieve?.Nom}</span>
             </div>
           </div>
         </div>
@@ -149,7 +156,7 @@ const CommuneDetail = ({ commune }) => {
             {commune.pieve && (
               <div className="bg-white rounded-lg shadow-sm border p-8">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                  La Pieve de {commune.pieve.Nom}
+                  La Pieve {getPreposition(commune.pieve.Nom)}{commune.pieve.Nom}
                 </h3>
                 <div 
                   className="text-gray-700 leading-relaxed prose max-w-none"
@@ -244,7 +251,7 @@ const CommuneDetail = ({ commune }) => {
               <div className="space-y-4">
                 <div>
                   <h4 className="font-medium text-gray-700 mb-1">Territoire</h4>
-                  <p className="text-gray-600 text-sm">Pieve de {commune.pieve?.Nom}</p>
+                  <p className="text-gray-600 text-sm">Pieve {getPreposition(commune.pieve?.Nom)}{commune.pieve?.Nom}</p>
                 </div>
 
                 {commune.coordonnees && (
