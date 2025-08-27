@@ -3,6 +3,7 @@ import { ArrowLeft, Calendar, MapPin, Phone, ExternalLink } from 'lucide-react';
 import { convertMarkdownToHtml } from '../../utils/markdownUtils.js';
 import { formatEventDate, getImageUrl, isEventPast } from '../../utils/eventUtils.js';
 import { getInlineStyles } from '../../utils/colorUtils.js';
+import { CommuneLink } from '../../utils/communeUtils.jsx';
 
 const EventDetail = ({ event, colorData }) => {
   const [isClient, setIsClient] = useState(false);
@@ -138,7 +139,7 @@ const EventDetail = ({ event, colorData }) => {
                 {event.commune && (
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium border bg-green-100 text-green-800 border-green-200">
                     <MapPin className="w-4 h-4" />
-                    {event.commune.Nom}
+                    <CommuneLink communeName={event.commune.Nom} className="hover:text-green-900" />
                   </div>
                 )}
               </div>
@@ -177,7 +178,11 @@ const EventDetail = ({ event, colorData }) => {
                       <LeafletComponents.Popup>
                         <div className="text-center">
                           <strong>{event.Nom}</strong>
-                          {event.commune && <div>{event.commune.Nom}</div>}
+                          {event.commune && (
+                            <div>
+                              <CommuneLink communeName={event.commune.Nom} />
+                            </div>
+                          )}
                         </div>
                       </LeafletComponents.Popup>
                     </LeafletComponents.Marker>
@@ -206,7 +211,9 @@ const EventDetail = ({ event, colorData }) => {
                     <MapPin className="w-5 h-5 text-green-600 mt-1" />
                     <div>
                       <p className="font-semibold text-gray-900">Commune</p>
-                      <p className="text-gray-600">{event.commune.Nom}</p>
+                      <p className="text-gray-600">
+                        <CommuneLink communeName={event.commune.Nom} />
+                      </p>
                     </div>
                   </div>
                 )}

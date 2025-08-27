@@ -4,6 +4,7 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { getImageUrl } from "../../utils/imageUtils";
+import { CommuneLink } from '../../utils/communeUtils.jsx';
 import { 
   Waves, 
   Clock, 
@@ -95,7 +96,9 @@ const ActiviteNautiqueDetail = ({ activite }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                 <div className="absolute bottom-6 left-6 text-white">
                   <h1 className="text-3xl font-bold mb-2">{activite.Nom}</h1>
-                  <p className="text-lg opacity-90">{activite.commune?.Nom}</p>
+                  <p className="text-lg opacity-90">
+                    <CommuneLink communeName={activite.commune?.Nom} className="text-white hover:text-blue-200" />
+                  </p>
                 </div>
                 <div className="absolute top-6 right-6 flex gap-2">
                   {activite.Type && (
@@ -224,7 +227,9 @@ const ActiviteNautiqueDetail = ({ activite }) => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-medium text-lg">{activite.commune.Nom}</p>
+                  <p className="font-medium text-lg">
+                    <CommuneLink communeName={activite.commune.Nom} />
+                  </p>
                   {activite.commune.description && (
                     <p className="text-gray-600 mt-2">{activite.commune.description}</p>
                   )}

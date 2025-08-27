@@ -4,6 +4,7 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { getImageUrl } from "../../utils/imageUtils";
+import { CommuneLink } from '../../utils/communeUtils.jsx';
 import { 
   Mountain, 
   Clock, 
@@ -84,7 +85,9 @@ const RandonneeDetail = ({ randonnee }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                 <div className="absolute bottom-6 left-6 text-white">
                   <h1 className="text-3xl font-bold mb-2">{randonnee.Nom}</h1>
-                  <p className="text-lg opacity-90">{randonnee.commune?.Nom}</p>
+                  <p className="text-lg opacity-90">
+                    <CommuneLink communeName={randonnee.commune?.Nom} className="text-white hover:text-blue-200" />
+                  </p>
                 </div>
                 {images.length > 1 && (
                   <>
@@ -235,7 +238,9 @@ const RandonneeDetail = ({ randonnee }) => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-medium text-lg">{randonnee.commune.Nom}</p>
+                  <p className="font-medium text-lg">
+                    <CommuneLink communeName={randonnee.commune.Nom} />
+                  </p>
                   {randonnee.commune.description && (
                     <p className="text-gray-600 mt-2">{randonnee.commune.description}</p>
                   )}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { getImageUrl } from '../../utils/eventUtils';
+import { CommuneLink } from '../../utils/communeUtils.jsx';
 
 const PlageDetail = ({ plage }) => {
   if (!plage) {
@@ -72,7 +73,9 @@ const PlageDetail = ({ plage }) => {
                   <h1 className="text-3xl font-bold text-gray-800 mb-2">{plage.Nom}</h1>
                   <div className="flex items-center text-gray-600 mb-2">
                     <span className="mr-2">📍</span>
-                    <span>{plage.commune?.Nom}</span>
+                    <span>
+                      <CommuneLink communeName={plage.commune?.Nom} />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -117,7 +120,9 @@ const PlageDetail = ({ plage }) => {
             {/* Description de la commune */}
             {plage.commune?.description && (
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">À propos de {plage.commune.Nom}</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                  À propos de <CommuneLink communeName={plage.commune.Nom} />
+                </h3>
                 <p className="text-gray-700 leading-relaxed">
                   {plage.commune.description}
                 </p>
@@ -133,7 +138,9 @@ const PlageDetail = ({ plage }) => {
               <div className="space-y-4">
                 <div>
                   <h4 className="font-medium text-gray-700 mb-2">Localisation</h4>
-                  <p className="text-gray-600">{plage.commune?.Nom}</p>
+                  <p className="text-gray-600">
+                    <CommuneLink communeName={plage.commune?.Nom} />
+                  </p>
                 </div>
                 
                 <div>

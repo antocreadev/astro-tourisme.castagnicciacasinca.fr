@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { convertMarkdownToHtml } from '../../utils/markdownUtils.js';
+import { CommuneLink } from '../../utils/communeUtils.jsx';
 import { openMaps, getGoogleMapsUrl } from '../../utils/mapsUtils.js';
 
 export default function SiteDetail({ site }) {
@@ -150,7 +151,9 @@ export default function SiteDetail({ site }) {
                 {site.commune && (
                   <div className="flex items-center gap-2 text-gray-600 mb-4">
                     <MapPin className="w-5 h-5 text-red-600" />
-                    <span className="text-lg">{site.commune}</span>
+                    <span className="text-lg">
+                      <CommuneLink communeName={site.commune} />
+                    </span>
                   </div>
                 )}
               </div>
@@ -222,7 +225,9 @@ export default function SiteDetail({ site }) {
                   {/* Info de localisation */}
                   <div className="text-center mb-4">
                     <p className="font-medium text-gray-900">{site.title}</p>
-                    <p className="text-gray-600">{site.commune}</p>
+                    <p className="text-gray-600">
+                      <CommuneLink communeName={site.commune} />
+                    </p>
                     <p className="text-xs text-gray-400 mt-2">
                       {site.coordinates.lat.toFixed(4)}, {site.coordinates.lng.toFixed(4)}
                     </p>

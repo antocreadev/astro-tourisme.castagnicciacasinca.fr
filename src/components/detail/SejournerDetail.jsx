@@ -3,6 +3,7 @@ import { ArrowLeft, MapPin, Phone, Mail, ExternalLink, Star, Images } from 'luci
 import { convertMarkdownToHtml } from '../../utils/markdownUtils.js';
 import { getImageUrl } from '../../utils/eventUtils.js';
 import CharteCard from '../ui/CharteCard.jsx';
+import { CommuneLink } from '../../utils/communeUtils.jsx';
 import CharteSidebarCard from '../ui/CharteSidebarCard.jsx';
 
 const SejournerDetail = ({ sejourner }) => {
@@ -155,7 +156,7 @@ const SejournerDetail = ({ sejourner }) => {
                 {sejourner.commune && sejourner.commune.Nom && (
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium border bg-green-100 text-green-800 border-green-200">
                     <MapPin className="w-4 h-4" />
-                    {sejourner.commune.Nom}
+                    <CommuneLink communeName={sejourner.commune.Nom} className="hover:text-green-900" />
                   </div>
                 )}
               </div>
@@ -194,7 +195,11 @@ const SejournerDetail = ({ sejourner }) => {
                       <LeafletComponents.Popup>
                         <div className="text-center">
                           <strong>{sejourner.Titre}</strong>
-                          {sejourner.commune && sejourner.commune.Nom && <div>{sejourner.commune.Nom}</div>}
+                          {sejourner.commune && sejourner.commune.Nom && (
+                            <div>
+                              <CommuneLink communeName={sejourner.commune.Nom} />
+                            </div>
+                          )}
                         </div>
                       </LeafletComponents.Popup>
                     </LeafletComponents.Marker>
@@ -215,7 +220,9 @@ const SejournerDetail = ({ sejourner }) => {
                     <MapPin className="w-5 h-5 text-green-600 mt-1" />
                     <div>
                       <p className="font-semibold text-gray-900">Commune</p>
-                      <p className="text-gray-600">{sejourner.commune.Nom}</p>
+                      <p className="text-gray-600">
+                        <CommuneLink communeName={sejourner.commune.Nom} />
+                      </p>
                     </div>
                   </div>
                 )}
