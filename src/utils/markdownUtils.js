@@ -219,6 +219,94 @@ export const convertSimpleMarkdown = (text) => {
 };
 
 /**
+ * Convertit du texte Markdown avec listes en HTML, en appliquant d'abord le formatage puis les listes
+ * @param {string} text - Le texte Markdown à convertir
+ * @returns {string} - Le HTML généré avec formatage correct
+ */
+export const convertMarkdownWithLists = (text) => {
+  if (!text) return "";
+
+  let html = text;
+
+  // Normaliser les sauts de ligne
+  html = html.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  // D'abord, appliquer les transformations de formatage (gras, italique, etc.)
+  // Convertir le gras et l'italique
+  html = html.replace(
+    /\*\*(.*?)\*\*/g,
+    '<strong class="font-bold">$1</strong>'
+  );
+  html = html.replace(/\*(.*?)\*/g, '<em class="italic">$1</em>');
+  html = html.replace(/_(.*?)_/g, '<em class="italic">$1</em>');
+  html = html.replace(/__(.*?)__/g, '<u class="underline">$1</u>');
+  html = html.replace(
+    /~~(.*?)~~/g,
+    '<del class="line-through text-gray-500">$1</del>'
+  );
+
+  // Convertir les liens
+  html = html.replace(
+    /\[([^\]]+)\]\(([^)]+)\)/g,
+    '<a href="$2" class="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">$1</a>'
+  );
+
+  // Convertir le code inline
+  html = html.replace(
+    /`([^`]+)`/g,
+    '<code class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">$1</code>'
+  );
+
+  // Maintenant traiter les listes et paragraphes
+  const lines = html
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+  let result = [];
+  let inUnorderedList = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Listes non ordonnées (- item)
+    if (line.startsWith("- ")) {
+      if (!inUnorderedList) {
+        result.push('<ul class="list-disc ml-6 mb-4 space-y-2">');
+        inUnorderedList = true;
+      }
+      const content = line.substring(2).trim();
+      result.push(
+        `<li class="text-gray-700 text-lg leading-relaxed">${content}</li>`
+      );
+    }
+    // Lignes normales
+    else {
+      if (inUnorderedList) {
+        result.push("</ul>");
+        inUnorderedList = false;
+      }
+
+      // Ligne de texte normal -> paragraphe
+      if (line && !line.startsWith("<")) {
+        result.push(
+          `<p class="text-gray-700 text-lg leading-relaxed mb-4">${line}</p>`
+        );
+      } else if (line.startsWith("<")) {
+        // Éléments HTML déjà formatés
+        result.push(line);
+      }
+    }
+  }
+
+  // Fermer les listes ouvertes
+  if (inUnorderedList) {
+    result.push("</ul>");
+  }
+
+  return result.join("");
+};
+
+/**
  * Convertit du texte Markdown en HTML pour le composant Hero avec gestion du compteur
  * @param {string} text - Le texte Markdown à convertir
  * @param {boolean} wrapInParagraph - Si true, enveloppe le résultat dans un paragraphe
