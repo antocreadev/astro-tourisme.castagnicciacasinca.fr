@@ -3,7 +3,7 @@ import RandonneeCard from '../ui/RandonneeCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { getInlineStyles } from '../../utils/colorUtils.js';
 
-const RandonneeListing = ({ randonnees = [], colorData }) => {
+const RandonneeListing = ({ randonnees = [], colorData, pageTexts }) => {
   // Utiliser les styles CSS globaux ou inline basés sur colorData
   const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
   
@@ -85,11 +85,10 @@ const RandonneeListing = ({ randonnees = [], colorData }) => {
         {/* En-tête */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Randonnées en Castagniccia Casinca
+            {pageTexts?.titreRandonnee || 'Randonnées en Castagniccia Casinca'}
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Découvrez les plus beaux sentiers de randonnée de la Castagniccia et de la Casinca. 
-            Paysages époustouflants, nature préservée et patrimoine authentique vous attendent.
+            {pageTexts?.descriptionRandonnee || 'Découvrez les plus beaux sentiers de randonnée de la Castagniccia et de la Casinca. Paysages époustouflants, nature préservée et patrimoine authentique vous attendent.'}
           </p>
         </div>
 

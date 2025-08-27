@@ -163,7 +163,7 @@ const ActiviteNautiqueCard = ({ activite, viewMode = 'grid' }) => {
   );
 };
 
-const ActiviteNautiqueListing = ({ activiteNautiques, colorData }) => {
+const ActiviteNautiqueListing = ({ activiteNautiques, colorData, pageTexts }) => {
   // Utiliser les styles CSS globaux ou inline basés sur colorData
   const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
   
@@ -218,10 +218,10 @@ const ActiviteNautiqueListing = ({ activiteNautiques, colorData }) => {
         {/* En-tête */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Activités Nautiques
+            {pageTexts?.titreActiviteNautique || 'Activités Nautiques'}
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Découvrez les nombreuses activités nautiques proposées dans la région de Castagniccia Casinca
+            {pageTexts?.descriptiontActiviteNautique || 'Découvrez les nombreuses activités nautiques proposées dans la région de Castagniccia Casinca'}
           </p>
         </div>
 

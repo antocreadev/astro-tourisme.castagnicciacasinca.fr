@@ -8,6 +8,7 @@ import {
 } from "../../services/apiUtils.js";
 import type { RootSejourner } from "../../types/sejourner";
 import type { RootColorTexte } from "../../types/color-texte";
+import type { RootTextePageSecondaire } from "../../types/texte-page-secondaire";
 
 // Récupération des couleurs dynamiques
 const colorData: RootColorTexte = await fetchColorTexte();
@@ -15,6 +16,11 @@ const colorData: RootColorTexte = await fetchColorTexte();
 const dataSejournerJson: RootSejourner = await fetchAllSejourners({
   populate: "*",
 });
+
+// Récupération du texte de la page
+const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire?filters[page][$eq]=sejourner&populate=*`);
+const pageTextsData: RootTextePageSecondaire = await pageTextsResponse.json();
+const pageTexts = pageTextsData.data?.[0]?.attributes;
 ---
 
 <Layout
@@ -26,6 +32,7 @@ const dataSejournerJson: RootSejourner = await fetchAllSejourners({
     <SejournerListing
       sejourners={dataSejournerJson.data}
       colorData={colorData}
+      pageTexts={pageTexts}
       client:load
     />
   </main>

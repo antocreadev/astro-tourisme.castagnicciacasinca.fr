@@ -5,7 +5,7 @@ import FilterBar from '../ui/FilterBar.jsx';
 import EventCard from '../ui/EventCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 
-export default function AgendaListing({ events = [], typesEvenements = [], initialTypes = [], initialPage = 1, colorData }) {
+export default function AgendaListing({ events = [], typesEvenements = [], initialTypes = [], initialPage = 1, colorData, pageTexts }) {
   const initialEvents = sortEventsByDate(events);
   const [filteredEvents, setFilteredEvents] = useState(initialEvents);
   // selectedTypes contient les NOMS (pas ids)
@@ -128,10 +128,11 @@ export default function AgendaListing({ events = [], typesEvenements = [], initi
           </nav>
           
           <div className="text-center">
-            <h1 className="text-4xl sm:text-6xl font-bold mb-4" style={{ color: colorData?.data?.texteAgenda || '#000000' }}>Agenda</h1>
+            <h1 className="text-4xl sm:text-6xl font-bold mb-4" style={{ color: colorData?.data?.texteAgenda || '#000000' }}>
+              {pageTexts?.titreAgenda || 'Agenda'}
+            </h1>
             <p className="text-lg max-w-4xl mx-auto leading-relaxed" style={{ color: colorData?.data?.texteAgenda || '#374b58' }}>
-              Tout au long de l'année, des multitudes de rendez-vous culturels, musicaux, 
-              cinématographiques, sportifs et gourmands avec des lieux de vie aux multiples facettes
+                            {pageTexts?.descriptionAgenda || 'Découvrez tous les événements organisés dans la région de Castagniccia Casinca'}
             </p>
           </div>
         </div>

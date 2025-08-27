@@ -5,9 +5,15 @@ import { PUBLIC_API_URL } from "astro:env/client";
 import { fetchColorTexte, fetchAllPlages } from "../../services/apiUtils.js";
 import type { RootPlage } from "../../types/plages";
 import type { RootColorTexte } from "../../types/color-texte";
+import type { RootTextePageSecondaire } from "../../types/texte-page-secondaire";
 
 // Récupération des couleurs dynamiques
 const colorData: RootColorTexte = await fetchColorTexte();
+
+// Récupération des textes des pages secondaires
+const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire?filters[page][$eq]=plages&populate=*`);
+const pageTextsData: RootTextePageSecondaire = await pageTextsResponse.json();
+const pageTexts = pageTextsData.data?.[0]?.attributes;
 
 // Fetch plages data with fetchAll to avoid pagination limits
 const plagesData: RootPlage = await fetchAllPlages({
@@ -21,6 +27,11 @@ const plagesData: RootPlage = await fetchAllPlages({
   pageName="liste-plages"
 >
   <main>
-    <PlagesListing plages={plagesData.data} colorData={colorData} client:load />
+    <PlagesListing
+      plages={plagesData.data}
+      colorData={colorData}
+      pageTexts={pageTexts}
+      client:load
+    />
   </main>
 </Layout>

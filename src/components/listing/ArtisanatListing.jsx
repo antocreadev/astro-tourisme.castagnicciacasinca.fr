@@ -3,7 +3,7 @@ import ArtisanatCard from '../ui/ArtisanatCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Search, Filter } from 'lucide-react';
 import { getInlineStyles } from '../../utils/colorUtils.js';
 
-const ArtisanatListing = ({ artisanat = [], colorData }) => {
+const ArtisanatListing = ({ artisanat = [], colorData, pageTexts }) => {
   // Utiliser les styles CSS globaux ou inline basés sur colorData
   const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
 
@@ -98,11 +98,10 @@ const ArtisanatListing = ({ artisanat = [], colorData }) => {
         {/* En-tête */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Artisanat & Produits du Terroir
+            {pageTexts?.titreArtisanat || 'Artisanat & Produits du Terroir'}
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Découvrez les artisans et producteurs locaux de la Castagniccia Casinca. 
-            Produits authentiques, savoir-faire traditionnel et goûts d'exception.
+            {pageTexts?.descriptionArtisanat || 'Découvrez les artisans et producteurs locaux de la Castagniccia Casinca. Produits authentiques, savoir-faire traditionnel et goûts d\'exception.'}
           </p>
         </div>
 

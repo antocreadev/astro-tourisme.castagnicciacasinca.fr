@@ -3,7 +3,7 @@ import PlageCard from '../ui/PlageCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { getInlineStyles } from '../../utils/colorUtils.js';
 
-const PlagesListing = ({ plages = [], colorData }) => {
+const PlagesListing = ({ plages = [], colorData, pageTexts }) => {
   // Utiliser les styles CSS globaux ou inline basés sur colorData
   const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
 
@@ -94,11 +94,10 @@ const PlagesListing = ({ plages = [], colorData }) => {
         {/* En-tête */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Les Plages de la Castagniccia Casinca
+            {pageTexts?.titrePlage || 'Les Plages de la Castagniccia Casinca'}
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Découvrez les plus belles plages de la côte orientale de la Corse : 
-            sable fin, eaux cristallines et paysages préservés vous attendent.
+            {pageTexts?.descriptionPlage || 'Découvrez les plus belles plages de la côte orientale de la Corse : sable fin, eaux cristallines et paysages préservés vous attendent.'}
           </p>
         </div>
 

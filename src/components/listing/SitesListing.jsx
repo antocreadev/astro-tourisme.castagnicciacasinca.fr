@@ -3,7 +3,7 @@ import { sites as fallbackSites } from '../../data/sites.js';
 import SiteCard from '../ui/SiteCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, Search, Mountain } from 'lucide-react';
 
-export default function SitesListing({ sites = fallbackSites }) {
+export default function SitesListing({ sites = fallbackSites, pageTexts }) {
   // Récupérer les paramètres URL pour initialiser les filtres
   const getInitialFilters = () => {
     if (typeof window !== 'undefined') {
@@ -90,10 +90,9 @@ export default function SitesListing({ sites = fallbackSites }) {
           </nav>
           
           <div className="text-center">
-            <h1 className="text-4xl sm:text-6xl font-bold text-black mb-4">Les sites</h1>
+            <h1 className="text-4xl sm:text-6xl font-bold text-black mb-4">{pageTexts?.titreSite || 'Les sites'}</h1>
             <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
-              Découvrez les trésors naturels et patrimoniaux de la Castagniccia-Casinca : 
-              sommets panoramiques, villages authentiques, sources thermales et écosystèmes préservés.
+              {pageTexts?.descriptionSite || 'Découvrez les trésors naturels et patrimoniaux de la Castagniccia-Casinca : sommets panoramiques, villages authentiques, sources thermales et écosystèmes préservés.'}
             </p>
           </div>
         </div>

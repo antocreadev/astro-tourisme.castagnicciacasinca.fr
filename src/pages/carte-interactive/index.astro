@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import InteractiveMapContainer from "../../components/InteractiveMapContainer.astro";
+import { PUBLIC_API_URL } from "astro:env/client";
 import {
   fetchAllEvenements,
   fetchAllSejourners,
@@ -15,6 +16,7 @@ import type { RootPlage } from "../../types/plages";
 import type { RootartisanatEtProduit } from "../../types/artisanat-et-produit";
 import type { RootRandonnee } from "../../types/randonnee";
 import type { RootActiviteNautique } from "../../types/activite-nautique";
+import type { RootTextePageSecondaire } from "../../types/texte-page-secondaire";
 
 // Récupération de toutes les données depuis l'API (sans limite de pagination)
 
@@ -45,13 +47,16 @@ const dataRandonneesJson: RootRandonnee = await fetchAllRandonnees({
 });
 
 // Activités nautiques
-const dataActiviteNautiqueJson: RootActiviteNautique =
-  await fetchAllActivitesNautiques({
-    populate: "*",
-  });
----
+  const dataActiviteNautiqueJson: RootActiviteNautique =
+    await fetchAllActivitesNautiques({
+      populate: "*",
+    });
 
-<Layout
+// Récupération du texte de la page
+const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire?filters[page][$eq]=carte-interactive&populate=*`);
+const pageTextsData: RootTextePageSecondaire = await pageTextsResponse.json();
+const pageTexts = pageTextsData.data?.[0]?.attributes;
+---<Layout
   title="Carte Interactive - Castagniccia-Casinca"
   pageCategory="Carte"
   pageName="carte-interactive"
@@ -71,15 +76,13 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
             class="text-4xl font-bold mb-2"
             style="color: var(--color-carte-text, #111827);"
           >
-            Carte Interactive
+            {pageTexts?.titreCarte || 'Carte Interactive'}
           </h1>
           <p
             class="text-lg max-w-3xl mx-auto"
             style="color: var(--color-carte-text, #4b5563);"
           >
-            Découvrez tous les points d'intérêt de la Castagniccia-Casinca :
-            hébergements, plages, artisanat, événements, activités nautiques et
-            randonnées.
+            {pageTexts?.descriptionCarte || 'Découvrez tous les points d\'intérêt de la Castagniccia-Casinca : hébergements, plages, artisanat, événements, activités nautiques et randonnées.'}
           </p>
         </div>
       </div>

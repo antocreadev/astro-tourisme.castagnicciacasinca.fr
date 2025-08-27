@@ -12,7 +12,7 @@ import SejournerCard from '../ui/SejournerCard.jsx';
 import { Grid, List, ChevronLeft, ChevronRight, MapPin, Star, Search } from 'lucide-react';
 import { getInlineStyles } from '../../utils/colorUtils.js';
 
-export default function SejournerListing({ sejourners = [], colorData }) {
+export default function SejournerListing({ sejourners = [], colorData, pageTexts }) {
   // Utiliser les styles CSS globaux ou inline basés sur colorData
   const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
 
@@ -105,9 +105,9 @@ export default function SejournerListing({ sejourners = [], colorData }) {
           </nav>
           
           <div className="text-center">
-            <h1 className="text-4xl sm:text-6xl font-bold text-black mb-4">Séjourner</h1>
+            <h1 className="text-4xl sm:text-6xl font-bold text-black mb-4">{pageTexts?.titreSejourner || 'Séjourner'}</h1>
             <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
-              Découvrez nos hébergements et services pour profiter pleinement de votre séjour en Castagniccia-Casinca
+              {pageTexts?.descriptionSejourner || 'Découvrez nos hébergements et services pour profiter pleinement de votre séjour en Castagniccia-Casinca'}
             </p>
           </div>
         </div>

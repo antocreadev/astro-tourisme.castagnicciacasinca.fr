@@ -8,9 +8,23 @@ import {
 } from "../../services/apiUtils.js";
 import type { RootActiviteNautique } from "../../types/activite-nautique";
 import type { RootColorTexte } from "../../types/color-texte";
+import type { RootTextePageSecondaire } from "../../types/texte-page-secondaire";
 
 // Récupération des couleurs dynamiques
 const colorData: RootColorTexte = await fetchColorTexte();
+
+// Récupération des textes des pages secondaires
+const textePageSecondaireRes = await fetch(
+  `${PUBLIC_API_URL}/api/texte-page-secondaire`,
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+);
+const textePageSecondaireData: RootTextePageSecondaire =
+  await textePageSecondaireRes.json();
 
 // Récupérer les activités nautiques depuis l'API avec fetchAll
 const activiteNautiqueData: RootActiviteNautique =
@@ -33,6 +47,10 @@ const description =
     <ActiviteNautiqueListing
       activiteNautiques={activiteNautiqueData.data}
       colorData={colorData}
+      pageTexts={{
+        titre: textePageSecondaireData.data.titreActiviteNautique,
+        description: textePageSecondaireData.data.descriptiontActiviteNautique,
+      }}
       client:load
     />
   </main>

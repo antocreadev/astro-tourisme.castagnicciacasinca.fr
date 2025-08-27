@@ -8,6 +8,7 @@ import {
 } from "../../services/apiUtils.js";
 import type { RootRandonnee } from "../../types/randonnee";
 import type { RootColorTexte } from "../../types/color-texte";
+import type { RootTextePageSecondaire } from "../../types/texte-page-secondaire";
 
 // Récupération des couleurs dynamiques
 const colorData: RootColorTexte = await fetchColorTexte();
@@ -16,6 +17,11 @@ const colorData: RootColorTexte = await fetchColorTexte();
 const randonneesData: RootRandonnee = await fetchAllRandonnees({
   populate: "*",
 });
+
+// Récupération du texte de la page
+const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire?filters[page][$eq]=randonnee&populate=*`);
+const pageTextsData: RootTextePageSecondaire = await pageTextsResponse.json();
+const pageTexts = pageTextsData.data?.[0]?.attributes;
 ---
 
 <Layout
@@ -27,6 +33,7 @@ const randonneesData: RootRandonnee = await fetchAllRandonnees({
     <RandonneeListing
       randonnees={randonneesData.data}
       colorData={colorData}
+      pageTexts={pageTexts}
       client:load
     />
   </main>

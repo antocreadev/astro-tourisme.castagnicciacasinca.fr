@@ -1,11 +1,18 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import SitesListing from "../../components/listing/SitesListing.jsx";
+import { PUBLIC_API_URL } from "astro:env/client";
 import { fetchSites, transformSiteData } from "../../services/sitesService.js";
+import type { RootTextePageSecondaire } from "../../types/texte-page-secondaire";
 
 // Récupérer les sites depuis l'API
 const sitesData = await fetchSites();
 const sites = sitesData.data.map(transformSiteData);
+
+// Récupération du texte de la page
+const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire?filters[page][$eq]=sites&populate=*`);
+const pageTextsData: RootTextePageSecondaire = await pageTextsResponse.json();
+const pageTexts = pageTextsData.data?.[0]?.attributes;
 ---
 
 <Layout
@@ -13,5 +20,5 @@ const sites = sitesData.data.map(transformSiteData);
   pageCategory="sites"
   pageName="liste-sites"
 >
-  <SitesListing sites={sites} client:load />
+  <SitesListing sites={sites} pageTexts={pageTexts} client:load />
 </Layout>

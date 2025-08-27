@@ -9,9 +9,23 @@ import {
 import type { RootEvenements } from "../../types/evenements";
 import type { RootTypeEvenements } from "../../types/type-evenements";
 import type { RootColorTexte } from "../../types/color-texte";
+import type { RootTextePageSecondaire } from "../../types/texte-page-secondaire";
 
 // Récupération des couleurs dynamiques
 const colorData: RootColorTexte = await fetchColorTexte();
+
+// Récupération des textes des pages secondaires
+const textePageSecondaireRes = await fetch(
+  `${PUBLIC_API_URL}/api/texte-page-secondaire`,
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+);
+const textePageSecondaireData: RootTextePageSecondaire =
+  await textePageSecondaireRes.json();
 
 const dataEvenementsJson: RootEvenements = await fetchAllEvenements({
   populate: "*",
@@ -75,6 +89,10 @@ const initialPage = Number(Astro.url.searchParams.get("page") || "1");
     initialTypes={initialTypes}
     initialPage={initialPage}
     colorData={colorData}
+    pageTexts={{
+      titre: textePageSecondaireData.data.titreAgenda,
+      description: textePageSecondaireData.data.descriptionAgenda,
+    }}
     client:load
   />
 </Layout>
