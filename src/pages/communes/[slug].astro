@@ -1,0 +1,50 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import CommuneDetail from "../../components/detail/CommuneDetail.jsx";
+import {
+  fetchCommunes,
+  getCommuneBySlug,
+} from "../../services/communesService.js";
+
+export async function getStaticPaths() {
+  try {
+    const communes = await fetchCommunes();
+
+    return communes.map((commune) => ({
+      params: {
+        slug: commune.slug,
+      },
+      props: {
+        commune,
+      },
+    }));
+  } catch (error) {
+    console.error("Erreur lors de la génération des chemins statiques:", error);
+    return [];
+  }
+}
+
+const { commune } = Astro.props;
+const { slug } = Astro.params;
+
+// Si aucune commune n'est trouvée dans les props, essayons de la récupérer par slug
+let communeData = commune;
+if (!communeData && slug) {
+  try {
+    communeData = await getCommuneBySlug(slug);
+  } catch (error) {
+    console.error("Erreur lors de la récupération de la commune:", error);
+  }
+}
+
+const pageTitle = communeData
+  ? `${communeData.Nom} - Commune`
+  : "Commune non trouvée";
+const pageDescription = communeData
+  ? `Découvrez ${communeData.Nom}, commune de la ${communeData.pieve?.Nom || "Castagniccia Casinca"}. ${communeData.Description || "Informations, histoire et services de cette commune corse."}`
+  : "Cette commune n'existe pas ou n'est plus disponible.";
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <CommuneDetail commune={communeData} client:load />
+</Layout>
