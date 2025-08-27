@@ -122,8 +122,6 @@ const CommuneDetail = ({ commune }) => {
             <ol className="flex items-center space-x-2 text-sm text-gray-600">
               <li><a href="/" className="hover:text-blue-600 transition-colors">Accueil</a></li>
               <li className="text-gray-400">›</li>
-              <li><a href="/carte-interactive" className="hover:text-blue-600 transition-colors">Territoires</a></li>
-              <li className="text-gray-400">›</li>
               <li className="text-gray-800 font-medium">{commune.Nom}</li>
             </ol>
           </nav>
