@@ -23,8 +23,8 @@ const parseHeroText = (text) => {
         "Explorez l'une des régions les plus authentiques de Corse...",
     };
 
-  console.log("=== SERVEUR DEBUG ===");
-  console.log("Texte original:", text);
+  // console.log("=== SERVEUR DEBUG ===");
+  // console.log("Texte original:", text);
 
   // Normaliser les sauts de ligne et nettoyer le texte
   const cleanText = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
@@ -33,7 +33,7 @@ const parseHeroText = (text) => {
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
 
-  console.log("Lignes après nettoyage:", lines);
+  // console.log("Lignes après nettoyage:", lines);
 
   // Extraire le titre (première ligne avec # mais pas ##)
   const titleLine = lines.find(
@@ -43,11 +43,11 @@ const parseHeroText = (text) => {
     ? convertHeroMarkdownToHtml(titleLine.replace("# ", "").trim(), false)
     : "Destination Castagniccia Casinca,";
 
-  console.log("Titre extrait:", title);
+  // console.log("Titre extrait:", title);
 
   // Extraire TOUTES les lignes de sous-titre (lignes avec ##)
   const subtitleLines = lines.filter((line) => line.startsWith("## "));
-  console.log("Lignes de sous-titre trouvées:", subtitleLines);
+  // console.log("Lignes de sous-titre trouvées:", subtitleLines);
 
   let subtitle = "";
 
@@ -56,13 +56,13 @@ const parseHeroText = (text) => {
     const processedSubtitles = subtitleLines.map((line) => {
       const cleanLine = line.replace("## ", "").trim();
       const processed = convertHeroMarkdownToHtml(cleanLine, false);
-      console.log("Ligne sous-titre traitée:", cleanLine, "->", processed);
+      // console.log("Ligne sous-titre traitée:", cleanLine, "->", processed);
       return processed;
     });
 
     // Joindre les sous-titres avec un saut de ligne visuel
     subtitle = processedSubtitles.join("<br>");
-    console.log("Sous-titre final:", subtitle);
+    // console.log("Sous-titre final:", subtitle);
   } else {
     subtitle =
       "à la découverte d'une Corse authentique, entre villages perchés, plages et saveurs du terroir";
@@ -73,21 +73,21 @@ const parseHeroText = (text) => {
     return !line.startsWith("#");
   });
 
-  console.log("Lignes de description:", descriptionLines);
+  // console.log("Lignes de description:", descriptionLines);
 
   let description = "";
   if (descriptionLines.length > 0) {
     // Joindre toutes les lignes de description avec des sauts de ligne
     const fullDescription = descriptionLines.join("\n");
     description = convertHeroMarkdownToHtml(fullDescription);
-    console.log("Description finale:", description);
+    // console.log("Description finale:", description);
   } else {
     description =
       "Explorez l'une des régions les plus authentiques de Corse...";
   }
 
   const result = { title, subtitle, description };
-  console.log("=== RÉSULTAT FINAL ===", result);
+  // console.log("=== RÉSULTAT FINAL ===", result);
 
   return result;
 };

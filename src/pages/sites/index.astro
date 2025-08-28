@@ -10,9 +10,9 @@ const sitesData = await fetchSites();
 const sites = sitesData.data.map(transformSiteData);
 
 // Récupération du texte de la page
-const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire?filters[page][$eq]=sites&populate=*`);
+const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire`);
 const pageTextsData: RootTextePageSecondaire = await pageTextsResponse.json();
-const pageTexts = pageTextsData.data?.[0]?.attributes;
+const pageTexts = pageTextsData.data;
 ---
 
 <Layout

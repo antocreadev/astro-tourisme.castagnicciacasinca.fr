@@ -11,9 +11,9 @@ import type { RootTextePageSecondaire } from "../../types/texte-page-secondaire"
 const colorData: RootColorTexte = await fetchColorTexte();
 
 // Récupération des textes des pages secondaires
-const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire?filters[page][$eq]=plages&populate=*`);
+const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire`);
 const pageTextsData: RootTextePageSecondaire = await pageTextsResponse.json();
-const pageTexts = pageTextsData.data?.[0]?.attributes;
+const pageTexts = pageTextsData.data;
 
 // Fetch plages data with fetchAll to avoid pagination limits
 const plagesData: RootPlage = await fetchAllPlages({

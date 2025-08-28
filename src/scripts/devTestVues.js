@@ -7,13 +7,13 @@
 if (import.meta.env.DEV) {
   import("../utils/testVuesService.js")
     .then((module) => {
-      console.log("🧪 Tests de vues chargés en mode développement");
+      // console.log("🧪 Tests de vues chargés en mode développement");
 
       // Optionnel: exécuter automatiquement un test de base
       // module.afficherDebugInfo();
     })
     .catch((err) => {
-      console.log("Erreur lors du chargement des tests:", err);
+      // console.log("Erreur lors du chargement des tests:", err);
     });
 }
 
@@ -27,7 +27,7 @@ if (import.meta.env.DEV) {
 
   history.pushState = function (...args) {
     vueCount++;
-    console.log(
+    // console.log(
       `🔄 Navigation détectée (#${vueCount}):`,
       args[2] || window.location.pathname
     );
@@ -35,7 +35,7 @@ if (import.meta.env.DEV) {
   };
 
   history.replaceState = function (...args) {
-    console.log(
+    // console.log(
       `🔄 Remplacement d'état détecté:`,
       args[2] || window.location.pathname
     );
@@ -44,6 +44,6 @@ if (import.meta.env.DEV) {
 
   // Observer les changements de hash
   window.addEventListener("hashchange", function (e) {
-    console.log(`🔄 Changement de hash détecté:`, e.newURL);
+    // console.log(`🔄 Changement de hash détecté:`, e.newURL);
   });
 }

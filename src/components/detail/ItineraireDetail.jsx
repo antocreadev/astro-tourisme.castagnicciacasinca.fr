@@ -58,7 +58,7 @@ export default function ItineraireDetail({ itineraire }) {
           url: window.location.href,
         });
       } catch (error) {
-        console.log('Erreur lors du partage:', error);
+        // console.log('Erreur lors du partage:', error);
       }
     } else {
       // Fallback: copy URL to clipboard

@@ -37,11 +37,11 @@ import type { RootSitePhare } from "../types/site-phare";
 import type { RootColorTexte } from "../types/color-texte";
 import { generateCSSVariables } from "../utils/colorUtils.js";
 
-console.log("API URL:", PUBLIC_API_URL);
+// console.log("API URL:", PUBLIC_API_URL);
 
 // Récupération des couleurs dynamiques
 const colorData: RootColorTexte = await fetchColorTexte();
-console.log("Color Data:", colorData);
+// console.log("Color Data:", colorData);
 
 // On utilise maintenant des fetchAll pour récupérer 100% des entrées.
 // ---- fetch Global
@@ -53,7 +53,7 @@ const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
 });
 
 const globalData: RootGlobal = await data.json();
-console.log("Global Data:", globalData);
+// console.log("Global Data:", globalData);
 
 // fetch landing-page
 
@@ -65,44 +65,44 @@ const dataLandingPage = await fetch(`${PUBLIC_API_URL}/api/landing-page`, {
 });
 
 const dataLandingPageJson: RootLandingPage = await dataLandingPage.json();
-console.log("dataLandingPageJson Data:", dataLandingPageJson);
+// console.log("dataLandingPageJson Data:", dataLandingPageJson);
 
 // fetch evenements
 
 const dataEvenementsJson: RootEvenements = await fetchAllEvenements({
   populate: "*",
 });
-console.log("dataEvenementsJson Data:", dataEvenementsJson);
+// console.log("dataEvenementsJson Data:", dataEvenementsJson);
 
 // fecth sejourner
 
 const dataSejournerJson: RootSejourner = await fetchAllSejourners({
   populate: "*",
 });
-console.log("dataSejournerJson Data:", dataSejournerJson);
+// console.log("dataSejournerJson Data:", dataSejournerJson);
 
 // fetch plages
 
 const dataPlagesJson: RootPlage = await fetchAllPlages({ populate: "*" });
-console.log("dataPlagesJson Data:", dataPlagesJson);
+// console.log("dataPlagesJson Data:", dataPlagesJson);
 
 // fetch artisanat-et-produit
 const dataArtisanatEtProduitJson: RootartisanatEtProduit =
   await fetchAllArtisanat({ populate: "*" });
-console.log("dataArtisanatEtProduitJson Data:", dataArtisanatEtProduitJson);
+// console.log("dataArtisanatEtProduitJson Data:", dataArtisanatEtProduitJson);
 
 // Randonnees
 
 const dataRandonneesJson: RootRandonnee = await fetchAllRandonnees({
   populate: "*",
 });
-console.log("dataRandonneesJson Data:", dataRandonneesJson);
+// console.log("dataRandonneesJson Data:", dataRandonneesJson);
 
 // activites-nautiques
 
 const dataActiviteNautiqueJson: RootActiviteNautique =
   await fetchAllActivitesNautiques({ populate: "*" });
-console.log("dataActiviteNautiqueJson Data:", dataActiviteNautiqueJson);
+// console.log("dataActiviteNautiqueJson Data:", dataActiviteNautiqueJson);
 
 // fetch sites phares (nouvelle route)
 const sitePharesRes = await fetch(
@@ -131,7 +131,7 @@ if (sitePharesRes.ok) {
     subtitle: s.subtitle || s.commune || "",
   }));
 }
-console.log("Sites Phares Data:", sites);
+// console.log("Sites Phares Data:", sites);
 ---
 
 <Layout

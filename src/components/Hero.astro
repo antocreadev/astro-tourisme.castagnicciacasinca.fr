@@ -20,7 +20,7 @@ const parseHeroText = (text) => {
         "Explorez l'une des régions les plus authentiques de Corse...",
     };
 
-  console.log("Texte original:", text); // Debug
+  // console.log("Texte original:", text); // Debug
 
   // Normaliser les sauts de ligne et nettoyer le texte
   const cleanText = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
@@ -29,7 +29,7 @@ const parseHeroText = (text) => {
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
 
-  console.log("Lignes après nettoyage:", lines); // Debug
+  // console.log("Lignes après nettoyage:", lines); // Debug
 
   // Extraire le titre (première ligne avec # mais pas ##)
   const titleLine = lines.find(
@@ -39,11 +39,11 @@ const parseHeroText = (text) => {
     ? convertHeroMarkdownToHtml(titleLine.replace("# ", "").trim())
     : "Destination Castagniccia Casinca,";
 
-  console.log("Titre extrait:", title); // Debug
+  // console.log("Titre extrait:", title); // Debug
 
   // Extraire TOUTES les lignes de sous-titre (lignes avec ##)
   const subtitleLines = lines.filter((line) => line.startsWith("## "));
-  console.log("Lignes de sous-titre trouvées:", subtitleLines); // Debug
+  // console.log("Lignes de sous-titre trouvées:", subtitleLines); // Debug
 
   let subtitle = "";
 
@@ -52,13 +52,13 @@ const parseHeroText = (text) => {
     const processedSubtitles = subtitleLines.map((line) => {
       const cleanLine = line.replace("## ", "").trim();
       const processed = convertHeroMarkdownToHtml(cleanLine, false); // false = pas de wrapper <p>
-      console.log("Ligne sous-titre traitée:", cleanLine, "->", processed); // Debug
+      // console.log("Ligne sous-titre traitée:", cleanLine, "->", processed); // Debug
       return processed;
     });
 
     // Joindre les sous-titres avec un saut de ligne visuel
     subtitle = processedSubtitles.join("<br>");
-    console.log("Sous-titre final:", subtitle); // Debug
+    // console.log("Sous-titre final:", subtitle); // Debug
   } else {
     subtitle =
       "à la découverte d'une Corse authentique, entre villages perchés, plages et saveurs du terroir";
@@ -69,21 +69,21 @@ const parseHeroText = (text) => {
     return !line.startsWith("#");
   });
 
-  console.log("Lignes de description:", descriptionLines); // Debug
+  // console.log("Lignes de description:", descriptionLines); // Debug
 
   let description = "";
   if (descriptionLines.length > 0) {
     // Joindre toutes les lignes de description avec des sauts de ligne
     const fullDescription = descriptionLines.join("\n");
     description = convertHeroMarkdownToHtml(fullDescription);
-    console.log("Description finale:", description); // Debug
+    // console.log("Description finale:", description); // Debug
   } else {
     description =
       "Explorez l'une des régions les plus authentiques de Corse...";
   }
 
   const result = { title, subtitle, description };
-  console.log("Résultat final du parsing:", result); // Debug
+  // console.log("Résultat final du parsing:", result); // Debug
 
   return result;
 };
@@ -103,10 +103,10 @@ Déjà {conteur} visiteurs ont exploré notre site pour découvrir les trésors 
 Que vous soyez à la recherche de paysages préservés, d'expériences culturelles uniques ou d'adresses incontournables, nous avons tout prévu pour que votre séjour soit inoubliable_.`;
 
 const heroContentTest = parseHeroText(testText);
-console.log("=== COMPARAISON ===");
-console.log("Données Strapi:", data?.texte);
-console.log("Résultat avec données Strapi:", heroContent);
-console.log("Résultat avec test:", heroContentTest);
+// console.log("=== COMPARAISON ===");
+// console.log("Données Strapi:", data?.texte);
+// console.log("Résultat avec données Strapi:", heroContent);
+// console.log("Résultat avec test:", heroContentTest);
 ---
 
 <section
@@ -321,7 +321,7 @@ console.log("Résultat avec test:", heroContentTest);
         targetValue = data.vues_totales || targetValue;
       }
     } catch (error) {
-      console.log(
+      // console.log(
         "Impossible de récupérer les statistiques, utilisation de la valeur par défaut"
       );
     }

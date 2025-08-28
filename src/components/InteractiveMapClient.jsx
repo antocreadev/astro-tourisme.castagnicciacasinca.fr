@@ -457,7 +457,7 @@ const InteractiveMap = ({
   randonneesData
 }) => {
   // Debug: afficher les données reçues
-  console.log('InteractiveMap - Données reçues:', {
+  // console.log('InteractiveMap - Données reçues:', {
     sejourner: sejournerData?.length || 0,
     plages: plagesData?.length || 0,
     artisanat: artisanatData?.length || 0,
@@ -470,7 +470,7 @@ const InteractiveMap = ({
   const hebergementsData = sejournerData?.filter(item => getSejournerType(item) === 'hebergements') || [];
   const restaurantsData = sejournerData?.filter(item => getSejournerType(item) === 'restaurants') || [];
   
-  console.log('Séparation séjourners:', {
+  // console.log('Séparation séjourners:', {
     hebergements: hebergementsData.length,
     restaurants: restaurantsData.length,
     total: sejournerData?.length || 0
@@ -539,7 +539,7 @@ const InteractiveMap = ({
     
     // Debug: afficher les coordonnées trouvées ou non
     if (!coords && item) {
-      console.log(`Aucune coordonnée trouvée pour ${type}:`, item);
+      // console.log(`Aucune coordonnée trouvée pour ${type}:`, item);
     }
     
     return coords;
@@ -668,8 +668,8 @@ const InteractiveMap = ({
   const markerGroups = groupMarkersByPosition(allMarkers);
 
   // Debug: afficher le nombre total de marqueurs
-  console.log(`Total de marqueurs créés: ${allMarkers.length}`);
-  console.log('Marqueurs par catégorie:', {
+  // console.log(`Total de marqueurs créés: ${allMarkers.length}`);
+  // console.log('Marqueurs par catégorie:', {
     hebergements: allMarkers.filter(m => m.type === 'hebergements').length,
     restaurants: allMarkers.filter(m => m.type === 'restaurants').length,
     plages: allMarkers.filter(m => m.type === 'plages').length,

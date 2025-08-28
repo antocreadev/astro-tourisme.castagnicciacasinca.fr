@@ -29,7 +29,7 @@ export async function enregistrerVuePage(nomPage, categorie = "page") {
     }
 
     const result = await response.json();
-    console.log("Vue de page enregistrée:", result);
+    // console.log("Vue de page enregistrée:", result);
     return true;
   } catch (error) {
     console.error("Erreur lors de l'enregistrement de la vue:", error);
@@ -114,7 +114,7 @@ export async function incrementerVuesTotales() {
     }
 
     const result = await response.json();
-    console.log("Vue totale incrémentée:", result);
+    // console.log("Vue totale incrémentée:", result);
     return true;
   } catch (error) {
     console.error("Erreur lors de l'incrémentation des vues totales:", error);
@@ -144,11 +144,11 @@ export async function initialiserTracking(
 
     if (isAccueil || (customPageName && customPageName === "accueil")) {
       // Page d'accueil : incrémenter les vues totales
-      console.log("🏠 Page d'accueil détectée - incrémentation vue totale");
+      // console.log("🏠 Page d'accueil détectée - incrémentation vue totale");
       await incrementerVuesTotales();
     } else {
       // Autres pages : enregistrer la vue de page spécifique
-      console.log("📄 Page interne détectée - enregistrement vue par page");
+      // console.log("📄 Page interne détectée - enregistrement vue par page");
       enregistrerVuePageAuto(customPageName, categorie);
     }
 
@@ -164,7 +164,7 @@ export async function initialiserTracking(
  * @returns {Promise<boolean>} - Succès ou échec
  */
 export async function trackerAccueil() {
-  console.log("🏠 Tracking page d'accueil");
+  // console.log("🏠 Tracking page d'accueil");
   return await incrementerVuesTotales();
 }
 
@@ -174,6 +174,6 @@ export async function trackerAccueil() {
  * @param {string} categorie - Catégorie de la page
  */
 export function trackerPageInterne(nomPage, categorie = "page") {
-  console.log("📄 Tracking page interne:", nomPage, "-", categorie);
+  // console.log("📄 Tracking page interne:", nomPage, "-", categorie);
   enregistrerVuePageAuto(nomPage, categorie);
 }

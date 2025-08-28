@@ -94,10 +94,10 @@ const PlagesListing = ({ plages = [], colorData, pageTexts }) => {
         {/* En-tête */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            {pageTexts?.titrePlage || 'Les Plages de la Castagniccia Casinca'}
+            {pageTexts?.titrePlage || ''}
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            {pageTexts?.descriptionPlage || 'Découvrez les plus belles plages de la côte orientale de la Corse : sable fin, eaux cristallines et paysages préservés vous attendent.'}
+            {pageTexts?.descriptionPlage || ''}
           </p>
         </div>
 

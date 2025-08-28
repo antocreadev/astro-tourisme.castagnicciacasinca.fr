@@ -47,65 +47,67 @@ const dataRandonneesJson: RootRandonnee = await fetchAllRandonnees({
 });
 
 // Activités nautiques
-  const dataActiviteNautiqueJson: RootActiviteNautique =
-    await fetchAllActivitesNautiques({
-      populate: "*",
-    });
+const dataActiviteNautiqueJson: RootActiviteNautique =
+  await fetchAllActivitesNautiques({
+    populate: "*",
+  });
 
 // Récupération du texte de la page
-const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire?filters[page][$eq]=carte-interactive&populate=*`);
+const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire`);
 const pageTextsData: RootTextePageSecondaire = await pageTextsResponse.json();
-const pageTexts = pageTextsData.data?.[0]?.attributes;
----<Layout
-  title="Carte Interactive - Castagniccia-Casinca"
-  pageCategory="Carte"
-  pageName="carte-interactive"
+const pageTexts = pageTextsData.data;
+---
+
+Layout title="Carte Interactive - Castagniccia-Casinca" pageCategory="Carte"
+pageName="carte-interactive" >
+<main
+  class="min-h-screen"
+  style="background-color: var(--color-carte-bg, #f9fafb);"
 >
-  <main
-    class="min-h-screen"
-    style="background-color: var(--color-carte-bg, #f9fafb);"
+  <!-- En-tête de la page -->
+  <div
+    class="shadow-sm border-b"
+    style="background-color: var(--color-carte-bg, #ffffff);"
   >
-    <!-- En-tête de la page -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="text-center">
+        <h1
+          class="text-4xl font-bold mb-2"
+          style="color: var(--color-carte-text, #111827);"
+        >
+          {pageTexts?.titreCarte || "Carte Interactive"}
+        </h1>
+        <p
+          class="text-lg max-w-3xl mx-auto"
+          style="color: var(--color-carte-text, #4b5563);"
+        >
+          {
+            pageTexts?.descriptionCarte ||
+              "Découvrez tous les points d'intérêt de la Castagniccia-Casinca : hébergements, plages, artisanat, événements, activités nautiques et randonnées."
+          }
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carte interactive -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div
-      class="shadow-sm border-b"
+      class="rounded-xl shadow-lg overflow-hidden"
       style="background-color: var(--color-carte-bg, #ffffff);"
     >
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div class="text-center">
-          <h1
-            class="text-4xl font-bold mb-2"
-            style="color: var(--color-carte-text, #111827);"
-          >
-            {pageTexts?.titreCarte || 'Carte Interactive'}
-          </h1>
-          <p
-            class="text-lg max-w-3xl mx-auto"
-            style="color: var(--color-carte-text, #4b5563);"
-          >
-            {pageTexts?.descriptionCarte || 'Découvrez tous les points d\'intérêt de la Castagniccia-Casinca : hébergements, plages, artisanat, événements, activités nautiques et randonnées.'}
-          </p>
-        </div>
-      </div>
+      <InteractiveMapContainer
+        sejournerData={dataSejournerJson.data}
+        plagesData={dataPlagesJson.data}
+        artisanatData={dataArtisanatEtProduitJson.data}
+        evenementsData={dataEvenementsJson.data}
+        activitesNautiquesData={dataActiviteNautiqueJson.data}
+        randonneesData={dataRandonneesJson.data}
+      />
     </div>
+  </div>
+</main>
 
-    <!-- Carte interactive -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div
-        class="rounded-xl shadow-lg overflow-hidden"
-        style="background-color: var(--color-carte-bg, #ffffff);"
-      >
-        <InteractiveMapContainer
-          sejournerData={dataSejournerJson.data}
-          plagesData={dataPlagesJson.data}
-          artisanatData={dataArtisanatEtProduitJson.data}
-          evenementsData={dataEvenementsJson.data}
-          activitesNautiquesData={dataActiviteNautiqueJson.data}
-          randonneesData={dataRandonneesJson.data}
-        />
-      </div>
-    </div>
-  </main>
-</Layout>
 
 <style>
   /* Styles personnalisés pour la carte */

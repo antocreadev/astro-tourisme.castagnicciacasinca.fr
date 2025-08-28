@@ -16,9 +16,9 @@ const artisanatData: RootartisanatEtProduit = await fetchAllArtisanat({
 });
 
 // Récupération du texte de la page
-const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire?filters[page][$eq]=artisanat&populate=*`);
+const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire`);
 const pageTextsData: RootTextePageSecondaire = await pageTextsResponse.json();
-const pageTexts = pageTextsData.data?.[0]?.attributes;
+const pageTexts = pageTextsData.data;
 ---
 
 <Layout

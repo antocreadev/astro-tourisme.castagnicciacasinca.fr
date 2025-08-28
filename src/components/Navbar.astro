@@ -2,7 +2,7 @@
 import { type RootGlobal } from "../types/gloabal";
 
 import { PUBLIC_API_URL } from "astro:env/client";
-console.log("API URL:", PUBLIC_API_URL);
+// console.log("API URL:", PUBLIC_API_URL);
 
 const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
   method: "GET",
@@ -12,7 +12,7 @@ const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
 });
 
 const globalData: RootGlobal = await data.json();
-console.log("Global Data:", globalData);
+// console.log("Global Data:", globalData);
 ---
 
 <nav
