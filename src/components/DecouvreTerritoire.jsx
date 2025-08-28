@@ -11,7 +11,7 @@ export default function DecouvreTerritoire({ data, colorData }) {
   return (
     <div  style={sectionStyle} id="decouvrez-le-territoire">
       
-      <div className="max-w-7xl mx-auto px-4 pb-16">
+      <div className="max-w-7xl mx-auto px-4 pb-16 pt-4">
                       <h1 className="text-4xl font-bold mb-6 leading-tight text-center" style={{ color: colorData?.data?.texteDecouvrezLeTerritoire || '#000000' }}>
                 {data?.Titre || 'Découvrez le territoire le patrimoine et la culture'}
               </h1>
