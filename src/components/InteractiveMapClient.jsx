@@ -458,23 +458,23 @@ const InteractiveMap = ({
 }) => {
   // Debug: afficher les données reçues
   // console.log('InteractiveMap - Données reçues:', {
-    sejourner: sejournerData?.length || 0,
-    plages: plagesData?.length || 0,
-    artisanat: artisanatData?.length || 0,
-    evenements: evenementsData?.length || 0,
-    activitesNautiques: activitesNautiquesData?.length || 0,
-    randonnees: randonneesData?.length || 0
-  });
+  //   sejourner: sejournerData?.length || 0,
+  //   plages: plagesData?.length || 0,
+  //   artisanat: artisanatData?.length || 0,
+  //   evenements: evenementsData?.length || 0,
+  //   activitesNautiques: activitesNautiquesData?.length || 0,
+  //   randonnees: randonneesData?.length || 0
+  // });
   
   // Séparer les séjourners en hébergements et restaurants
   const hebergementsData = sejournerData?.filter(item => getSejournerType(item) === 'hebergements') || [];
   const restaurantsData = sejournerData?.filter(item => getSejournerType(item) === 'restaurants') || [];
   
-  // console.log('Séparation séjourners:', {
-    hebergements: hebergementsData.length,
-    restaurants: restaurantsData.length,
-    total: sejournerData?.length || 0
-  });
+  // // console.log('Séparation séjourners:', {
+  //   hebergements: hebergementsData.length,
+  //   restaurants: restaurantsData.length,
+  //   total: sejournerData?.length || 0
+  // });
   
   const [currentZoom, setCurrentZoom] = useState(11);
   const [visibleCategories, setVisibleCategories] = useState(
@@ -670,14 +670,14 @@ const InteractiveMap = ({
   // Debug: afficher le nombre total de marqueurs
   // console.log(`Total de marqueurs créés: ${allMarkers.length}`);
   // console.log('Marqueurs par catégorie:', {
-    hebergements: allMarkers.filter(m => m.type === 'hebergements').length,
-    restaurants: allMarkers.filter(m => m.type === 'restaurants').length,
-    plages: allMarkers.filter(m => m.type === 'plages').length,
-    artisanat: allMarkers.filter(m => m.type === 'artisanat').length,
-    evenements: allMarkers.filter(m => m.type === 'evenements').length,
-    activitesNautiques: allMarkers.filter(m => m.type === 'activitesNautiques').length,
-    randonnees: allMarkers.filter(m => m.type === 'randonnees').length
-  });
+  //   hebergements: allMarkers.filter(m => m.type === 'hebergements').length,
+  //   restaurants: allMarkers.filter(m => m.type === 'restaurants').length,
+  //   plages: allMarkers.filter(m => m.type === 'plages').length,
+  //   artisanat: allMarkers.filter(m => m.type === 'artisanat').length,
+  //   evenements: allMarkers.filter(m => m.type === 'evenements').length,
+  //   activitesNautiques: allMarkers.filter(m => m.type === 'activitesNautiques').length,
+  //   randonnees: allMarkers.filter(m => m.type === 'randonnees').length
+  // });
 
   return (
     <div className="relative w-full h-[400px] md:h-[600px] rounded-lg overflow-hidden shadow-lg">
