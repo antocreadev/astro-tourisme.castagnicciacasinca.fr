@@ -35,6 +35,7 @@ import type { RootActiviteNautique } from "../types/activite-nautique";
 import type { RootSite } from "../types/site";
 import type { RootSitePhare } from "../types/site-phare";
 import type { RootColorTexte } from "../types/color-texte";
+import type { RootTypeInformationPratique } from "../types/type-information-pratique";
 import { generateCSSVariables } from "../utils/colorUtils.js";
 
 // console.log("API URL:", PUBLIC_API_URL);
@@ -103,6 +104,22 @@ const dataRandonneesJson: RootRandonnee = await fetchAllRandonnees({
 const dataActiviteNautiqueJson: RootActiviteNautique =
   await fetchAllActivitesNautiques({ populate: "*" });
 // console.log("dataActiviteNautiqueJson Data:", dataActiviteNautiqueJson);
+
+// types informations pratiques (pour afficher toutes les catégories dynamiques)
+let typesInformationPratique: RootTypeInformationPratique | null = null;
+try {
+  const typesRes = await fetch(`${PUBLIC_API_URL}/api/type-information-pratiques?populate=Icone,Lien`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  });
+  if (typesRes.ok) {
+    typesInformationPratique = await typesRes.json();
+  } else {
+    console.error('Erreur fetch type-information-pratiques:', typesRes.status, typesRes.statusText);
+  }
+} catch (e) {
+  console.error('Exception fetch type-information-pratiques:', e);
+}
 
 // fetch sites phares (nouvelle route)
 const sitePharesRes = await fetch(
@@ -191,7 +208,10 @@ if (sitePharesRes.ok) {
   />
 
   <InformationsPratiques
-    data={dataLandingPageJson.data.InformationsPratiques}
+    data={{
+      ...dataLandingPageJson.data.InformationsPratiques,
+      type_information_pratiques: typesInformationPratique?.data || []
+    }}
     colorData={colorData}
   />
   <Footer data={globalData} />

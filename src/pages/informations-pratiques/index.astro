@@ -1,0 +1,44 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import InformationsPratiques from "../../components/InformationsPratiques.jsx";
+import type { RootTypeInformationPratique } from "../../types/type-information-pratique";
+import type { RootColorTexte } from "../../types/color-texte";
+import { fetchColorTexte } from "../../services/apiUtils.js";
+import { createSlug } from "../../utils/slugUtils.js";
+
+// Couleurs dynamiques
+const colorData: RootColorTexte = await fetchColorTexte();
+
+// Fetch des types d'informations pratiques
+const res = await fetch(
+  `${import.meta.env.PUBLIC_API_URL}/api/type-information-pratiques?populate=Icone,Lien`,
+  {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  }
+);
+let typeData: RootTypeInformationPratique | null = null;
+if (res.ok) {
+  typeData = await res.json();
+}
+
+const types = typeData?.data || [];
+---
+
+<Layout
+  title="Informations pratiques - Castagniccia Casinca"
+  description="Toutes les informations utiles : urgences, santé, transports, administration et services pratiques en Castagniccia-Casinca."
+  pageCategory="informations-pratiques"
+  pageName="liste-informations-pratiques"
+>
+  <main>
+    <InformationsPratiques
+      data={{
+        Titre: "Informations pratiques",
+        type_information_pratiques: types,
+      }}
+      colorData={colorData}
+      client:load
+    />
+  </main>
+</Layout>

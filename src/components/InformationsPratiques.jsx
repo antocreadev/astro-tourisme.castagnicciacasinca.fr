@@ -5,14 +5,18 @@ export default function InformationsPratiques({ data, colorData }) {
   // Utilise les données dynamiques de l'API ou les données statiques en fallback
   const getInformationItems = () => {
     if (data?.type_information_pratiques && data.type_information_pratiques.length > 0) {
-      return data.type_information_pratiques.map(item => ({
-        title: item.Titre,
-        description: item.Description,
-        link: `/informations-pratiques/${createSlug(item.Titre)}`,
-        linkLabel: "Voir les informations",
-        linkColor: item.Lien?.TextColor,
-        iconUrl: item.Icone?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${item.Icone.url}` : null
-      }));
+      return data.type_information_pratiques.map(item => {
+        const isImage = item.Icone?.mime && item.Icone.mime.startsWith('image/');
+        const iconUrl = isImage && item.Icone?.url ? `${import.meta.env.PUBLIC_API_URL || ''}${item.Icone.url}` : null;
+        return {
+          title: item.Titre,
+          description: item.Description || '',
+          link: item.Lien?.Lien || null,
+          linkLabel: item.Lien?.Label || '',
+          linkColor: item.Lien?.TextColor || null,
+          iconUrl
+        };
+      });
     }
 
     // Fallback vers les données statiques si pas de données API
@@ -103,17 +107,21 @@ export default function InformationsPratiques({ data, colorData }) {
                 <h2 className="text-xl sm:text-2xl font-bold text-black">{info.title}</h2>
 
                 {/* Description */}
-                <p className="text-gray-600 text-base sm:text-lg leading-relaxed">{info.description}</p>
+                {info.description && (
+                  <p className="text-gray-600 text-base sm:text-lg leading-relaxed">{info.description}</p>
+                )}
 
                 {/* Link */}
-                <a 
-                  href={info.link}
-                  className="inline-flex items-center font-medium hover:opacity-80 transition-colors group mt-4"
-                  style={{ color: info.linkColor || '#000000' }}
-                >
-                  <span className="mr-2">{info.linkLabel}</span>
-                  <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
-                </a>
+                {info.link && info.linkLabel && (
+                  <a 
+                    href={info.link}
+                    className="inline-flex items-center font-medium hover:opacity-80 transition-colors group mt-4"
+                    style={info.linkColor ? { color: info.linkColor } : undefined}
+                  >
+                    <span className="mr-2">{info.linkLabel}</span>
+                    <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
+                  </a>
+                )}
               </div>
             )
           })}
