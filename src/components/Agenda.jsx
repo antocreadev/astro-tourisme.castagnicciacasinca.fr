@@ -1,4 +1,4 @@
-import { sortEventsByDate, getImageUrl } from '../utils/eventUtils.js';
+import { sortEventsByDate, getImageUrl, getFirstImage, getBestFormat } from '../utils/eventUtils.js';
 import { convertSimpleMarkdown } from '../utils/markdownUtils.js';
 
 export default function Agenda({ data, events, colorData }) {
@@ -39,7 +39,8 @@ export default function Agenda({ data, events, colorData }) {
         <div className="flex flex-col items-center justify-center md:items-start md:justify-start md:flex-row gap-8 overflow-x-auto pb-4 md:p-2">
           {displayEvents.map((event, index) => {
             const { day, month } = formatEventDate(event.Date);
-            const imageUrl = getImageUrl(event.image);
+            const firstImage = getBestFormat(getFirstImage(event));
+            const imageUrl = getImageUrl(firstImage);
             return (
               <div key={event.id || index} className="flex-shrink-0 w-full md:w-[25rem] px-4">
                 <a href={`/agenda/${event.documentId}`} className={`block group h-full ${event.isPast ? 'opacity-60' : ''}`}>

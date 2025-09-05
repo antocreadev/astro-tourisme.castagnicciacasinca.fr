@@ -1,9 +1,83 @@
 import React, { useEffect, useState } from "react";
 import { ArrowLeft, Calendar, MapPin, Phone, ExternalLink } from 'lucide-react';
 import { convertMarkdownToHtml } from '../../utils/markdownUtils.js';
-import { formatEventDate, getImageUrl, isEventPast } from '../../utils/eventUtils.js';
+import { formatEventDate, getImageUrl, isEventPast, getFirstImage, getBestFormat } from '../../utils/eventUtils.js';
 import { getInlineStyles } from '../../utils/colorUtils.js';
 import { CommuneLink } from '../../utils/communeUtils.jsx';
+
+// Galerie d'images pour un événement (multi-images)
+const EventGallery = ({ event, isPast }) => {
+  const images = event.images || (event.image ? [event.image] : []);
+  const [currentIndex, setCurrentIndex] = React.useState(0);
+
+  if (images.length === 0) return null;
+
+  const current = getBestFormat(images[currentIndex]) || images[currentIndex];
+  const goPrev = () => setCurrentIndex(idx => (idx === 0 ? images.length - 1 : idx - 1));
+  const goNext = () => setCurrentIndex(idx => (idx === images.length - 1 ? 0 : idx + 1));
+
+  return (
+    <div className="relative mb-4">
+      <div className="aspect-video rounded-xl overflow-hidden bg-gray-200">
+        <img
+          src={getImageUrl(current)}
+          alt={current?.alternativeText || event.Nom}
+          className={`w-full h-full object-cover ${isPast ? 'opacity-75 grayscale' : ''}`}
+          loading="lazy"
+        />
+      </div>
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={goPrev}
+            className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-gray-800 p-2 rounded-full shadow"
+            aria-label="Image précédente"
+          >
+            ‹
+          </button>
+          <button
+            onClick={goNext}
+            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-gray-800 p-2 rounded-full shadow"
+            aria-label="Image suivante"
+          >
+            ›
+          </button>
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1">
+            {images.map((img, i) => (
+              <button
+                key={img.id || i}
+                onClick={() => setCurrentIndex(i)}
+                className={`w-2.5 h-2.5 rounded-full ${i === currentIndex ? 'bg-white' : 'bg-white/50'} border border-white/70`}
+                aria-label={`Aller à l'image ${i + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+      {images.length > 1 && (
+        <div className="grid grid-cols-5 md:grid-cols-8 gap-2 mt-4">
+          {images.map((img, i) => {
+            const thumb = getBestFormat(img.formats?.thumbnail ? img : img);
+            return (
+              <button
+                key={img.id || i}
+                onClick={() => setCurrentIndex(i)}
+                className={`relative rounded overflow-hidden border ${i === currentIndex ? 'ring-2 ring-blue-500 border-blue-500' : 'border-transparent'}`}
+              >
+                <img
+                  src={getImageUrl(img.formats?.thumbnail || img.formats?.small || img)}
+                  alt={img.alternativeText || event.Nom}
+                  className="w-full h-14 object-cover"
+                  loading="lazy"
+                />
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const EventDetail = ({ event, colorData }) => {
   const [isClient, setIsClient] = useState(false);
@@ -114,18 +188,8 @@ const EventDetail = ({ event, colorData }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Image */}
-            {event.image && (
-              <div className="relative">
-                <div className="aspect-video rounded-xl overflow-hidden bg-gray-200">
-                  <img
-                    src={getImageUrl(event.image)}
-                    alt={event.Nom}
-                    className={`w-full h-full object-cover ${isPast ? 'opacity-75 grayscale' : ''}`}
-                  />
-                </div>
-              </div>
-            )}
+            {/* Galerie d'images */}
+            <EventGallery event={event} isPast={isPast} />
 
             {/* Event Info */}
             <div>

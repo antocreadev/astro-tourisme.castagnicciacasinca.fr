@@ -45,6 +45,11 @@ const pageDescription = communeData
   : "Cette commune n'existe pas ou n'est plus disponible.";
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  pageCategory="commune"
+  pageName={communeData?.Nom || (slug as string)}
+>
   <CommuneDetail commune={communeData} client:load />
 </Layout>

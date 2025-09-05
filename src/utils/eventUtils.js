@@ -62,6 +62,34 @@ export const getImageUrl = (image) => {
 };
 
 /**
+ * Retourne la première image disponible d'un événement (nouvelle structure multi-images)
+ * Fallback sur l'ancienne propriété event.image si présente
+ * @param {Object} event
+ * @returns {Object|null}
+ */
+export const getFirstImage = (event) => {
+  if (!event) return null;
+  return (event.images && event.images[0]) || event.image || null;
+};
+
+/**
+ * Sélectionne le meilleur format d'image disponible (large > medium > small > thumbnail > image brute)
+ * @param {Object} image
+ * @returns {Object|null}
+ */
+export const getBestFormat = (image) => {
+  if (!image) return null;
+  const formats = image.formats || {};
+  return (
+    formats.large ||
+    formats.medium ||
+    formats.small ||
+    formats.thumbnail ||
+    image
+  );
+};
+
+/**
  * Vérifie si un événement est passé
  * @param {string} eventDate - Date de l'événement
  * @returns {boolean} - True si l'événement est passé

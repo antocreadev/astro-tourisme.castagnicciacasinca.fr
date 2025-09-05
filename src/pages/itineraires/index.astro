@@ -3,6 +3,11 @@ import Layout from "../../layouts/Layout.astro";
 import ItinerairesListing from "../../components/listing/ItinerairesListing.jsx";
 ---
 
-<Layout title="Itinéraires - Castagniccia Casinca">
+<Layout
+  title="Itinéraires - Castagniccia Casinca"
+  description="Découvrez les itinéraires touristiques de la Castagniccia-Casinca. Circuits et parcours pour explorer notre territoire."
+  pageCategory="itineraires"
+  pageName="liste-itineraires"
+>
   <ItinerairesListing client:load />
 </Layout>

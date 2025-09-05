@@ -13,6 +13,12 @@ export async function getStaticPaths() {
 const { itineraire } = Astro.props;
 ---
 
-<Layout title={`${itineraire.title} - Itinéraires`}>
+<Layout
+  title={`${itineraire.title} - Itinéraires`}
+  description={itineraire.description ||
+    `Découvrez l'itinéraire ${itineraire.title} en Castagniccia-Casinca.`}
+  pageCategory="itineraire"
+  pageName={itineraire.title}
+>
   <ItineraireDetail itineraire={itineraire} client:load />
 </Layout>
