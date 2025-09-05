@@ -227,7 +227,7 @@ export default function AgendaListing({ events = [], typesEvenements = [], initi
               <select
                 value={sortBy}
                 onChange={(e) => handleSortChange(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
               >
                 <option value="date">Date</option>
                 <option value="title">Titre</option>

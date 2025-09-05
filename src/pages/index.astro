@@ -108,17 +108,24 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
 // types informations pratiques (pour afficher toutes les catégories dynamiques)
 let typesInformationPratique: RootTypeInformationPratique | null = null;
 try {
-  const typesRes = await fetch(`${PUBLIC_API_URL}/api/type-information-pratiques?populate=Icone,Lien`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
-  });
+  const typesRes = await fetch(
+    `${PUBLIC_API_URL}/api/type-information-pratiques?populate=Icone,Lien`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
   if (typesRes.ok) {
     typesInformationPratique = await typesRes.json();
   } else {
-    console.error('Erreur fetch type-information-pratiques:', typesRes.status, typesRes.statusText);
+    console.error(
+      "Erreur fetch type-information-pratiques:",
+      typesRes.status,
+      typesRes.statusText
+    );
   }
 } catch (e) {
-  console.error('Exception fetch type-information-pratiques:', e);
+  console.error("Exception fetch type-information-pratiques:", e);
 }
 
 // fetch sites phares (nouvelle route)
@@ -149,6 +156,7 @@ if (sitePharesRes.ok) {
   }));
 }
 // console.log("Sites Phares Data:", sites);
+
 ---
 
 <Layout
@@ -210,7 +218,7 @@ if (sitePharesRes.ok) {
   <InformationsPratiques
     data={{
       ...dataLandingPageJson.data.InformationsPratiques,
-      type_information_pratiques: typesInformationPratique?.data || []
+      type_information_pratiques: typesInformationPratique?.data || [],
     }}
     colorData={colorData}
   />

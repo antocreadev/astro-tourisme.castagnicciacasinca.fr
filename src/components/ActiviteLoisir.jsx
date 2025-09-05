@@ -41,7 +41,7 @@ export default function ActivitesLoisirs({ data, randonnees = [], activitesNauti
         icon: Sparkles,
         title: "Festivals, Marchés et foires",
         description: "Participez aux événements festifs et découvrez l'artisanat local lors de nos marchés et foires.",
-        link: "/agenda",
+        link: "/agenda?types1=Marchés&types2=Festivals&types3=Foires",
         linkLabel: "En savoir plus"
       },
       {

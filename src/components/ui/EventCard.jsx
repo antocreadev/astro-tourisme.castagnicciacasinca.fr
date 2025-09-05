@@ -19,16 +19,35 @@ export default function EventCard({ event, href, onClick, isPast }) {
     return { day, month };
   };
 
+  // Récupérer la meilleure image disponible
+  const extractImage = (evt) => {
+    if (!evt) return null;
+    // Priorité explicite
+    if (evt.image) return evt.image;
+    // Tableaux possibles (différentes nomenclatures)
+    if (Array.isArray(evt.images) && evt.images.length > 0) return evt.images[0];
+    if (Array.isArray(evt.Images) && evt.Images.length > 0) return evt.Images[0];
+    if (Array.isArray(evt.medias) && evt.medias.length > 0) return evt.medias[0];
+    if (Array.isArray(evt.media) && evt.media.length > 0) return evt.media[0];
+    // Fallback si Strapi v4 formate en { data: [ { attributes: { url } } ] }
+    if (evt.images?.data?.length > 0) return evt.images.data[0].attributes || evt.images.data[0];
+    return null;
+  };
+
   // Fonction pour obtenir l'URL de l'image
   const getImageUrl = (image) => {
     if (!image) return null;
+    const rawUrl = image.url || image.src || image.path;
+    if (!rawUrl) return null;
+    // Si c'est déjà une URL absolue
+    if (/^https?:\/\//i.test(rawUrl)) return rawUrl;
     const baseUrl = import.meta.env.PUBLIC_STRAPI_URL || import.meta.env.PUBLIC_API_URL || 'https://cms.castagnicciacasinca.fr';
-    return `${baseUrl}${image.url}`;
+    return `${baseUrl}${rawUrl}`;
   };
 
   const { day, month } = formatEventDate(event.Date);
   const categoryColor = 'bg-blue-100 text-blue-800'; // Couleur par défaut
-  const imageUrl = getImageUrl(event.image);
+  const imageUrl = getImageUrl(extractImage(event));
 
   const handleClick = (e) => {
     if (onClick) {
