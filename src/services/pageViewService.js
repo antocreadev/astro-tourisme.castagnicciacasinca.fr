@@ -6,6 +6,55 @@
 const API_BASE_URL = "https://data.castagnicciacasinca.fr/api";
 
 /**
+ * Détermine le nom de page à partir d'un nom custom ou de l'URL courante
+ * Ne renvoie jamais "page-inconnue" : si rien n'est trouvable on annule l'envoi.
+ * Règles :
+ *  - customPageName prioritaire s'il est non vide
+ *  - sinon pathname :
+ *      /            => "accueil"
+ *      /guides      => "guides"
+ *      /communes/x  => "x" (dernier segment non vide)
+ *  - Nettoyage : decodeURI, suppression extension .html, trimming
+ *  - Remplacement des tirets par espaces pour un tracking plus lisible (facultatif)
+ * @param {string|null} customPageName
+ * @returns {string|null} nom de page ou null si aucun nom fiable
+ */
+function determinerNomPage(customPageName) {
+  if (customPageName && typeof customPageName === "string") {
+    const trimmed = customPageName.trim();
+    if (trimmed.length > 0) return trimmed;
+  }
+
+  if (typeof window === "undefined") return null; // sécurité SSR
+
+  try {
+    let path = window.location.pathname || "/";
+    if (!path.startsWith("/")) path = "/" + path;
+    if (path === "/" || path === "/index" || path === "/index.html") {
+      return "accueil";
+    }
+    // Découper et prendre le dernier segment non vide
+    const segments = path.split("/").filter(Boolean);
+    if (segments.length === 0) return "accueil";
+    let last = segments[segments.length - 1];
+    // Retirer extension .html ou .htm
+    last = last.replace(/\.(html?|astro)$/i, "");
+    // Décoder caractères %XX
+    try {
+      last = decodeURIComponent(last);
+    } catch (e) {
+      /* ignore */
+    }
+    // Remplacer tirets/underscores par espaces pour lisibilité
+    last = last.replace(/[\-_]+/g, " ").trim();
+    if (last.length === 0) return null;
+    return last;
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
  * Enregistre une vue de page
  * @param {string} nomPage - Le nom de la page visitée
  * @param {string} categorie - La catégorie de la page (optionnel)
@@ -60,11 +109,22 @@ export function enregistrerVuePageAuto(
  * Fonction interne pour effectuer l'enregistrement
  */
 function doEnregistrement(customPageName, categorie) {
-  // Utiliser le nom personnalisé ou un nom générique
-  const nomPage = customPageName || "page-inconnue";
-
-  // Enregistrer la vue
-  enregistrerVuePage(nomPage, categorie);
+  // Déterminer un nom de page fiable (jamais "page-inconnue")
+  const nomPage = determinerNomPage(customPageName);
+  let finalName = nomPage;
+  if (!finalName) {
+    // Fallback ultime : URL complète (sans protocole) pour avoir toujours une trace
+    try {
+      if (typeof window !== "undefined") {
+        const { pathname, search, hash, host } = window.location;
+        finalName = `${host}${pathname}${search}${hash}`.replace(/\s+/g, "");
+      }
+    } catch (e) {
+      // Dernier filet de sécurité
+      finalName = "fallback-technique";
+    }
+  }
+  enregistrerVuePage(finalName, categorie);
 }
 
 /**
