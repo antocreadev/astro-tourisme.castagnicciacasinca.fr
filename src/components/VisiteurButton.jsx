@@ -63,7 +63,7 @@ const VisiteurButton = () => {
 
       <VisiteurModal isOpen={isModalOpen} onClose={handleCloseModal} />
 
-      <style jsx>{`
+  <style>{`
         .visiteur-button {
           position: fixed;
           bottom: 30px;
@@ -134,7 +134,7 @@ const VisiteurButton = () => {
             justify-content: center;
           }
         }
-      `}</style>
+  `}</style>
     </>
   );
 };

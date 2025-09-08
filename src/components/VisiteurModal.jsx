@@ -223,7 +223,7 @@ const VisiteurModal = ({ isOpen, onClose }) => {
         )}
       </div>
 
-      <style jsx>{`
+  <style>{`
         .modal-overlay {
           position: fixed;
           top: 0;
@@ -526,7 +526,7 @@ const VisiteurModal = ({ isOpen, onClose }) => {
             width: 100%;
           }
         }
-      `}</style>
+  `}</style>
     </div>
   );
 };
