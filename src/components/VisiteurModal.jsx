@@ -8,6 +8,9 @@ const VisiteurModal = ({ isOpen, onClose }) => {
     tranche_age: '',
     type_personna: ''
   });
+  // Multi-sélection pour "type_personna" (intérêts)
+  const MULTI_FIELDS = new Set(['type_personna']);
+  const [multiSelections, setMultiSelections] = useState({ type_personna: [] });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -49,17 +52,31 @@ const VisiteurModal = ({ isOpen, onClose }) => {
   }, []);
 
   const handleOptionSelect = (value) => {
+    const field = currentStepData.field;
+    if (MULTI_FIELDS.has(field)) {
+      // Toggle dans la liste multi
+      setMultiSelections(prev => {
+        const prevList = prev[field] || [];
+        const exists = prevList.includes(value);
+        const nextList = exists ? prevList.filter(v => v !== value) : [...prevList, value];
+        // Mettre à jour formData avec la chaîne joinée par virgules
+        setFormData(fd => ({ ...fd, [field]: nextList.join(',') }));
+        return { ...prev, [field]: nextList };
+      });
+      // Ne pas avancer automatiquement, l'utilisateur peut choisir plusieurs options
+      return;
+    }
+
+    // Cas sélection simple: setter et avancer
     setFormData(prev => ({
       ...prev,
-      [currentStepData.field]: value
+      [field]: value
     }));
 
-    // Passer à l'étape suivante après un petit délai
     setTimeout(() => {
       if (currentStep < steps.length) {
         setCurrentStep(prev => prev + 1);
       }
-      // Ne pas appeler automatiquement handleSubmit ici
     }, 300);
   };
 
@@ -152,17 +169,27 @@ const VisiteurModal = ({ isOpen, onClose }) => {
 
             <div className="question-content">
               <h3>{currentStepData.title}</h3>
+              {MULTI_FIELDS.has(currentStepData.field) && (
+                <p className="text-sm text-gray-500 mb-2">Vous pouvez sélectionner plusieurs options.</p>
+              )}
               
               <div className="options-grid">
-                {currentStepData.options.map((option, index) => (
-                  <button
-                    key={option}
-                    className={`option-button ${formData[currentStepData.field] === option ? 'selected' : ''}`}
-                    onClick={() => handleOptionSelect(option)}
-                  >
-                    <span className="option-text">{option}</span>
-                  </button>
-                ))}
+                {currentStepData.options.map((option) => {
+                  const field = currentStepData.field;
+                  const isMulti = MULTI_FIELDS.has(field);
+                  const isSelected = isMulti
+                    ? (multiSelections[field] || []).includes(option)
+                    : formData[field] === option;
+                  return (
+                    <button
+                      key={option}
+                      className={`option-button ${isSelected ? 'selected' : ''}`}
+                      onClick={() => handleOptionSelect(option)}
+                    >
+                      <span className="option-text">{option}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -173,7 +200,7 @@ const VisiteurModal = ({ isOpen, onClose }) => {
                 </button>
               )}
               
-              {currentStep < steps.length && formData[currentStepData.field] && (
+        {currentStep < steps.length && !MULTI_FIELDS.has(currentStepData.field) && formData[currentStepData.field] && (
                 <button 
                   className="nav-button next-button"
                   onClick={() => setCurrentStep(prev => prev + 1)}
@@ -182,10 +209,11 @@ const VisiteurModal = ({ isOpen, onClose }) => {
                 </button>
               )}
 
-              {currentStep === steps.length && formData[currentStepData.field] && (
+        {currentStep === steps.length && (
                 <button 
                   className="nav-button submit-button"
-                  onClick={handleSubmit}
+          onClick={handleSubmit}
+          disabled={MULTI_FIELDS.has(currentStepData.field) ? (multiSelections[currentStepData.field]?.length === 0) : !formData[currentStepData.field]}
                 >
                   Terminer
                 </button>
