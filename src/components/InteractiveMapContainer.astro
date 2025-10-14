@@ -7,6 +7,7 @@ export interface Props {
   evenementsData: any[];
   activitesNautiquesData: any[];
   randonneesData: any[];
+  sitesData: any[];
 }
 
 const {
@@ -16,6 +17,7 @@ const {
   evenementsData,
   activitesNautiquesData,
   randonneesData,
+  sitesData,
 } = Astro.props;
 ---
 
@@ -41,6 +43,7 @@ const {
     evenementsData,
     activitesNautiquesData,
     randonneesData,
+    sitesData,
   }}
 >
   // Script côté client pour charger la carte
@@ -67,7 +70,8 @@ const {
           evenementsData,
           activitesNautiquesData,
           randonneesData,
-        })
+          sitesData,
+        }),
       );
     } catch (error) {
       console.error("Erreur lors du chargement de la carte:", error);

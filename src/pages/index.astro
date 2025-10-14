@@ -24,6 +24,7 @@ import {
   fetchAllArtisanat,
   fetchAllRandonnees,
   fetchAllActivitesNautiques,
+  fetchAllSites,
   fetchColorTexte,
 } from "../services/apiUtils.js";
 import type { RootEvenements } from "../types/evenements";
@@ -105,6 +106,7 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
   await fetchAllActivitesNautiques({ populate: "*" });
 // console.log("dataActiviteNautiqueJson Data:", dataActiviteNautiqueJson);
 
+const dataSites: RootSite = await fetchAllSites({ populate: "*" });
 // types informations pratiques (pour afficher toutes les catégories dynamiques)
 let typesInformationPratique: RootTypeInformationPratique | null = null;
 try {
@@ -113,7 +115,7 @@ try {
     {
       method: "GET",
       headers: { "Content-Type": "application/json" },
-    }
+    },
   );
   if (typesRes.ok) {
     typesInformationPratique = await typesRes.json();
@@ -121,7 +123,7 @@ try {
     console.error(
       "Erreur fetch type-information-pratiques:",
       typesRes.status,
-      typesRes.statusText
+      typesRes.statusText,
     );
   }
 } catch (e) {
@@ -130,7 +132,7 @@ try {
 
 // fetch sites phares (nouvelle route)
 const sitePharesRes = await fetch(
-  `${PUBLIC_API_URL}/api/site-phares?populate=*`
+  `${PUBLIC_API_URL}/api/site-phares?populate=*`,
 );
 let sites = [];
 if (sitePharesRes.ok) {
@@ -156,7 +158,6 @@ if (sitePharesRes.ok) {
   }));
 }
 // console.log("Sites Phares Data:", sites);
-
 ---
 
 <Layout

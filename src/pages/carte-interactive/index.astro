@@ -9,6 +9,7 @@ import {
   fetchAllArtisanat,
   fetchAllRandonnees,
   fetchAllActivitesNautiques,
+  fetchAllSites,
 } from "../../services/apiUtils.js";
 import type { RootEvenements } from "../../types/evenements";
 import type { RootSejourner } from "../../types/sejourner";
@@ -17,6 +18,7 @@ import type { RootartisanatEtProduit } from "../../types/artisanat-et-produit";
 import type { RootRandonnee } from "../../types/randonnee";
 import type { RootActiviteNautique } from "../../types/activite-nautique";
 import type { RootTextePageSecondaire } from "../../types/texte-page-secondaire";
+import type { RootSite } from "../../types/site";
 
 // Récupération de toutes les données depuis l'API (sans limite de pagination)
 
@@ -52,8 +54,14 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
     populate: "*",
   });
 
+const dataSitesJson: RootSite = await fetchAllSites({
+  populate: "*",
+});
+
 // Récupération du texte de la page
-const pageTextsResponse = await fetch(`${PUBLIC_API_URL}/api/texte-page-secondaire`);
+const pageTextsResponse = await fetch(
+  `${PUBLIC_API_URL}/api/texte-page-secondaire`,
+);
 const pageTextsData: RootTextePageSecondaire = await pageTextsResponse.json();
 const pageTexts = pageTextsData.data;
 ---
@@ -103,11 +111,11 @@ pageName="carte-interactive" >
         evenementsData={dataEvenementsJson.data}
         activitesNautiquesData={dataActiviteNautiqueJson.data}
         randonneesData={dataRandonneesJson.data}
+        sitesData={dataSitesJson.data}
       />
     </div>
   </div>
 </main>
-
 
 <style>
   /* Styles personnalisés pour la carte */

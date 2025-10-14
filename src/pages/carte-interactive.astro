@@ -8,6 +8,7 @@ import {
   fetchAllArtisanat,
   fetchAllRandonnees,
   fetchAllActivitesNautiques,
+  fetchAllSites,
   fetchColorTexte,
 } from "../services/apiUtils.js";
 import type { RootEvenements } from "../types/evenements";
@@ -17,6 +18,7 @@ import type { RootartisanatEtProduit } from "../types/artisanat-et-produit";
 import type { RootRandonnee } from "../types/randonnee";
 import type { RootActiviteNautique } from "../types/activite-nautique";
 import type { RootColorTexte } from "../types/color-texte";
+import type { RootSite } from "../types/site";
 
 // Récupération des couleurs dynamiques
 const colorData: RootColorTexte = await fetchColorTexte();
@@ -54,6 +56,11 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
   await fetchAllActivitesNautiques({
     populate: "*",
   });
+
+// Sites
+const dataSitesJson: RootSite = await fetchAllSites({
+  populate: "*",
+});
 ---
 
 <Layout
@@ -71,7 +78,7 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
       evenementsData={dataEvenementsJson.data}
       activitesNautiquesData={dataActiviteNautiqueJson.data}
       randonneesData={dataRandonneesJson.data}
-      colorData={colorData}
+      sitesData={dataSitesJson.data}
     />
   </main>
 

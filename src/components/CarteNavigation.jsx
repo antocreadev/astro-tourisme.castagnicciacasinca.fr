@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { Map, FileImage } from 'lucide-react';
 import CarteStatique from './CarteStatique.jsx';
 
-export default function CarteNavigation({ 
-  sejournerData, 
-  plagesData, 
-  artisanatData, 
-  evenementsData, 
-  activitesNautiquesData, 
-  randonneesData 
+export default function CarteNavigation({
+  sejournerData,
+  plagesData,
+  artisanatData,
+  evenementsData,
+  activitesNautiquesData,
+  randonneesData,
+  sitesData,
 }) {
   const [activeView, setActiveView] = useState('interactive');
   const [isMounted, setIsMounted] = useState(false);
@@ -46,7 +47,8 @@ export default function CarteNavigation({
         artisanatData: JSON.parse(wrapper.dataset.artisanat || '[]'),
         evenementsData: JSON.parse(wrapper.dataset.evenements || '[]'),
         activitesNautiquesData: JSON.parse(wrapper.dataset.activitesNautiques || '[]'),
-        randonneesData: JSON.parse(wrapper.dataset.randonnees || '[]')
+        randonneesData: JSON.parse(wrapper.dataset.randonnees || '[]'),
+        sitesData: JSON.parse(wrapper.dataset.sites || '[]'),
       };
 
       // Créer ou réutiliser le root React
@@ -79,7 +81,7 @@ export default function CarteNavigation({
               Cartes du territoire
             </h1>
             <p className="text-lg text-gray-600 max-w-4xl mx-auto">
-              Découvrez le territoire de la Castagniccia-Casinca à travers notre carte statique téléchargeable 
+              Découvrez le territoire de la Castagniccia-Casinca à travers notre carte statique téléchargeable
               et notre carte interactive avec tous les points d'intérêt.
             </p>
           </div>
@@ -88,23 +90,21 @@ export default function CarteNavigation({
           <div className="flex justify-center gap-4">
             <button
               onClick={() => setActiveView('static')}
-              className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-                activeView === 'static'
-                  ? 'bg-black text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-              }`}
+              className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${activeView === 'static'
+                ? 'bg-black text-white shadow-lg'
+                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                }`}
             >
               <FileImage size={20} />
               Carte statique
             </button>
-            
+
             <button
               onClick={() => setActiveView('interactive')}
-              className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-                activeView === 'interactive'
-                  ? 'bg-black text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-              }`}
+              className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${activeView === 'interactive'
+                ? 'bg-black text-white shadow-lg'
+                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                }`}
             >
               <Map size={20} />
               Carte interactive
@@ -115,14 +115,14 @@ export default function CarteNavigation({
 
       {/* Contenu conditionnel */}
       {activeView === 'static' ? (
-        <CarteStatique 
+        <CarteStatique
         />
       ) : (
         <div className="bg-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden min-h-[600px]">
               {isMounted ? (
-                <div 
+                <div
                   className="interactive-map-wrapper"
                   data-sejourner={JSON.stringify(sejournerData)}
                   data-plages={JSON.stringify(plagesData)}
@@ -130,6 +130,7 @@ export default function CarteNavigation({
                   data-evenements={JSON.stringify(evenementsData)}
                   data-activites-nautiques={JSON.stringify(activitesNautiquesData)}
                   data-randonnees={JSON.stringify(randonneesData)}
+                  data-sites={JSON.stringify(sitesData)}
                 >
                   <div className="flex items-center justify-center h-[600px] bg-gray-100">
                     <div className="text-center">

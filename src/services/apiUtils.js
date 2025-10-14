@@ -60,6 +60,8 @@ export const fetchAllRandonnees = (opts = {}) =>
   fetchAll("/api/randonnees", opts);
 export const fetchAllActivitesNautiques = (opts = {}) =>
   fetchAll("/api/activites-nautiques", opts);
+export const fetchAllSites = (opts = {}) =>
+  fetchAll("/api/sites", opts);
 
 /**
  * Récupère les couleurs et textes dynamiques
