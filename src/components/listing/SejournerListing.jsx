@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
-import { 
-  filterSejournersByType, 
-  filterSejournersByCommune, 
+import {
+  filterSejournersByType,
+  filterSejournersByCommune,
   filterSejournersByNote,
-  searchSejourners, 
+  searchSejourners,
   sortSejourners,
   getUniqueCommunes,
   getUniqueTypes
@@ -13,6 +13,8 @@ import { Grid, List, ChevronLeft, ChevronRight, MapPin, Star, Search } from 'luc
 import { getInlineStyles } from '../../utils/colorUtils.js';
 
 export default function SejournerListing({ sejourners = [], colorData, pageTexts }) {
+
+  console.log(sejourners);
   // Utiliser les styles CSS globaux ou inline basés sur colorData
   const dynamicStyles = colorData ? getInlineStyles(colorData) : {};
 
@@ -49,12 +51,12 @@ export default function SejournerListing({ sejourners = [], colorData, pageTexts
 
   const applyFilters = () => {
     let filtered = [...sejourners];
-    
+
     // Appliquer les filtres
     if (filters.commune && filters.commune !== 'toutes') {
       filtered = filterSejournersByCommune(filtered, filters.commune);
     }
-    
+
     if (filters.type && filters.type !== 'tous') {
       if (filters.type === 'Charté') {
         filtered = filterSejournersByNote(filtered, 'Certifié');
@@ -62,14 +64,14 @@ export default function SejournerListing({ sejourners = [], colorData, pageTexts
         filtered = filterSejournersByType(filtered, filters.type);
       }
     }
-    
+
     if (filters.search) {
       filtered = searchSejourners(filtered, filters.search);
     }
-    
+
     // Appliquer le tri
     filtered = sortSejourners(filtered, sortBy);
-    
+
     setFilteredSejourners(filtered);
   };
 
@@ -103,7 +105,7 @@ export default function SejournerListing({ sejourners = [], colorData, pageTexts
             <span>/</span>
             <span className="text-gray-900">Séjourner</span>
           </nav>
-          
+
           <div className="text-center">
             <h1 className="text-4xl sm:text-6xl font-bold text-black mb-4">{pageTexts?.titreSejourner || 'Séjourner'}</h1>
             <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
@@ -128,7 +130,7 @@ export default function SejournerListing({ sejourners = [], colorData, pageTexts
             />
           </div>
 
-            {/* Commune */}
+          {/* Commune */}
           <div className="flex items-center gap-2 order-2">
             <label className="text-sm font-medium text-gray-700">Commune:</label>
             <select
@@ -172,7 +174,7 @@ export default function SejournerListing({ sejourners = [], colorData, pageTexts
             <p className="text-gray-600">
               <span className="font-semibold">{filteredSejourners.length}</span> hébergement{filteredSejourners.length > 1 ? 's' : ''} trouvé{filteredSejourners.length > 1 ? 's' : ''}
             </p>
-            
+
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">Trier par:</span>
               <select
@@ -218,11 +220,10 @@ export default function SejournerListing({ sejourners = [], colorData, pageTexts
           </div>
         ) : (
           <>
-            <div className={`${
-              viewMode === 'grid' 
-                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6' 
-                : 'space-y-4'
-            }`}>
+            <div className={`${viewMode === 'grid'
+              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+              : 'space-y-4'
+              }`}>
               {currentSejourners.map((sejourner) => (
                 <SejournerCard
                   key={sejourner.id}
@@ -249,11 +250,10 @@ export default function SejournerListing({ sejourners = [], colorData, pageTexts
                     <button
                       key={page}
                       onClick={() => goToPage(page)}
-                      className={`px-4 py-2 rounded-lg ${
-                        currentPage === page
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-600 hover:bg-gray-100'
-                      }`}
+                      className={`px-4 py-2 rounded-lg ${currentPage === page
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-600 hover:bg-gray-100'
+                        }`}
                     >
                       {page}
                     </button>

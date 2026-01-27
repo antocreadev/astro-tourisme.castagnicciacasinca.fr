@@ -1,23 +1,20 @@
 ---
+import {
+  fetchAllSejourners,
+
+} from "../../services/apiUtils.js";
+
 import Layout from "../../layouts/Layout.astro";
 import SejournerDetail from "../../components/detail/SejournerDetail.jsx";
 import { PUBLIC_API_URL } from "astro:env/client";
 import type { RootSejourner } from "../../types/sejourner";
 
 export async function getStaticPaths() {
-  let page = 1;
-  let pageSize = 100;
-  const response = await fetch(
-    `${PUBLIC_API_URL}/api/sejourners?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const dataSejournerJson: RootSejourner = await fetchAllSejourners({
+    populate: "*",
+  });
 
-  const data: RootSejourner = await response.json();
+  const data: RootSejourner = dataSejournerJson;
 
   return data.data.map((sejourner) => ({
     params: { slug: sejourner.documentId },
