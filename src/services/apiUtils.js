@@ -62,6 +62,8 @@ export const fetchAllActivitesNautiques = (opts = {}) =>
   fetchAll("/api/activites-nautiques", opts);
 export const fetchAllSites = (opts = {}) =>
   fetchAll("/api/sites", opts);
+export const fetchAllQrCodes = (opts = {}) =>
+  fetchAll("/api/qr-codes", opts);
 
 /**
  * Récupère les couleurs et textes dynamiques

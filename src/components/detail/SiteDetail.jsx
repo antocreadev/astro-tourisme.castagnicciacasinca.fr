@@ -82,25 +82,6 @@ export default function SiteDetail({ site }) {
               </nav>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={toggleFavorite}
-                className={`p-2 rounded-lg transition-colors ${
-                  isFavorite 
-                    ? 'bg-red-100 text-red-600' 
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
-              </button>
-              
-              <button
-                onClick={handleShare}
-                className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-              >
-                <Share2 className="w-5 h-5" />
-              </button>
-            </div>
           </div>
         </div>
       </div>

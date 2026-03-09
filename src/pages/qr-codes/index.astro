@@ -1,0 +1,40 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import QrCodesListing from "../../components/listing/QrCodesListing.jsx";
+import { fetchAllQrCodes } from "../../services/apiUtils.js";
+
+const qrCodesData = await fetchAllQrCodes({ populate: "*" });
+
+const qrCodes = qrCodesData.data.map((item) => {
+  const baseUrl =
+    import.meta.env.STRAPI_API_URL ||
+    import.meta.env.PUBLIC_API_URL ||
+    "http://localhost:1337";
+
+  const images =
+    item.images?.map((img) => ({
+      url: img.url?.startsWith("http") ? img.url : `${baseUrl}${img.url}`,
+      alt: img.alternativeText || item.Titre,
+    })) || [];
+
+  return {
+    id: item.id,
+    documentId: item.documentId,
+    title: item.Titre,
+    description: item.description,
+    commune: item.commune?.Nom || "",
+    coordonnees: item.coordonnees,
+    images,
+    image: images[0]?.url || null,
+    site: item.site,
+  };
+});
+---
+
+<Layout
+  title="Points d'intérêt QR Codes - Castagniccia Casinca"
+  pageCategory="qr-codes"
+  pageName="liste-qr-codes"
+>
+  <QrCodesListing qrCodes={qrCodes} client:load />
+</Layout>

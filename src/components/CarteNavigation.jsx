@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Map, FileImage } from 'lucide-react';
+import { Map, FileImage, QrCode } from 'lucide-react';
 import CarteStatique from './CarteStatique.jsx';
 
 export default function CarteNavigation({
@@ -10,20 +10,39 @@ export default function CarteNavigation({
   activitesNautiquesData,
   randonneesData,
   sitesData,
+  qrCodesData,
 }) {
-  const [activeView, setActiveView] = useState('interactive');
+  const [activeView, setActiveView] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const vue = params.get('vue');
+      if (['static', 'interactive', 'qrcodes'].includes(vue)) return vue;
+    }
+    return 'interactive';
+  });
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  // Sync URL param when tab changes
   useEffect(() => {
-    // Charger la carte interactive si elle est active et que nous sommes côté client
+    if (!isMounted) return;
+    const url = new URL(window.location);
+    url.searchParams.set('vue', activeView);
+    window.history.replaceState({}, '', url);
+  }, [activeView, isMounted]);
+
+  useEffect(() => {
     if (activeView === 'interactive' && isMounted) {
-      // Délai pour s'assurer que le DOM est prêt
       setTimeout(() => {
         loadInteractiveMap();
+      }, 100);
+    }
+    if (activeView === 'qrcodes' && isMounted) {
+      setTimeout(() => {
+        loadQrCodeMap();
       }, 100);
     }
   }, [activeView, isMounted]);
@@ -33,14 +52,12 @@ export default function CarteNavigation({
     if (!wrapper) return;
 
     try {
-      // Import dynamique du module React et du composant côté client uniquement
       const [React, ReactDOM, { default: InteractiveMapClient }] = await Promise.all([
         import('react'),
         import('react-dom/client'),
         import('./InteractiveMapClient.jsx')
       ]);
 
-      // Récupération des données depuis les attributs data
       const props = {
         sejournerData: JSON.parse(wrapper.dataset.sejourner || '[]'),
         plagesData: JSON.parse(wrapper.dataset.plages || '[]'),
@@ -51,7 +68,6 @@ export default function CarteNavigation({
         sitesData: JSON.parse(wrapper.dataset.sites || '[]'),
       };
 
-      // Créer ou réutiliser le root React
       let root = wrapper._reactRoot;
       if (!root) {
         root = ReactDOM.createRoot(wrapper);
@@ -71,9 +87,51 @@ export default function CarteNavigation({
     }
   };
 
+  const loadQrCodeMap = async () => {
+    const wrapper = document.querySelector('.qrcode-map-wrapper');
+    if (!wrapper) return;
+
+    try {
+      const [React, ReactDOM, { default: QrCodeMapClient }] = await Promise.all([
+        import('react'),
+        import('react-dom/client'),
+        import('./QrCodeMapClient.jsx')
+      ]);
+
+      const props = {
+        qrCodesData: JSON.parse(wrapper.dataset.qrCodes || '[]'),
+      };
+
+      let root = wrapper._reactRoot;
+      if (!root) {
+        root = ReactDOM.createRoot(wrapper);
+        wrapper._reactRoot = root;
+      }
+
+      root.render(React.createElement(QrCodeMapClient, props));
+    } catch (error) {
+      console.error('Erreur lors du chargement de la carte QR:', error);
+      wrapper.innerHTML = `
+        <div class="flex items-center justify-center h-[600px] bg-red-50">
+          <div class="text-center">
+            <p class="text-red-600">Erreur lors du chargement de la carte</p>
+          </div>
+        </div>
+      `;
+    }
+  };
+
+  const renderLoading = () => (
+    <div className="flex items-center justify-center h-[600px] bg-gray-100">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+        <p className="text-gray-600">Chargement de la carte...</p>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* En-tête avec navigation */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center mb-8">
@@ -81,13 +139,11 @@ export default function CarteNavigation({
               Cartes du territoire
             </h1>
             <p className="text-lg text-gray-600 max-w-4xl mx-auto">
-              Découvrez le territoire de la Castagniccia-Casinca à travers notre carte statique téléchargeable
-              et notre carte interactive avec tous les points d'intérêt.
+              Découvrez le territoire de la Castagniccia-Casinca à travers nos cartes.
             </p>
           </div>
 
-          {/* Boutons de navigation */}
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-4 flex-wrap">
             <button
               onClick={() => setActiveView('static')}
               className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${activeView === 'static'
@@ -109,15 +165,26 @@ export default function CarteNavigation({
               <Map size={20} />
               Carte interactive
             </button>
+
+            <button
+              onClick={() => setActiveView('qrcodes')}
+              className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${activeView === 'qrcodes'
+                ? 'bg-blue-700 text-white shadow-lg'
+                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                }`}
+            >
+              <QrCode size={20} />
+              Carte QR Codes
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Contenu conditionnel */}
-      {activeView === 'static' ? (
-        <CarteStatique
-        />
-      ) : (
+      {activeView === 'static' && (
+        <CarteStatique />
+      )}
+
+      {activeView === 'interactive' && (
         <div className="bg-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden min-h-[600px]">
@@ -132,20 +199,29 @@ export default function CarteNavigation({
                   data-randonnees={JSON.stringify(randonneesData)}
                   data-sites={JSON.stringify(sitesData)}
                 >
-                  <div className="flex items-center justify-center h-[600px] bg-gray-100">
-                    <div className="text-center">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-                      <p className="text-gray-600">Chargement de la carte...</p>
-                    </div>
-                  </div>
+                  {renderLoading()}
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-[600px] bg-gray-100">
-                  <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Chargement de la carte...</p>
-                  </div>
+                renderLoading()
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeView === 'qrcodes' && (
+        <div className="bg-white py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden min-h-[600px]">
+              {isMounted ? (
+                <div
+                  className="qrcode-map-wrapper"
+                  data-qr-codes={JSON.stringify(qrCodesData)}
+                >
+                  {renderLoading()}
                 </div>
+              ) : (
+                renderLoading()
               )}
             </div>
           </div>

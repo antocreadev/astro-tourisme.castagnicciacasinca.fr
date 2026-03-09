@@ -4,6 +4,7 @@ import {
   TileLayer,
   Marker,
   Popup,
+  Circle,
   useMap,
   ImageOverlay,
 } from "react-leaflet";
@@ -267,28 +268,83 @@ const MapBounds = () => {
   const map = useMap();
 
   useEffect(() => {
-    // Définir les limites de la région Castagniccia-Casinca
-    const bounds = L.latLngBounds(
-      [42.25, 9.15], // Sud-Ouest
-      [42.65, 9.65], // Nord-Est
-    );
-
-    map.setMaxBounds(bounds);
-    map.on("drag", () => {
-      map.panInsideBounds(bounds, { animate: false });
-    });
-
-    // Limiter les niveaux de zoom
-    map.setMinZoom(9);
+    // Limiter les niveaux de zoom (pas de maxBounds pour permettre la géolocalisation libre)
+    map.setMinZoom(7);
     map.setMaxZoom(18);
-
-    return () => {
-      map.off("drag");
-    };
   }, [map]);
 
   return null;
 };
+
+const createUserIcon = () => {
+  return L.divIcon({
+    className: "user-marker",
+    html: `
+      <div style="
+        width: 18px;
+        height: 18px;
+        background-color: #3b82f6;
+        border: 3px solid white;
+        border-radius: 50%;
+        box-shadow: 0 0 0 3px rgba(59,130,246,0.3), 0 2px 6px rgba(0,0,0,0.3);
+      "></div>
+    `,
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+  });
+};
+
+// Composant qui gère la géolocalisation et le recentrage
+const GeolocateControl = ({ onLocated }) => {
+  const map = useMap();
+  const [locating, setLocating] = useState(false);
+  const [autoLocated, setAutoLocated] = useState(false);
+
+  const doGeolocate = (silent = false) => {
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        map.flyTo([latitude, longitude], 13, { duration: 1.5 });
+        onLocated({ lat: latitude, lng: longitude });
+        setLocating(false);
+      },
+      () => {
+        setLocating(false);
+        if (!silent) {
+          alert("Impossible d'obtenir votre position. Vérifiez les permissions de géolocalisation.");
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
+
+  // Géolocalisation automatique au montage
+  useEffect(() => {
+    if (!autoLocated && navigator.geolocation) {
+      setAutoLocated(true);
+      doGeolocate(true);
+    }
+  }, []);
+
+  return (
+    <div className="absolute top-40 right-4 z-[1000]">
+      <button
+        onClick={() => doGeolocate(false)}
+        disabled={locating}
+        className="w-10 h-10 bg-white rounded-xl shadow-lg flex items-center justify-center text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+        title="Ma position"
+      >
+        {locating ? (
+          <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        ) : (
+          <Locate size={18} />
+        )}
+      </button>
+    </div>
+  );
+};
+
 // Composant pour contrôler le zoom avec un style plus moderne
 const ZoomControl = ({ onZoomChange, currentZoom }) => {
   const map = useMap();
@@ -386,7 +442,7 @@ const CategoryFilter = ({
 
         {/* Panel des filtres pour mobile */}
         {isExpanded && (
-          <div className="absolute top-14 left-0 bg-white rounded-xl shadow-lg p-4 w-72 max-w-[calc(100vw-2rem)] border border-gray-200">
+          <div className="absolute top-14 left-0 bg-white rounded-xl shadow-lg p-4 w-72 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-8rem)] overflow-y-auto border border-gray-200">
             <div className="space-y-3">
               {Object.entries(MARKER_TYPES).map(([key, info]) => (
                 <label
@@ -556,6 +612,7 @@ const InteractiveMap = ({
   // });
 
   const [currentZoom, setCurrentZoom] = useState(11);
+  const [userPosition, setUserPosition] = useState(null);
   const [visibleCategories, setVisibleCategories] = useState(
     Object.keys(MARKER_TYPES).reduce((acc, key) => {
       acc[key] = true;
@@ -789,7 +846,6 @@ const InteractiveMap = ({
     });
   }
 
-
   // Grouper les marqueurs par position pour gérer les doublons
   const markerGroups = groupMarkersByPosition(allMarkers);
 
@@ -890,8 +946,25 @@ const InteractiveMap = ({
           );
         })}
 
+        {/* Marqueur utilisateur */}
+        {userPosition && (
+          <>
+            <Marker position={[userPosition.lat, userPosition.lng]} icon={createUserIcon()}>
+              <Popup>
+                <div className="p-1 text-sm font-medium text-gray-700">Vous êtes ici</div>
+              </Popup>
+            </Marker>
+            <Circle
+              center={[userPosition.lat, userPosition.lng]}
+              radius={200}
+              pathOptions={{ color: "#3b82f6", fillColor: "#3b82f6", fillOpacity: 0.1, weight: 1 }}
+            />
+          </>
+        )}
+
         {/* Contrôles de zoom personnalisés */}
         <ZoomControl onZoomChange={setCurrentZoom} currentZoom={currentZoom} />
+        <GeolocateControl onLocated={setUserPosition} />
       </MapContainer>
 
       {/* Filtres de catégories */}

@@ -1,0 +1,86 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import QrCodeDetail from "../../components/detail/QrCodeDetail.jsx";
+import { fetchAllQrCodes } from "../../services/apiUtils.js";
+
+const qrCodesData = await fetchAllQrCodes({ populate: "*" });
+const baseUrl =
+  import.meta.env.STRAPI_API_URL ||
+  import.meta.env.PUBLIC_API_URL ||
+  "http://localhost:1337";
+
+function transformQrCode(item) {
+  const images =
+    item.images?.map((img) => ({
+      url: img.url?.startsWith("http") ? img.url : `${baseUrl}${img.url}`,
+      alt: img.alternativeText || item.Titre,
+    })) || [];
+
+  return {
+    id: item.id,
+    documentId: item.documentId,
+    title: item.Titre,
+    description: item.description,
+    commune: item.commune?.Nom || "",
+    coordonnees: item.coordonnees,
+    images,
+    image: images[0]?.url || null,
+    site: item.site,
+  };
+}
+
+export async function getStaticPaths() {
+  try {
+    const data = await fetchAllQrCodes({ populate: "*" });
+    const bu =
+      import.meta.env.STRAPI_API_URL ||
+      import.meta.env.PUBLIC_API_URL ||
+      "http://localhost:1337";
+
+    const allTransformed = data.data.map((item) => {
+      const images =
+        item.images?.map((img) => ({
+          url: img.url?.startsWith("http") ? img.url : `${bu}${img.url}`,
+          alt: img.alternativeText || item.Titre,
+        })) || [];
+
+      return {
+        id: item.id,
+        documentId: item.documentId,
+        title: item.Titre,
+        description: item.description,
+        commune: item.commune?.Nom || "",
+        coordonnees: item.coordonnees,
+        images,
+        image: images[0]?.url || null,
+        site: item.site,
+      };
+    });
+
+    return data.data.map((item, i) => ({
+      params: { slug: item.documentId },
+      props: {
+        qrCode: allTransformed[i],
+        allQrCodes: allTransformed,
+      },
+    }));
+  } catch (error) {
+    console.error("Erreur lors de la génération des chemins statiques:", error);
+    return [];
+  }
+}
+
+const { qrCode, allQrCodes } = Astro.props;
+
+if (!qrCode) {
+  return Astro.redirect("/404");
+}
+---
+
+<Layout
+  title={`${qrCode.title} - Points d'intérêt`}
+  pageCategory="qr-codes"
+  pageName={qrCode.title}
+>
+  <QrCodeDetail qrCode={qrCode} allQrCodes={allQrCodes} client:load />
+</Layout>

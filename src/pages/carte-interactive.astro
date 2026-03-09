@@ -9,6 +9,7 @@ import {
   fetchAllRandonnees,
   fetchAllActivitesNautiques,
   fetchAllSites,
+  fetchAllQrCodes,
   fetchColorTexte,
 } from "../services/apiUtils.js";
 import type { RootEvenements } from "../types/evenements";
@@ -61,6 +62,11 @@ const dataActiviteNautiqueJson: RootActiviteNautique =
 const dataSitesJson: RootSite = await fetchAllSites({
   populate: "*",
 });
+
+// QR Codes
+const dataQrCodesJson = await fetchAllQrCodes({
+  populate: "*",
+});
 ---
 
 <Layout
@@ -79,6 +85,7 @@ const dataSitesJson: RootSite = await fetchAllSites({
       activitesNautiquesData={dataActiviteNautiqueJson.data}
       randonneesData={dataRandonneesJson.data}
       sitesData={dataSitesJson.data}
+      qrCodesData={dataQrCodesJson.data}
     />
   </main>
 
@@ -93,7 +100,8 @@ const dataSitesJson: RootSite = await fetchAllSites({
       background: white;
     }
 
-    :global(.custom-marker) {
+    :global(.custom-marker),
+    :global(.qrcode-marker) {
       background: transparent !important;
       border: none !important;
     }
