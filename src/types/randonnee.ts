@@ -12,9 +12,15 @@ export interface Randonnee {
   updatedAt: string;
   publishedAt: string;
   depart?: Depart;
-  commune: Commune;
-  Lien: Lien;
-  images?: Image2[];
+  commune?: Commune;
+  GPX?: GpxFile;
+  images?: Image[];
+  Difficulte?: string;
+  Duree?: string;
+  Distance?: string;
+  Denivele?: string;
+  Conseils?: string;
+  GPS?: string;
 }
 
 export interface Depart {
@@ -33,10 +39,26 @@ export interface Commune {
   coordonnees: any;
 }
 
-export interface Lien {
+export interface GpxFile {
   id: number;
-  lien: string;
-  image: Image;
+  documentId: string;
+  name: string;
+  alternativeText: any;
+  caption: any;
+  width: any;
+  height: any;
+  formats: any;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: any;
+  provider: string;
+  provider_metadata: any;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
 }
 
 export interface Image {
@@ -62,91 +84,13 @@ export interface Image {
 }
 
 export interface Formats {
-  thumbnail: Thumbnail;
+  thumbnail?: FormatDetail;
+  small?: FormatDetail;
+  medium?: FormatDetail;
+  large?: FormatDetail;
 }
 
-export interface Thumbnail {
-  name: string;
-  hash: string;
-  ext: string;
-  mime: string;
-  path: any;
-  width: number;
-  height: number;
-  size: number;
-  sizeInBytes: number;
-  url: string;
-}
-
-export interface Image2 {
-  id: number;
-  documentId: string;
-  name: string;
-  alternativeText: any;
-  caption: any;
-  width: number;
-  height: number;
-  formats: Formats2;
-  hash: string;
-  ext: string;
-  mime: string;
-  size: number;
-  url: string;
-  previewUrl: any;
-  provider: string;
-  provider_metadata: any;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-}
-
-export interface Formats2 {
-  thumbnail: Thumbnail2;
-  small?: Small;
-  medium?: Medium;
-  large?: Large;
-}
-
-export interface Thumbnail2 {
-  name: string;
-  hash: string;
-  ext: string;
-  mime: string;
-  path: any;
-  width: number;
-  height: number;
-  size: number;
-  sizeInBytes: number;
-  url: string;
-}
-
-export interface Small {
-  name: string;
-  hash: string;
-  ext: string;
-  mime: string;
-  path: any;
-  width: number;
-  height: number;
-  size: number;
-  sizeInBytes: number;
-  url: string;
-}
-
-export interface Medium {
-  name: string;
-  hash: string;
-  ext: string;
-  mime: string;
-  path: any;
-  width: number;
-  height: number;
-  size: number;
-  sizeInBytes: number;
-  url: string;
-}
-
-export interface Large {
+export interface FormatDetail {
   name: string;
   hash: string;
   ext: string;

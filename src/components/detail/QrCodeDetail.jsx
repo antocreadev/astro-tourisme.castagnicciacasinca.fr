@@ -347,6 +347,18 @@ export default function QrCodeDetail({ qrCode, allQrCodes = [] }) {
                 </a>
               </div>
             )}
+
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <a
+                href="https://tourisme.castagnicciacasinca.fr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2 bg-green-700 text-white px-4 py-3 rounded-lg hover:bg-green-800 transition-colors font-medium"
+              >
+                <ExternalLink className="w-4 h-4" />
+                <span>Site tourisme Castagniccia-Casinca</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

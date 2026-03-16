@@ -2,7 +2,6 @@
 import { type RootGlobal } from "../types/gloabal";
 
 import { PUBLIC_API_URL } from "astro:env/client";
-// console.log("API URL:", PUBLIC_API_URL);
 
 const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
   method: "GET",
@@ -12,7 +11,6 @@ const data = await fetch(`${PUBLIC_API_URL}/api/global`, {
 });
 
 const globalData: RootGlobal = await data.json();
-// console.log("Global Data:", globalData);
 ---
 
 <nav
@@ -34,11 +32,12 @@ const globalData: RootGlobal = await data.json();
       </a>
     </div>
 
+    <!-- Burger button (mobile only) -->
     <button
       id="burger-menu"
-      class="lg:hidden focus:outline-none z-20"
+      class="lg:hidden focus:outline-none"
       style="color: var(--color-navbar-text, #808080);"
-      aria-controls="nav-links"
+      aria-controls="mobile-menu-overlay"
       aria-expanded="false"
     >
       <span class="sr-only">Ouvrir le menu</span>
@@ -55,25 +54,13 @@ const globalData: RootGlobal = await data.json();
           stroke-width="2"
           d="M4 6h16M4 12h16m-7 6h7"></path></svg
       >
-      <svg
-        id="close-icon"
-        class="w-6 h-6 hidden"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-        ><path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"></path></svg
-      >
     </button>
 
+    <!-- Desktop nav -->
     <ul
-      id="nav-links"
-      class="hidden flex-col space-y-4 absolute top-0 left-0 w-full h-screen pt-24 px-6 text-center text-lg lg:flex lg:relative lg:flex-row lg:space-y-0 lg:space-x-6 lg:h-auto lg:w-auto lg:bg-transparent lg:p-0 lg:top-auto lg:left-auto lg:pt-0 lg:text-sm font-medium bg-white"
-      style="color: var(--color-navbar-text, #808080); background-color: var(--color-navbar-bg, #ffffff);"
+      id="nav-links-desktop"
+      class="hidden lg:flex lg:relative lg:flex-row lg:space-x-6 lg:h-auto lg:w-auto lg:bg-transparent lg:p-0 lg:text-sm font-medium"
+      style="color: var(--color-navbar-text, #808080);"
     >
       {
         globalData.data.BarreDeNavigation.page_de_sections.map((page) => (
@@ -97,6 +84,27 @@ const globalData: RootGlobal = await data.json();
   </div>
 </nav>
 
+<!-- Mobile fullscreen menu overlay (completely separate from navbar) -->
+<div id="mobile-menu-overlay" class="mobile-overlay" aria-hidden="true">
+  <!-- Close button top-right -->
+  <button id="mobile-menu-close" class="mobile-overlay__close" aria-label="Fermer le menu">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </button>
+
+  <!-- Links centered -->
+  <nav class="mobile-overlay__nav">
+    {
+      globalData.data.BarreDeNavigation.page_de_sections.map((page) => (
+        <a href={page.LienVersLaPage} class="mobile-overlay__link">
+          {page.Titre}
+        </a>
+      ))
+    }
+  </nav>
+</div>
+
 <style>
   body {
     margin: 0;
@@ -104,8 +112,7 @@ const globalData: RootGlobal = await data.json();
     background-color: #f5f5f5;
   }
 
-  /* Empêche le scroll du body quand le menu mobile est ouvert */
-  body.overflow-hidden {
+  body.menu-open {
     overflow: hidden;
   }
 
@@ -117,6 +124,84 @@ const globalData: RootGlobal = await data.json();
     background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(16px);
   }
+
+  /* ===== Mobile overlay ===== */
+  .mobile-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100000; /* Above everything: Leaflet (~400), sticky headers (50), modals (9999) */
+    background: #ffffff;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* Hidden by default */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  .mobile-overlay[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .mobile-overlay__close {
+    position: absolute;
+    top: 1.1rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: #374151;
+    line-height: 0;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s;
+  }
+
+  .mobile-overlay__close:hover {
+    background-color: #f3f4f6;
+  }
+
+  .mobile-overlay__nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    width: 100%;
+    padding: 0 1.5rem;
+  }
+
+  .mobile-overlay__link {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0.875rem 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #374151;
+    text-decoration: none;
+    border-radius: 0.75rem;
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  .mobile-overlay__link:hover,
+  .mobile-overlay__link:active {
+    background-color: #f3f4f6;
+    color: #111827;
+  }
+
+  /* Force hide on desktop */
+  @media (min-width: 1024px) {
+    .mobile-overlay {
+      display: none !important;
+    }
+  }
 </style>
 
 <script>
@@ -124,37 +209,59 @@ const globalData: RootGlobal = await data.json();
     const navbar = document.getElementById("navbar");
     const burgerMenu = document.getElementById("burger-menu");
     const burgerIcon = document.getElementById("burger-icon");
-    const closeIcon = document.getElementById("close-icon");
-    const navLinks = document.getElementById("nav-links");
+    const overlay = document.getElementById("mobile-menu-overlay");
+    const closeBtn = document.getElementById("mobile-menu-close");
 
-    // --- Logique du Menu Burger ---
+    // --- Mobile menu ---
+    const openMenu = () => {
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.classList.add("menu-open");
+      burgerMenu.setAttribute("aria-expanded", "true");
+      // Keep navbar visible when menu is open
+      navbar.style.transform = "translateY(0)";
+    };
+
+    const closeMenu = () => {
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("menu-open");
+      burgerMenu.setAttribute("aria-expanded", "false");
+    };
+
     burgerMenu.addEventListener("click", () => {
-      const isExpanded = navLinks.classList.toggle("hidden");
-      burgerMenu.setAttribute("aria-expanded", (!isExpanded).toString());
+      const isHidden = overlay.getAttribute("aria-hidden") === "true";
+      if (isHidden) openMenu();
+      else closeMenu();
+    });
 
-      // Bascule entre l'icône burger et croix
-      burgerIcon.classList.toggle("hidden");
-      closeIcon.classList.toggle("hidden");
+    closeBtn.addEventListener("click", closeMenu);
 
-      // Empêche le scroll du body quand le menu est ouvert sur mobile
-      document.body.classList.toggle("overflow-hidden");
-      // Sur grand écran, on retire la classe pour éviter les problèmes de resize
-      if (window.innerWidth >= 1024) {
-        document.body.classList.remove("overflow-hidden");
+    // Close on link click
+    overlay.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
+
+    // Close on Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && overlay.getAttribute("aria-hidden") === "false") {
+        closeMenu();
       }
     });
 
-    // --- Logique de la barre de navigation au scroll ---
+    // Close on resize to desktop
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 1024) closeMenu();
+    });
+
+    // --- Navbar scroll hide/show ---
     let lastScrollY = window.scrollY;
 
     window.addEventListener(
       "scroll",
       () => {
         const currentScrollY = window.scrollY;
-        const isMenuOpen = !navLinks.classList.contains("hidden");
 
-        // Ne pas masquer la barre si le menu mobile est ouvert
-        if (isMenuOpen && window.innerWidth < 1024) {
+        // Don't hide navbar when mobile menu is open
+        if (overlay.getAttribute("aria-hidden") === "false" && window.innerWidth < 1024) {
           return;
         }
 
@@ -175,7 +282,7 @@ const globalData: RootGlobal = await data.json();
       { passive: true }
     );
 
-    // --- Logique du surlignage (Highlighter) pour Desktop ---
+    // --- Desktop highlighter ---
     const navItems = document.querySelectorAll(".nav-item");
     const highlighter = document.getElementById("nav-highlighter");
 
@@ -208,10 +315,8 @@ const globalData: RootGlobal = await data.json();
       item.addEventListener("mouseleave", hideHighlighter);
     });
 
-    // Gérer le cas où on redimensionne la fenêtre
     window.addEventListener("resize", hideHighlighter);
 
-    // Positionnement initial
     const activeItem = document.querySelector(".nav-item.active");
     updateHighlighter(activeItem);
   });

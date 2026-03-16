@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Map, FileImage, QrCode } from 'lucide-react';
+import { Map, FileImage, QrCode, Mountain } from 'lucide-react';
 import CarteStatique from './CarteStatique.jsx';
 
 export default function CarteNavigation({
@@ -12,17 +12,17 @@ export default function CarteNavigation({
   sitesData,
   qrCodesData,
 }) {
-  const [activeView, setActiveView] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const vue = params.get('vue');
-      if (['static', 'interactive', 'qrcodes'].includes(vue)) return vue;
-    }
-    return 'interactive';
-  });
+  const [activeView, setActiveView] = useState(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const vue = params.get('vue');
+    if (['static', 'interactive', 'qrcodes', 'randonnees'].includes(vue)) {
+      setActiveView(vue);
+    } else {
+      setActiveView('interactive');
+    }
     setIsMounted(true);
   }, []);
 
@@ -43,6 +43,11 @@ export default function CarteNavigation({
     if (activeView === 'qrcodes' && isMounted) {
       setTimeout(() => {
         loadQrCodeMap();
+      }, 100);
+    }
+    if (activeView === 'randonnees' && isMounted) {
+      setTimeout(() => {
+        loadRandonneesMap();
       }, 100);
     }
   }, [activeView, isMounted]);
@@ -121,6 +126,40 @@ export default function CarteNavigation({
     }
   };
 
+  const loadRandonneesMap = async () => {
+    const wrapper = document.querySelector('.randonnees-map-wrapper');
+    if (!wrapper) return;
+
+    try {
+      const [React, ReactDOM, { default: RandonneesMapClient }] = await Promise.all([
+        import('react'),
+        import('react-dom/client'),
+        import('./RandonneesMapClient.jsx')
+      ]);
+
+      const props = {
+        randonneesData: JSON.parse(wrapper.dataset.randonnees || '[]'),
+      };
+
+      let root = wrapper._reactRoot;
+      if (!root) {
+        root = ReactDOM.createRoot(wrapper);
+        wrapper._reactRoot = root;
+      }
+
+      root.render(React.createElement(RandonneesMapClient, props));
+    } catch (error) {
+      console.error('Erreur lors du chargement de la carte randonnées:', error);
+      wrapper.innerHTML = `
+        <div class="flex items-center justify-center h-[600px] bg-red-50">
+          <div class="text-center">
+            <p class="text-red-600">Erreur lors du chargement de la carte</p>
+          </div>
+        </div>
+      `;
+    }
+  };
+
   const renderLoading = () => (
     <div className="flex items-center justify-center h-[600px] bg-gray-100">
       <div className="text-center">
@@ -143,42 +182,67 @@ export default function CarteNavigation({
             </p>
           </div>
 
-          <div className="flex justify-center gap-4 flex-wrap">
+          <div className="flex justify-center gap-3 flex-wrap">
             <button
               onClick={() => setActiveView('static')}
-              className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${activeView === 'static'
-                ? 'bg-black text-white shadow-lg'
+              disabled={!isMounted}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm ${activeView === 'static'
+                ? 'bg-gray-800 text-white shadow-lg ring-2 ring-gray-800 ring-offset-2'
                 : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                }`}
+                } ${!isMounted ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
             >
-              <FileImage size={20} />
+              <FileImage size={18} />
               Carte statique
             </button>
 
             <button
               onClick={() => setActiveView('interactive')}
-              className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${activeView === 'interactive'
-                ? 'bg-black text-white shadow-lg'
+              disabled={!isMounted}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm ${activeView === 'interactive'
+                ? 'bg-indigo-700 text-white shadow-lg ring-2 ring-indigo-700 ring-offset-2'
                 : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                }`}
+                } ${!isMounted ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
             >
-              <Map size={20} />
+              <Map size={18} />
               Carte interactive
             </button>
 
             <button
-              onClick={() => setActiveView('qrcodes')}
-              className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${activeView === 'qrcodes'
-                ? 'bg-blue-700 text-white shadow-lg'
+              onClick={() => setActiveView('randonnees')}
+              disabled={!isMounted}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm ${activeView === 'randonnees'
+                ? 'bg-green-700 text-white shadow-lg ring-2 ring-green-700 ring-offset-2'
                 : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                }`}
+                } ${!isMounted ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
             >
-              <QrCode size={20} />
-              Carte QR Codes
+              <Mountain size={18} />
+              Carte randonnées
             </button>
+{/* 
+            <button
+              onClick={() => setActiveView('qrcodes')}
+              disabled={!isMounted}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm ${activeView === 'qrcodes'
+                ? 'bg-blue-700 text-white shadow-lg ring-2 ring-blue-700 ring-offset-2'
+                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                } ${!isMounted ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
+            >
+              <QrCode size={18} />
+              Carte QR Codes
+            </button> */}
           </div>
         </div>
       </div>
+
+      {!activeView && (
+        <div className="bg-white py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden min-h-[600px]">
+              {renderLoading()}
+            </div>
+          </div>
+        </div>
+      )}
 
       {activeView === 'static' && (
         <CarteStatique />
@@ -198,6 +262,25 @@ export default function CarteNavigation({
                   data-activites-nautiques={JSON.stringify(activitesNautiquesData)}
                   data-randonnees={JSON.stringify(randonneesData)}
                   data-sites={JSON.stringify(sitesData)}
+                >
+                  {renderLoading()}
+                </div>
+              ) : (
+                renderLoading()
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeView === 'randonnees' && (
+        <div className="bg-white py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden min-h-[600px]">
+              {isMounted ? (
+                <div
+                  className="randonnees-map-wrapper"
+                  data-randonnees={JSON.stringify(randonneesData)}
                 >
                   {renderLoading()}
                 </div>

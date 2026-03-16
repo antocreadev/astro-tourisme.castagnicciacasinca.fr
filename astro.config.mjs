@@ -28,6 +28,9 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      allowedHosts: ["cms.castagnicciacasinca.fr"],
+    },
     build: {
       cssCodeSplit: true,
       rollupOptions: {
