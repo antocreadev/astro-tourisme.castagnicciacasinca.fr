@@ -1,19 +1,10 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import PlageDetail from "../../components/detail/PlageDetail.jsx";
-import { PUBLIC_API_URL } from "astro:env/client";
-import type { RootPlage } from "../../types/plages";
+import { fetchAllPlages } from "../../services/apiUtils.js";
 
 export async function getStaticPaths() {
-  // Récupérer les plages depuis l'API
-  const response = await fetch(`${PUBLIC_API_URL}/api/plages`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const plagesData: RootPlage = await response.json();
+  const plagesData = await fetchAllPlages({ populate: "*" });
 
   // Générer les paths statiques
   return plagesData.data.map((plage) => ({

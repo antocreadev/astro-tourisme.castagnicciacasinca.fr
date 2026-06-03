@@ -1,27 +1,10 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ActiviteNautiqueDetail from "../../components/detail/ActiviteNautiqueDetail.jsx";
-import { PUBLIC_API_URL } from "astro:env/client";
-import type { RootActiviteNautique } from "../../types/activite-nautique";
+import { fetchAllActivitesNautiques } from "../../services/apiUtils.js";
 
 export async function getStaticPaths() {
-  // Récupérer les activités nautiques depuis l'API
-  const response = await fetch(`${PUBLIC_API_URL}/api/activites-nautiques`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    console.error(
-      "Erreur lors de la récupération des activités nautiques:",
-      response.status
-    );
-    return [];
-  }
-
-  const activitesData: RootActiviteNautique = await response.json();
+  const activitesData = await fetchAllActivitesNautiques({ populate: "*" });
 
   if (!activitesData || !activitesData.data) {
     console.error("Données activités nautiques non disponibles");
