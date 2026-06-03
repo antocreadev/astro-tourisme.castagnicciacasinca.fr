@@ -1,23 +1,14 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import EventDetail from "../../components/detail/EventDetail.jsx";
-import { PUBLIC_API_URL } from "astro:env/client";
-import { fetchColorTexte } from "../../services/apiUtils.js";
-import type { RootEvenements } from "../../types/evenements";
+import { fetchAllEvenements, fetchColorTexte } from "../../services/apiUtils.js";
 import type { RootColorTexte } from "../../types/color-texte";
 
 // Récupération des couleurs dynamiques
 const colorData: RootColorTexte = await fetchColorTexte();
 
 export async function getStaticPaths() {
-  const response = await fetch(`${PUBLIC_API_URL}/api/evenements`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const data: RootEvenements = await response.json();
+  const data = await fetchAllEvenements({ populate: "*" });
 
   return data.data.map((event) => ({
     params: { slug: event.documentId },

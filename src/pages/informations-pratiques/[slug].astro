@@ -8,33 +8,16 @@ import type {
 import type { RootColorTexte } from "../../types/color-texte";
 import { convertMarkdownToHtml } from "../../utils/markdownUtils.js";
 import { createSlug, findCategoryBySlug } from "../../utils/slugUtils.js";
-import { fetchColorTexte } from "../../services/apiUtils.js";
+import { fetchAll, fetchColorTexte } from "../../services/apiUtils.js";
 import { getInlineStyles } from "../../utils/colorUtils.js";
 
 // Récupération des couleurs dynamiques
 const colorData: RootColorTexte = await fetchColorTexte();
 
 export async function getStaticPaths() {
-  // Récupérer toutes les informations pratiques depuis l'API
-  const response = await fetch(
-    `${import.meta.env.PUBLIC_API_URL}/api/information-pratiques?populate=type_information_pratique`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  if (!response.ok) {
-    console.error(
-      "Erreur lors de la récupération des informations pratiques:",
-      response.status
-    );
-    return [];
-  }
-
-  const informationsData: RootInformationPratique = await response.json();
+  const informationsData = await fetchAll("/api/information-pratiques", {
+    populate: "type_information_pratique",
+  });
 
   if (!informationsData || !informationsData.data) {
     console.error("Données informations pratiques non disponibles");
