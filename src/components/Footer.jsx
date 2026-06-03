@@ -43,6 +43,25 @@ export default function Footer(
           </nav>
         </div>
 
+        {/* Partenaires */}
+        <div className="border-t border-gray-300 pt-6 mb-6">
+          <p className="text-sm font-medium text-gray-700 text-center mb-4">
+            Ce projet a été subventionné par nos partenaires :
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-8">
+            <img
+              src="/partenaire-republique-francaise.png"
+              alt="République Française"
+              className="h-20 w-auto"
+            />
+            <img
+              src="/partenaire-collectivite-corse.png"
+              alt="Collectivité de Corse - Agence du Tourisme de la Corse"
+              className="h-20 w-auto"
+            />
+          </div>
+        </div>
+
         {/* Separator Line */}
         <div className="border-t border-gray-300 mb-6"></div>
 
@@ -55,10 +74,10 @@ export default function Footer(
 
           {/* Legal Links */}
           <div className="flex gap-6">
-          
-              <a href="/mentions-legales" className="text-gray-600 hover:text-black transition-colors underline">
-                Mentions légales
-              </a>
+
+            <a href="/mentions-legales" className="text-gray-600 hover:text-black transition-colors underline">
+              Mentions légales
+            </a>
           </div>
         </div>
       </div>
