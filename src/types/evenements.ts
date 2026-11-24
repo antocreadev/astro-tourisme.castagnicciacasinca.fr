@@ -8,7 +8,8 @@ export interface Daum {
   documentId: string
   Nom: string
   Description: string
-  Date: string
+  Date: string | null
+  PagePrincipale?: boolean
   Coordonnees?: Coordonnees
   createdAt: string
   updatedAt: string

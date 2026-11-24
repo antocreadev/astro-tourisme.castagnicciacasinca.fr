@@ -18,7 +18,7 @@ export async function GET() {
     
     let events;
     try {
-      events = await fetchAllEvenements();
+      events = await fetchAllEvenements({ populate: "*" });
     } catch (fetchError) {
       console.error("Erreur fetch événements RSS:", fetchError);
       return new Response(fallbackRss, {
@@ -34,65 +34,44 @@ export async function GET() {
       });
     }
 
-    // Filtrer les événements valides de manière ultra-défensive
-    const validEvents = events.data.filter((event) => {
-      try {
-        return (
-          event &&
-          typeof event === "object" &&
-          event.attributes &&
-          typeof event.attributes === "object" &&
-          event.attributes.date_debut &&
-          !isNaN(new Date(event.attributes.date_debut).getTime())
-        );
-      } catch {
-        return false;
-      }
-    });
+    // Événements à venir / en cours, puis sans date (format Strapi 5 : champs à plat)
+    const { splitEvents, formatEventPeriod } = await import("../utils/eventUtils.js");
+    const { current, undated } = splitEvents(events.data);
+    const selected = [...current, ...undated].slice(0, 30);
 
-    // Si aucun événement valide, retourner le fallback
-    if (validEvents.length === 0) {
-      console.warn("RSS: Aucun événement valide trouvé");
+    if (selected.length === 0) {
       return new Response(fallbackRss, {
         headers: { "Content-Type": "application/xml" },
       });
     }
 
-    // Tri sécurisé
-    const sortedEvents = validEvents
-      .sort((a, b) => {
-        try {
-          return new Date(b.attributes.date_debut) - new Date(a.attributes.date_debut);
-        } catch {
-          return 0;
-        }
-      })
-      .slice(0, 20);
+    const stripMd = (txt = "") =>
+      String(txt)
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+        .replace(/[*_#>`~]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
 
-    // Génération des items avec protection individuelle
-    const items = sortedEvents
+    const items = selected
       .map((event) => {
         try {
-          const title = String(event.attributes.titre || "Événement").replace(/[<>&'"]/g, (c) => ({
-            '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;'
-          }[c]));
-          
-          const description = String(
-            event.attributes.description || "Découvrez cet événement en Castagniccia-Casinca"
-          ).replace(/[<>&'"]/g, (c) => ({
-            '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;'
-          }[c]));
-          
-          const date = new Date(event.attributes.date_debut).toUTCString();
-          const guid = `${siteURL}/agenda/event-${event.id || Date.now()}`;
+          const title = String(event.Nom || "Événement");
+          const period = formatEventPeriod(event);
+          const commune = event.commune?.Nom ? ` – ${event.commune.Nom}` : "";
+          const excerpt = stripMd(event.Description).slice(0, 300);
+          const description = [period ? `${period}${commune}` : commune.replace(/^ – /, ""), excerpt].filter(Boolean).join(". ");
+          const link = `${siteURL}/agenda/${event.documentId}`;
+          const pub = new Date(event.publishedAt || event.updatedAt || event.createdAt);
+          const pubDate = isNaN(pub.getTime()) ? new Date().toUTCString() : pub.toUTCString();
 
           return `    <item>
       <title><![CDATA[${title}]]></title>
       <description><![CDATA[${description}]]></description>
-      <link>${siteURL}/agenda</link>
-      <guid isPermaLink="false">${guid}</guid>
-      <pubDate>${date}</pubDate>
-      <category>Événements</category>
+      <link>${link}</link>
+      <guid isPermaLink="true">${link}</guid>
+      <pubDate>${pubDate}</pubDate>
+      <category><![CDATA[${event.type_evenement?.Nom || "Événements"}]]></category>
     </item>`;
         } catch (itemError) {
           console.warn("RSS: Erreur sur un item, ignoré:", itemError);

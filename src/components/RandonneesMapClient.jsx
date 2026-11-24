@@ -17,12 +17,6 @@ const TRACE_COLORS = ["#2563eb", "#dc2626", "#7c3aed", "#ea580c", "#0891b2", "#1
 
 const TILE_LAYERS = [
   {
-    id: "osm",
-    name: "OpenStreetMap",
-    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  },
-  {
     id: "topo",
     name: "Topographique",
     url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
@@ -32,18 +26,21 @@ const TILE_LAYERS = [
     id: "ign",
     name: "IGN Plan",
     url: "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+    maxZoom: 19,
     attribution: '&copy; <a href="https://www.ign.fr">IGN</a>',
   },
   {
     id: "ign-satellite",
     name: "Satellite",
     url: "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+    maxZoom: 19,
     attribution: '&copy; <a href="https://www.ign.fr">IGN</a>',
   },
   {
     id: "ign-cadastre",
     name: "Cadastre",
     url: "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=CADASTRALPARCELS.PARCELLAIRE_EXPRESS&STYLE=normal&FORMAT=image/png&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}",
+    maxZoom: 19,
     attribution: '&copy; <a href="https://www.ign.fr">IGN</a>',
   },
 ];
@@ -211,7 +208,7 @@ const RandonneesMap = ({ randonneesData }) => {
   const [userPosition, setUserPosition] = useState(null);
   const [gpxTraces, setGpxTraces] = useState({});
   const [loadingGpx, setLoadingGpx] = useState(true);
-  const [activeLayer, setActiveLayer] = useState("osm");
+  const [activeLayer, setActiveLayer] = useState("ign");
   const [showLayerPicker, setShowLayerPicker] = useState(false);
   const mapCenter = [42.4, 9.4];
 

@@ -88,6 +88,8 @@ const initialPage = Number(Astro.url.searchParams.get("page") || "1");
     typesEvenements={dataTypeEvenementsJson.data}
     initialTypes={initialTypes}
     initialPage={initialPage}
+    initialTab={qp.get("passes") === "1" ? "past" : "upcoming"}
+    buildTime={new Date().toISOString()}
     colorData={colorData}
     pageTexts={{
       titre: textePageSecondaireData.data.titreAgenda,

@@ -1,22 +1,31 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { filterEvents, sortEvents } from '../../utils/filters.js';
-import { sortEventsByDate } from '../../utils/eventUtils.js';
-import FilterBar from '../ui/FilterBar.jsx';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { splitEvents, selectHomepageEvents } from '../../utils/eventUtils.js';
+import useNow from '../../utils/useNow.js';
 import EventCard from '../ui/EventCard.jsx';
-import { Grid, List, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
+import { Grid, List, ChevronLeft, ChevronRight, Calendar, History } from 'lucide-react';
 
-export default function AgendaListing({ events = [], typesEvenements = [], initialTypes = [], initialPage = 1, colorData, pageTexts }) {
-  const initialEvents = sortEventsByDate(events);
-  const [filteredEvents, setFilteredEvents] = useState(initialEvents);
+const EVENTS_PER_PAGE = 12;
+
+const compareText = (a = '', b = '') => a.localeCompare(b, 'fr', { sensitivity: 'base' });
+
+/**
+ * Page Agenda.
+ * - Onglet « À venir » : mis en avant d'abord, puis en cours / à venir par date, puis les événements sans date.
+ * - Onglet « Passés » : événements terminés, du plus récent au plus ancien.
+ * Le statut est recalculé dans le navigateur (useNow) : un événement terminé
+ * depuis le dernier build bascule automatiquement dans « Passés ».
+ */
+export default function AgendaListing({ events = [], typesEvenements = [], initialTypes = [], initialPage = 1, initialTab = 'upcoming', buildTime, colorData, pageTexts }) {
+  const now = useNow(buildTime);
   // selectedTypes contient les NOMS (pas ids)
   const [selectedTypes, setSelectedTypes] = useState(Array.isArray(initialTypes) ? initialTypes : []);
   const [viewMode, setViewMode] = useState('grid');
-  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [currentPage, setCurrentPage] = useState(initialPage > 0 ? initialPage : 1);
   const [sortBy, setSortBy] = useState('date');
-  const eventsPerPage = 12;
+  const [tab, setTab] = useState(initialTab === 'past' ? 'past' : 'upcoming');
   const [showTypesMenu, setShowTypesMenu] = useState(false);
   const typesMenuRef = useRef(null);
-  const didInitialSyncRef = useRef(false);
+  const isFirstSyncRef = useRef(true);
 
   // Fermer le menu au clic extérieur
   useEffect(() => {
@@ -30,82 +39,82 @@ export default function AgendaListing({ events = [], typesEvenements = [], initi
     return () => document.removeEventListener('mousedown', handler);
   }, [showTypesMenu]);
 
-  // Mettre à jour les événements filtrés quand les événements changent
+  // Récupérer les filtres depuis l'URL si le rendu statique ne les a pas reçus
   useEffect(() => {
-    const sortedEvents = sortEventsByDate(events);
-    setFilteredEvents(sortedEvents);
-  }, [events]);
+    const url = new URL(window.location.href);
+    const fromUrl = ['types1', 'types2', 'types3'].map((k) => url.searchParams.get(k)).filter(Boolean);
+    if (selectedTypes.length === 0 && fromUrl.length > 0) setSelectedTypes(fromUrl);
+    if (url.searchParams.get('passes') === '1') setTab('past');
+    const p = Number(url.searchParams.get('page') || '1');
+    if (p > 1) setCurrentPage(p);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleFiltersChange = useCallback(() => {
-    let evts = [...events];
+  // Filtrage par type puis répartition à venir / sans date / passés
+  const { upcomingList, pastList } = useMemo(() => {
+    let evts = Array.isArray(events) ? events : [];
     if (selectedTypes.length > 0) {
-      const selectedNamesLower = selectedTypes.map(n => n.toLowerCase());
-      evts = evts.filter(evt => evt.type_evenement && selectedNamesLower.includes(evt.type_evenement.Nom.toLowerCase()));
+      const names = selectedTypes.map((n) => n.toLowerCase());
+      evts = evts.filter((evt) => evt.type_evenement?.Nom && names.includes(evt.type_evenement.Nom.toLowerCase()));
     }
-    const sorted = sortEventsByDate(evts);
-    setFilteredEvents(sorted);
-    setCurrentPage(1);
-  }, [events, selectedTypes]);
+    const { past } = splitEvents(evts, now);
+    // Même ordre que l'accueil : « Mettre en avant » d'abord, puis par date, puis sans date
+    let upcoming = selectHomepageEvents(evts, Infinity, now);
+    let pastSorted = past;
+    if (sortBy === 'title') {
+      upcoming = [...upcoming].sort((a, b) => compareText(a.Nom, b.Nom));
+      pastSorted = [...past].sort((a, b) => compareText(a.Nom, b.Nom));
+    } else if (sortBy === 'commune') {
+      const byCommune = (a, b) => compareText(a.commune?.Nom || '~', b.commune?.Nom || '~') || compareText(a.Nom, b.Nom);
+      upcoming = [...upcoming].sort(byCommune);
+      pastSorted = [...past].sort(byCommune);
+    }
+    return { upcomingList: upcoming, pastList: pastSorted };
+  }, [events, selectedTypes, sortBy, now]);
 
-  useEffect(() => {
-    handleFiltersChange();
-  }, [handleFiltersChange]);
-
-  const handleSortChange = (newSortBy) => {
-    setSortBy(newSortBy);
-    const sorted = sortEventsByDate(filteredEvents);
-    setFilteredEvents(sorted);
-  };
+  const activeList = tab === 'past' ? pastList : upcomingList;
 
   // Pagination
-  const totalPages = Math.ceil(filteredEvents.length / eventsPerPage);
-  const startIndex = (currentPage - 1) * eventsPerPage;
-  const endIndex = startIndex + eventsPerPage;
-  const currentEvents = filteredEvents.slice(startIndex, endIndex);
+  const totalPages = Math.max(1, Math.ceil(activeList.length / EVENTS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
+  const startIndex = (safePage - 1) * EVENTS_PER_PAGE;
+  const currentEvents = activeList.slice(startIndex, startIndex + EVENTS_PER_PAGE);
+
+  // Synchroniser l'URL (types, onglet, page) sans recharger
+  useEffect(() => {
+    if (isFirstSyncRef.current) {
+      isFirstSyncRef.current = false;
+      return;
+    }
+    const url = new URL(window.location.href);
+    ['type', 'types', 'types1', 'types2', 'types3', 'page', 'passes'].forEach((k) => url.searchParams.delete(k));
+    selectedTypes.slice(0, 3).forEach((name, idx) => {
+      if (name) url.searchParams.set(`types${idx + 1}`, name);
+    });
+    if (tab === 'past') url.searchParams.set('passes', '1');
+    if (safePage > 1) url.searchParams.set('page', String(safePage));
+    window.history.replaceState({}, '', url);
+  }, [selectedTypes, tab, safePage]);
+
+  const changeTypes = (updater) => {
+    setSelectedTypes(updater);
+    setCurrentPage(1);
+  };
+
+  const changeTab = (next) => {
+    setTab(next);
+    setCurrentPage(1);
+  };
 
   const goToPage = (page) => {
     setCurrentPage(page);
-    const url = new URL(window.location.href);
-    // Nettoyage ancien format
-    ['type','types'].forEach(k => url.searchParams.delete(k));
-    // Préserver les types sélectionnés
-    ['types1','types2','types3'].forEach(k => url.searchParams.delete(k));
-    selectedTypes.slice(0,3).forEach((name, idx) => {
-      if (name) url.searchParams.set(`types${idx+1}`, name);
-    });
-    if (page > 1) url.searchParams.set('page', String(page)); else url.searchParams.delete('page');
-    window.history.replaceState({}, '', url);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Synchroniser l'URL quand les types changent
-  useEffect(() => {
-    const url = new URL(window.location.href);
-    const existingQueryTypes = ['types1','types2','types3']
-      .map(k => url.searchParams.get(k))
-      .filter(Boolean);
-
-    // Cas: l'utilisateur arrive avec des paramètres, mais initialTypes n'a pas été peuplé (ex: hydration / mismatch)
-    if (!didInitialSyncRef.current) {
-      didInitialSyncRef.current = true;
-      if (selectedTypes.length === 0 && existingQueryTypes.length > 0) {
-        // Hydrater l'état à partir de l'URL (sans la réécrire encore)
-        setSelectedTypes(existingQueryTypes);
-        return; // ne pas écraser l'URL maintenant
-      }
-    }
-
-    // Réécriture normale seulement si l'état reflète réellement la sélection
-    // Nettoyage ancien format
-    ['types','type'].forEach(k => url.searchParams.delete(k));
-    ['types1','types2','types3'].forEach(k => url.searchParams.delete(k));
-    selectedTypes.slice(0,3).forEach((name, idx) => {
-      if (name) url.searchParams.set(`types${idx+1}`, name);
-    });
-    url.searchParams.delete('page');
-    window.history.replaceState({}, '', url);
+  const handleSortChange = (newSortBy) => {
+    setSortBy(newSortBy);
     setCurrentPage(1);
-  }, [selectedTypes]);
+  };
 
   const headerStyle = {
     backgroundColor: colorData?.data?.FondAgenda || '#ffffff',
@@ -129,29 +138,40 @@ export default function AgendaListing({ events = [], typesEvenements = [], initi
           
           <div className="text-center">
             <h1 className="text-4xl sm:text-6xl font-bold mb-4" style={{ color: colorData?.data?.texteAgenda || '#000000' }}>
-              {pageTexts?.titreAgenda || 'Agenda'}
+              {pageTexts?.titre || 'Agenda'}
             </h1>
             <p className="text-lg max-w-4xl mx-auto leading-relaxed" style={{ color: colorData?.data?.texteAgenda || '#374b58' }}>
-                            {pageTexts?.descriptionAgenda || 'Découvrez tous les événements organisés dans la région de Castagniccia Casinca'}
+                            {pageTexts?.description || 'Découvrez tous les événements organisés dans la région de Castagniccia Casinca'}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Filters */}
-      {/* <FilterBar 
-        categories={categories}
-        communes={communes}
-        onFiltersChange={handleFiltersChange}
-      /> */}
-
       {/* Results Header */}
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4 flex-wrap">
-            <p className="text-gray-600">
-              <span className="font-semibold">{filteredEvents.length}</span> événement{filteredEvents.length > 1 ? 's' : ''} trouvé{filteredEvents.length > 1 ? 's' : ''}
-            </p>
+            {/* Onglets À venir / Passés */}
+            <div className="inline-flex rounded-lg border border-gray-300 bg-white p-0.5" role="tablist">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={tab === 'upcoming'}
+                onClick={() => changeTab('upcoming')}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition ${tab === 'upcoming' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:text-gray-900'}`}
+              >
+                À venir <span className="opacity-80">({upcomingList.length})</span>
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={tab === 'past'}
+                onClick={() => changeTab('past')}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition ${tab === 'past' ? 'bg-gray-800 text-white' : 'text-gray-600 hover:text-gray-900'}`}
+              >
+                Passés <span className="opacity-80">({pastList.length})</span>
+              </button>
+            </div>
 
             {/* Filtre Types d'événement (multi-select) */}
             {typesEvenements.length > 0 && (
@@ -186,7 +206,7 @@ export default function AgendaListing({ events = [], typesEvenements = [], initi
                       {selectedTypes.length > 0 && (
                         <button
                           type="button"
-                          onClick={() => setSelectedTypes([])}
+                          onClick={() => changeTypes([])}
                           className="text-xs text-blue-600 hover:underline"
                         >Vider</button>
                       )}
@@ -201,7 +221,7 @@ export default function AgendaListing({ events = [], typesEvenements = [], initi
                               type="button"
                               disabled={disabled}
                               onClick={() => {
-                                setSelectedTypes(prev => prev.includes(type.Nom)
+                                changeTypes(prev => prev.includes(type.Nom)
                                   ? prev.filter(n => n !== type.Nom)
                                   : (prev.length < 3 ? [...prev, type.Nom] : prev)
                                 );
@@ -260,8 +280,25 @@ export default function AgendaListing({ events = [], typesEvenements = [], initi
             <div className="text-gray-400 mb-4">
               <Calendar className="w-16 h-16 mx-auto" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Aucun événement trouvé</h3>
-            <p className="text-gray-600">Essayez de modifier vos critères de recherche</p>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              {tab === 'past' ? 'Aucun événement passé' : 'Aucun événement à venir pour le moment'}
+            </h3>
+            <p className="text-gray-600">
+              {selectedTypes.length > 0
+                ? 'Essayez de modifier vos critères de recherche.'
+                : tab === 'upcoming'
+                  ? 'De nouveaux rendez-vous seront bientôt annoncés.'
+                  : ''}
+            </p>
+            {tab === 'upcoming' && pastList.length > 0 && (
+              <button
+                type="button"
+                onClick={() => changeTab('past')}
+                className="mt-4 inline-flex items-center gap-2 text-blue-600 hover:underline"
+              >
+                <History className="w-4 h-4" /> Voir les événements passés
+              </button>
+            )}
           </div>
         ) : (
           <>
@@ -271,10 +308,7 @@ export default function AgendaListing({ events = [], typesEvenements = [], initi
                 : 'space-y-4'
             }`}>
               {currentEvents.map((event) => (
-                <div
-                  key={event.id}
-                  className={`${event.isPast ? 'opacity-60' : ''}`}
-                >
+                <div key={event.id}>
                   <EventCard
                     event={event}
                     href={`/agenda/${event.documentId}`}
@@ -288,8 +322,8 @@ export default function AgendaListing({ events = [], typesEvenements = [], initi
             {totalPages > 1 && (
               <div className="flex items-center justify-center mt-12 gap-2">
                 <button
-                  onClick={() => goToPage(currentPage - 1)}
-                  disabled={currentPage === 1}
+                  onClick={() => goToPage(safePage - 1)}
+                  disabled={safePage === 1}
                   className="flex items-center gap-1 px-4 py-2 text-gray-600 disabled:text-gray-400 hover:text-gray-900 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-4 h-4" />
@@ -302,7 +336,7 @@ export default function AgendaListing({ events = [], typesEvenements = [], initi
                       key={page}
                       onClick={() => goToPage(page)}
                       className={`px-4 py-2 rounded-lg ${
-                        currentPage === page
+                        safePage === page
                           ? 'bg-blue-600 text-white'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
@@ -313,8 +347,8 @@ export default function AgendaListing({ events = [], typesEvenements = [], initi
                 </div>
 
                 <button
-                  onClick={() => goToPage(currentPage + 1)}
-                  disabled={currentPage === totalPages}
+                  onClick={() => goToPage(safePage + 1)}
+                  disabled={safePage === totalPages}
                   className="flex items-center gap-1 px-4 py-2 text-gray-600 disabled:text-gray-400 hover:text-gray-900 disabled:cursor-not-allowed"
                 >
                   Suivant

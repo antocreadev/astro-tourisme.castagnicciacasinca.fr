@@ -241,8 +241,9 @@ const QrCodeMap = ({ qrCodesData }) => {
           dragging={true}
         >
           <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url={"https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image/png"}
+            maxZoom={19}
+            attribution='&copy; <a href="https://www.ign.fr/">IGN</a> - Géoplateforme'
           />
 
           <MapBounds />

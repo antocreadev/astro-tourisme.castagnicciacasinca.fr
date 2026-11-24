@@ -188,8 +188,9 @@ const SejournerDetail = ({ sejourner }) => {
                     style={{ height: '100%', width: '100%' }}
                   >
                     <LeafletComponents.TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; <a href="https://www.ign.fr/">IGN</a> - Géoplateforme'
+                      url={"https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image/png"}
+                      maxZoom={19}
                     />
                     <LeafletComponents.Marker position={[sejourner.Coordonnees.lat, sejourner.Coordonnees.lng]}>
                       <LeafletComponents.Popup>

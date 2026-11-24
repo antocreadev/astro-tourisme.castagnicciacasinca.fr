@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { ArrowLeft, Calendar, MapPin, Phone, ExternalLink } from "lucide-react";
 import { convertMarkdownToHtml } from "../../utils/markdownUtils.js";
 import {
-  formatEventDate,
+  formatEventPeriod,
   getImageUrl,
-  isEventPast,
+  getEventStatus,
   getFirstImage,
   getBestFormat,
 } from "../../utils/eventUtils.js";
+import useNow from "../../utils/useNow.js";
 import { getInlineStyles } from "../../utils/colorUtils.js";
 import { CommuneLink } from "../../utils/communeUtils.jsx";
 
@@ -89,7 +90,8 @@ const EventGallery = ({ event, isPast }) => {
   );
 };
 
-const EventDetail = ({ event, colorData }) => {
+const EventDetail = ({ event, colorData, buildTime }) => {
+  const now = useNow(buildTime);
   const [isClient, setIsClient] = useState(false);
   const [LeafletComponents, setLeafletComponents] = useState(null);
 
@@ -136,11 +138,10 @@ const EventDetail = ({ event, colorData }) => {
     }
   }, []);
 
-  const isEventPastCheck = () => {
-    return isEventPast(event.Date);
-  };
-
-  const isPast = isEventPast(event.Date);
+  const status = getEventStatus(event, now);
+  const isPast = status === "past";
+  const isOngoing = status === "ongoing";
+  const periodLabel = formatEventPeriod(event);
 
   const getLinkImageUrl = (lien) => {
     if (!lien.image) return null;
@@ -214,6 +215,11 @@ const EventDetail = ({ event, colorData }) => {
                 Événement passé
               </div>
             )}
+            {isOngoing && (
+              <div className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium">
+                En cours
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -228,7 +234,7 @@ const EventDetail = ({ event, colorData }) => {
             {/* Event Info */}
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div
+                {periodLabel && (<div
                   className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium border ${
                     isPast
                       ? "bg-gray-100 text-gray-600 border-gray-200"
@@ -236,8 +242,8 @@ const EventDetail = ({ event, colorData }) => {
                   }`}
                 >
                   <Calendar className="w-4 h-4" />
-                  {formatEventDate(event.Date)}
-                </div>
+                  {periodLabel}
+                </div>)}
                 {event.commune && (
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium border bg-green-100 text-green-800 border-green-200">
                     <MapPin className="w-4 h-4" />
@@ -282,8 +288,9 @@ const EventDetail = ({ event, colorData }) => {
                     style={{ height: "100%", width: "100%" }}
                   >
                     <LeafletComponents.TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; <a href="https://www.ign.fr/">IGN</a> - Géoplateforme'
+                      url={"https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image/png"}
+                      maxZoom={19}
                     />
                     <LeafletComponents.Marker
                       position={[event.Coordonnees.lat, event.Coordonnees.lng]}
@@ -313,15 +320,17 @@ const EventDetail = ({ event, colorData }) => {
                 Informations pratiques
               </h3>
               <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <Calendar className="w-5 h-5 text-blue-600 mt-1" />
-                  <div>
-                    <p className="font-semibold text-gray-900">Date</p>
-                    <p className="text-gray-600">
-                      {formatEventDate(event.Date)}
-                    </p>
+                {periodLabel && (
+                  <div className="flex items-start space-x-3">
+                    <Calendar className="w-5 h-5 text-blue-600 mt-1" />
+                    <div>
+                      <p className="font-semibold text-gray-900">Date</p>
+                      <p className="text-gray-600">
+                        {periodLabel}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {event.commune && (
                   <div className="flex items-start space-x-3">

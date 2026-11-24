@@ -24,5 +24,10 @@ const { event } = Astro.props;
   pageCategory="agenda"
   pageName={event.Nom}
 >
-  <EventDetail event={event} colorData={colorData} client:load />
+  <EventDetail
+    event={event}
+    colorData={colorData}
+    buildTime={new Date().toISOString()}
+    client:load
+  />
 </Layout>

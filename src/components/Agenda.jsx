@@ -1,36 +1,12 @@
-import {
-  sortEventsByDate,
-  getImageUrl,
-  getFirstImage,
-  getBestFormat,
-} from "../utils/eventUtils.js";
-import { convertSimpleMarkdown } from "../utils/markdownUtils.js";
+import { selectHomepageEvents } from "../utils/eventUtils.js";
+import useNow from "../utils/useNow.js";
+import EventCard from "./ui/EventCard.jsx";
 
-export default function Agenda({ data, events, colorData }) {
-  // Fonction pour formater la date pour l'affichage en cards
-  const formatEventDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, "0");
-    const months = [
-      "JAN",
-      "FEV",
-      "MAR",
-      "AVR",
-      "MAI",
-      "JUN",
-      "JUL",
-      "AOU",
-      "SEP",
-      "OCT",
-      "NOV",
-      "DEC",
-    ];
-    const month = months[date.getMonth()];
-    return { day, month };
-  };
-
-  const sortedEvents = sortEventsByDate(events);
-  const displayEvents = sortedEvents.slice(0, 4);
+export default function Agenda({ data, events, colorData, buildTime }) {
+  // "now" = instant du build au rendu serveur, puis instant réel côté visiteur
+  const now = useNow(buildTime);
+  // Mis en avant d'abord, puis prochains événements ; jamais d'événement terminé
+  const displayEvents = selectHomepageEvents(events, 4, now);
 
   // Couleurs dynamiques
   const agendaStyle = {
@@ -63,89 +39,26 @@ export default function Agenda({ data, events, colorData }) {
         </div>
 
         {/* Events Grid */}
-        <div className="flex flex-col items-center justify-center md:items-start md:justify-start md:flex-row gap-8 overflow-x-auto pb-4 md:p-2">
-          {displayEvents.map((event, index) => {
-            const { day, month } = formatEventDate(event.Date);
-            const firstImage = getBestFormat(getFirstImage(event));
-            const imageUrl = getImageUrl(firstImage);
-            return (
-              <div
-                key={event.id || index}
-                className="flex-shrink-0 w-full md:w-[25rem] px-4"
-              >
-                <a
-                  href={`/agenda/${event.documentId}`}
-                  className={`block group h-full ${event.isPast ? "opacity-60" : ""}`}
-                >
-                  <div
-                    className={`rounded-lg overflow-hidden shadow-sm group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-1 h-[360px] flex flex-col ${event.isPast ? "grayscale" : ""}`}
-                    style={elementStyle}
-                  >
-                    {/* Date Section */}
-                    <div className="flex flex-shrink-0">
-                      <div
-                        className={`${event.isPast ? "bg-gray-300" : "bg-gray-200"} w-24 flex flex-col items-center justify-center py-8`}
-                      >
-                        <div
-                          className={`text-4xl font-bold ${event.isPast ? "text-gray-500" : "text-gray-400"}`}
-                        >
-                          {day}
-                        </div>
-                        <div
-                          className={`text-sm font-medium ${event.isPast ? "text-gray-500" : "text-gray-400"} mt-1`}
-                        >
-                          {month}
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <div className="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center overflow-hidden">
-                          {imageUrl ? (
-                            <img
-                              src={imageUrl}
-                              alt={event.Nom}
-                              className={`w-full h-full object-contain ${event.isPast ? "opacity-75 grayscale" : ""}`}
-                            />
-                          ) : (
-                            <span className="text-gray-500 text-sm">
-                              Image événement
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Content Section */}
-                    <div className="p-6 flex-1 flex flex-col">
-                      <div
-                        className={`text-sm font-medium ${event.isPast ? "text-gray-500" : "text-gray-600"} mb-2`}
-                      >
-                        {event.commune?.Nom || "Événement"}
-                      </div>
-                      <h3
-                        className={`text-lg font-semibold leading-tight group-hover:text-blue-600 transition-colors line-clamp-2 mb-2 ${event.isPast ? "text-gray-600" : "text-black"}`}
-                      >
-                        {event.Nom}
-                      </h3>
-                      <div
-                        className={`text-sm line-clamp-2 flex-1 ${event.isPast ? "text-gray-500" : "text-gray-600"}`}
-                      >
-                        {event.Description && (
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: convertSimpleMarkdown(
-                                event.Description.substring(0, 120) +
-                                  (event.Description.length > 120 ? "..." : ""),
-                              ),
-                            }}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            );
-          })}
+        {displayEvents.length === 0 && (
+          <p className="text-center text-gray-500 px-4">
+            De nouveaux rendez-vous seront bientôt annoncés.
+          </p>
+        )}
+        {/* flex + justify-center : reste centré s'il y a moins de 4 événements */}
+        <div className="flex flex-wrap justify-center gap-6 px-4 md:px-8 max-w-[110rem] mx-auto">
+          {displayEvents.map((event, index) => (
+            <div
+              key={event.id || index}
+              className="w-full sm:w-[calc(50%-0.75rem)] xl:w-[calc(25%-1.125rem)]"
+            >
+              <EventCard
+                event={event}
+                href={`/agenda/${event.documentId}`}
+                isPast={event.isPast}
+                style={elementStyle}
+              />
+            </div>
+          ))}
         </div>
 
         {/* See All Button */}

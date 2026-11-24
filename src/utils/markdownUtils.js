@@ -1,4 +1,34 @@
 /**
+ * Détermine l'URL réelle d'un lien Markdown [texte](url).
+ * L'éditeur Strapi insère "link" comme URL par défaut : si l'URL n'est pas
+ * valide mais que le texte est une URL, on utilise le texte.
+ * @param {string} label - Le texte du lien
+ * @param {string} url - L'URL saisie
+ * @returns {string} - L'URL à utiliser dans href
+ */
+const resolveLinkHref = (label, url) => {
+  const isValidHref = (value) =>
+    /^(https?:\/\/|mailto:|tel:|\/|#)/i.test(value);
+  const looksLikeDomain = (value) => /^(www\.)?[\w-]+(\.[\w-]+)+(\/\S*)?$/i.test(value);
+
+  const href = url.trim();
+  const text = label.trim();
+
+  let result = href;
+  if (!isValidHref(href)) {
+    if (/^https?:\/\//i.test(text)) {
+      result = text;
+    } else if (looksLikeDomain(text)) {
+      result = `https://${text}`;
+    } else if (looksLikeDomain(href)) {
+      result = `https://${href}`;
+    }
+  }
+
+  return result.replace(/"/g, "&quot;");
+};
+
+/**
  * Convertit du texte Markdown en HTML avec des classes Tailwind CSS
  * @param {string} text - Le texte Markdown à convertir
  * @returns {string} - Le HTML généré avec les classes CSS
@@ -54,7 +84,8 @@ export const convertMarkdownToHtml = (text) => {
   // Convertir les liens [text](url)
   html = html.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
-    '<a href="$2" class="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">$1</a>'
+    (match, label, url) =>
+      `<a href="${resolveLinkHref(label, url)}" class="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">${label}</a>`
   );
 
   // Convertir le code inline `code`
@@ -252,7 +283,8 @@ export const convertMarkdownWithLists = (text) => {
   // Convertir les liens
   html = html.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
-    '<a href="$2" class="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">$1</a>'
+    (match, label, url) =>
+      `<a href="${resolveLinkHref(label, url)}" class="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">${label}</a>`
   );
 
   // Convertir le code inline
@@ -375,7 +407,8 @@ export const convertHeroMarkdownToHtml = (text, wrapInParagraph = true) => {
   // ÉTAPE 6: Convertir les liens et le code
   html = html.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
-    '<a href="$2" class="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">$1</a>'
+    (match, label, url) =>
+      `<a href="${resolveLinkHref(label, url)}" class="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">${label}</a>`
   );
   html = html.replace(
     /`([^`]+)`/g,

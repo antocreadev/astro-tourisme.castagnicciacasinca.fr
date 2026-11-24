@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { isEventPast } from "../utils/eventUtils.js";
 import {
   MapContainer,
   TileLayer,
@@ -773,6 +774,8 @@ const InteractiveMap = ({
     Array.isArray(evenementsData)
   ) {
     evenementsData.forEach((item) => {
+      // Les événements terminés n'ont plus leur place sur la carte
+      if (isEventPast(item)) return;
       const coords = getCoordinates(item, "evenements");
       if (coords && coords.lat && coords.lng) {
         allMarkers.push({
@@ -874,8 +877,9 @@ const InteractiveMap = ({
       >
         {/* Couche de tuiles OpenStreetMap */}
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url={"https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image/png"}
+          maxZoom={19}
+          attribution='&copy; <a href="https://www.ign.fr/">IGN</a> - Géoplateforme'
         />
 
         {/* Composant pour limiter les bounds */}
